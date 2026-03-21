@@ -1,0 +1,21 @@
+# Lean directories and binaries
+.lake/
+lean-4.*/
+build/
+*.olean
+*.ilean
+
+# Python caches and environments
+.venv/
+__pycache__/
+*.pyc
+*.pyo
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
