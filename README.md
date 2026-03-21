@@ -31,3 +31,68 @@ lake build
 # Or check the main coverage lemma directly
 lake env lean MathTest/urt_coverage.lean
 ```
+
+## El Mapa Completo: De Teorema a Motor
+
+```text
+PAPER (arXiv)          LIBRERÍA (PyPI)         MOTOR (torch.compile)
+      │                      │                          │
+      ▼                      ▼                          ▼
+ Fundamento            pip install               @martinez_functor
+ académico             martinez-functor          como backend nativo
+```
+
+### Ruta 1 — La Librería PyPI (`martinez-functor`)
+
+Esta es la forma en que todo el mundo puede importar el trabajo con un solo comando:
+
+```bash
+pip install martinez-functor
+```
+
+#### El API que Verá el Mundo
+
+```python
+from martinez import MartinezFunctor
+
+Φ = MartinezFunctor(target_dim_d=1024, precision="fp32")
+
+# Cualquier función -> GEMM automáticamente
+result = Φ.reduce("5*x**3 - 2*x + 1")      # Path Horner
+result = Φ.reduce("sin(exp(x))")           # Path Bournez
+result = Φ.reduce("my_nonlinear_ode")      # Path Koopman
+
+# Ejecutar directo en GPU
+output = Φ.execute(input_tensor, device="cuda")
+```
+
+### Ruta 2 — El Motor Real: Backend de `torch.compile`
+
+Esta es la integración más poderosa: el Functor como **compilador nativo de PyTorch**. Cualquier modelo existente puede beneficiarse automáticamente de esta arquitectura ruteando operaciones como una multiplicación óptima de matrices tensoriales sin pasos intermedios inestables.
+
+```python
+import torch
+from martinez.backends import martinez_backend
+
+# Compilar CUALQUIER modelo con el Functor de Martínez
+model = torch.compile(my_model, backend=martinez_backend)
+
+# Internamente, torch.compile rutea cada operación
+# a través de Φ automáticamente
+```
+
+Al utilizar la API oficial de backends personalizados de `torch.compile` y acceder directamente a recursos vía Triton, se eliminan los cuellos de botella mediante hardware-aware FMA en Tensor Cores.
+
+### Ruta 3 — El Plugin JAX (Opcional pero Poderoso)
+
+Para la comunidad científica en Google Research que utiliza JAX, el framework se registra limpiamente como una primitiva nativa:
+
+```python
+import jax
+from martinez.backends import martinez_primitive
+
+# El Functor como primitiva JAX con JIT, grad, y vmap automáticos
+@jax.jit
+def my_computation(x):
+    return martinez_primitive(x)  # Φ aplicado automáticamente y factorizado
+```
