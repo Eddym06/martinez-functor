@@ -1,0 +1,123 @@
+{
+  "generated_on": "2026-04-06",
+  "entry_count": 5,
+  "status_counts": {
+    "Certified": 2,
+    "Validated": 3
+  },
+  "entries": [
+    {
+      "claim_id": "C-EXACT-POLY",
+      "claim": "Polynomial reduction/evaluation path is exact under Horner/FMA branch assumptions.",
+      "rigor_layer": "Formal + runtime",
+      "status": "Certified",
+      "implementation_refs": [
+        "poema/compiler.py",
+        "MathTest/HornerExact.lean",
+        "MathTest/HornerExtract.lean"
+      ],
+      "validation_refs": [
+        "tests/test_poema.py",
+        "tests/test_functor_engine.py"
+      ],
+      "artifact_refs": [
+        "artifacts/poema_hardening_metrics.json"
+      ],
+      "commands": [
+        "PYTHONPATH=. python3 -m pytest tests/test_poema.py tests/test_functor_engine.py -q",
+        "./lean-4.29.0-rc6-linux/bin/lake build"
+      ],
+      "current_limit": "Certified on implemented branch assumptions; does not claim unrestricted global theorem for all runtimes."
+    },
+    {
+      "claim_id": "C-TRANSCENDENTAL-CERT",
+      "claim": "Canonical transcendental branches use constructive interval certificates synchronized to runtime.",
+      "rigor_layer": "Constructive + runtime",
+      "status": "Certified",
+      "implementation_refs": [
+        "python_analysis/generate_interval_certificates.py",
+        "MathTest/TranscendentalCertificates.lean"
+      ],
+      "validation_refs": [
+        "python_analysis/test_transcendental_integration.py",
+        "tests/test_jit_onnx_export.py"
+      ],
+      "artifact_refs": [
+        "python_analysis/certificates/transcendental_runtime.py"
+      ],
+      "commands": [
+        "PYTHONPATH=. python3 -m pytest python_analysis/test_transcendental_integration.py -q"
+      ],
+      "current_limit": "Coverage is explicit for canonical domains/functions; not a claim of universal transcendental closure."
+    },
+    {
+      "claim_id": "C-KOOPMAN-ADAPTIVE",
+      "claim": "Adaptive Koopman diagnostics are implemented and empirically validated on covered benchmark classes.",
+      "rigor_layer": "Empirical systems",
+      "status": "Validated",
+      "implementation_refs": [
+        "acf_functor/koopman_adaptive.py",
+        "acf_functor/kolmogorov_entropy.py"
+      ],
+      "validation_refs": [
+        "tests/test_invariant_unified.py",
+        "tests/test_certified_koopman_extended.py"
+      ],
+      "artifact_refs": [
+        "artifacts/cluster_bridge_metrics.json",
+        "artifacts/periodic_table.md"
+      ],
+      "commands": [
+        "PYTHONPATH=. python3 -m pytest tests/test_invariant_unified.py tests/test_certified_koopman_extended.py -q",
+        "python3 benchmarks/periodic_table.py --output artifacts/periodic_table.md"
+      ],
+      "current_limit": "General finite-dimensional truncation theorem for broad nonlinear families remains open."
+    },
+    {
+      "claim_id": "C-ALPHA-CONSISTENCY",
+      "claim": "Alpha estimators are tracked with executable discrepancy reporting across canonical functions.",
+      "rigor_layer": "Empirical systems",
+      "status": "Validated",
+      "implementation_refs": [
+        "python_analysis/alpha_consistency_report.py"
+      ],
+      "validation_refs": [
+        "tests/test_alpha_consistency_report.py"
+      ],
+      "artifact_refs": [
+        "artifacts/alpha_consistency_report.json",
+        "artifacts/alpha_consistency_report.md"
+      ],
+      "commands": [
+        "PYTHONPATH=. python3 python_analysis/alpha_consistency_report.py --fast --skip-geometric --output-json artifacts/alpha_consistency_report.json --output-md artifacts/alpha_consistency_report.md",
+        "PYTHONPATH=. python3 -m pytest tests/test_alpha_consistency_report.py -q"
+      ],
+      "current_limit": "Estimator agreement is measured; full theorem-level equivalence is explicitly open."
+    },
+    {
+      "claim_id": "C-SECTION18-CLOSURE",
+      "claim": "Section 18 engineering closure is implemented with reproducible closure tests and benchmarks.",
+      "rigor_layer": "Empirical systems",
+      "status": "Validated",
+      "implementation_refs": [
+        "benchmarks/periodic_table.py",
+        "benchmarks/cluster_proxy.py",
+        "poema/frontend.py"
+      ],
+      "validation_refs": [
+        "tests/test_section18_closure.py",
+        "tests/test_symbiotic_convergence.py"
+      ],
+      "artifact_refs": [
+        "artifacts/periodic_table.json",
+        "artifacts/cluster_proxy_metrics.json"
+      ],
+      "commands": [
+        "PYTHONPATH=. python3 -m pytest tests/test_section18_closure.py -q",
+        "python3 benchmarks/cluster_proxy.py --steps 5 --output artifacts/cluster_proxy_metrics.json"
+      ],
+      "current_limit": "Global theorem closure for all nonlinear classes is outside the Section 18 closure scope."
+    }
+  ],
+  "note": "This matrix tracks implemented evidence and explicit limits; it does not elevate open research fronts to theorem status."
+}

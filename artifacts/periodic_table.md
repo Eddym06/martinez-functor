@@ -1,0 +1,13 @@
+| Case | Domain | Family | alpha_mean | alpha_std | alpha_ci95 | SpectralGap_mean | DominantLambda_mean | ReconstructionErr_mean | DriftScore | DriftFlag |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| lorenz | fluids | fast | 0.0071 | 0.0006 | 0.0004 | 0.0067 | 0.9994 | 0.0417 | 0.0824 | False |
+| stiff_two_scale | fluids | fast | 1.0413 | 0.4097 | 0.2539 | 0.0430 | 1.0000 | 0.0266 | 0.3934 | True |
+| rossler | fluids | slow | 3.1513 | 3.5891 | 2.2245 | 0.0189 | 1.0001 | 0.0222 | 1.1389 | True |
+| linear_stable | general | fast | 0.0060 | 0.0026 | 0.0016 | 0.0001 | 1.0012 | 0.0207 | 0.4375 | True |
+| exp_decay | general | fast | 0.0456 | 0.0127 | 0.0079 | 0.0327 | 1.0000 | 0.0177 | 0.2776 | True |
+| logistic | general | algebraic | 1.8910 | 0.5227 | 0.3240 | 0.3596 | 1.0000 | 0.0755 | 0.2764 | True |
+| relu | signals | fast | 0.0000 | 0.0000 | 0.0000 | 0.0082 | 1.0175 | 0.0210 | 0.0938 | False |
+| sin | signals | fast | 0.0061 | 0.0004 | 0.0002 | 0.0004 | 1.0000 | 0.0414 | 0.0586 | False |
+| rotation | signals | algebraic | 1.3641 | 0.3408 | 0.2113 | 0.0002 | 1.0000 | 0.0270 | 0.2499 | True |
+| step | signals | algebraic | 2.4145 | 0.7585 | 0.4701 | 0.0067 | 1.0000 | 0.0653 | 0.3142 | True |
+| square_wave | signals | algebraic | 2.4146 | 0.8789 | 0.5447 | 0.0535 | 1.0000 | 0.2281 | 0.3640 | True |

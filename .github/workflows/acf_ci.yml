@@ -1,0 +1,63 @@
+name: Functor de Colapso Afín (ACF) CI
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  math_tests:
+    runs-on: ubuntu-latest
+    name: Tests matematicos y unitarios
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Instalar dependencias
+        run: |
+          python -m pip install --upgrade pip
+          pip install numpy scipy pytest pytest-cov matplotlib
+      - name: Ejecutar tests principales
+        run: |
+          PYTHONPATH=. pytest tests/test_invariant_unified.py tests/test_certified_koopman_extended.py -v --tb=short
+      - name: Cobertura minima
+        run: |
+          PYTHONPATH=. pytest tests/test_invariant_unified.py tests/test_certified_koopman_extended.py --cov=acf_functor --cov-report=term-missing --cov-report=xml
+
+  lean_verification:
+    runs-on: ubuntu-latest
+    name: Verificacion Lean 4
+    steps:
+      - uses: actions/checkout@v4
+      - name: Instalar Lean toolchain local
+        run: |
+          chmod +x ./lean-4.29.0-rc6-linux/bin/lake || true
+          ./lean-4.29.0-rc6-linux/bin/lake build
+      - name: Contar sorries
+        run: |
+          SORRY_COUNT=$(grep -r "sorry" MathTest --include="*.lean" | wc -l || true)
+          echo "Sorries en MathTest: $SORRY_COUNT"
+
+  scientific_report:
+    runs-on: ubuntu-latest
+    name: Reporte cientifico
+    needs: [math_tests, lean_verification]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Instalar dependencias
+        run: |
+          python -m pip install --upgrade pip
+          pip install numpy scipy matplotlib pytest
+      - name: Generar reporte
+        run: |
+          PYTHONPATH=. python ci/generate_validation_report.py
+      - name: Upload reporte
+        uses: actions/upload-artifact@v4
+        with:
+          name: validation-report
+          path: validation_report/

@@ -1,0 +1,113 @@
+{
+  "timestamp": "20260406_012236",
+  "benchmarks": {
+    "horner_vs_naive": {
+      "5": {
+        "horner": {
+          "mean_ms": 0.00105961,
+          "std_ms": 0.0032974975190134715,
+          "min_ms": 0.000749,
+          "max_ms": 0.047497,
+          "median_ms": 0.000788,
+          "throughput_per_sec": 943743.4527797964
+        },
+        "naive": {
+          "mean_ms": 0.00081801,
+          "std_ms": 5.1263533822786736e-05,
+          "min_ms": 0.000745,
+          "max_ms": 0.001107,
+          "median_ms": 0.000809,
+          "throughput_per_sec": 1222478.9428002103
+        },
+        "speedup_vs_naive": 0.7719915818084012
+      },
+      "20": {
+        "horner": {
+          "mean_ms": 0.001765355,
+          "std_ms": 4.381311418970351e-05,
+          "min_ms": 0.00169,
+          "max_ms": 0.002081,
+          "median_ms": 0.001759,
+          "throughput_per_sec": 566458.3044203575
+        },
+        "naive": {
+          "mean_ms": 0.002327895,
+          "std_ms": 0.0009399535541583956,
+          "min_ms": 0.002068,
+          "max_ms": 0.015475,
+          "median_ms": 0.0022375,
+          "throughput_per_sec": 429572.6396594348
+        },
+        "speedup_vs_naive": 1.318655454568628
+      },
+      "50": {
+        "horner": {
+          "mean_ms": 0.00366007,
+          "std_ms": 0.00017071644648363556,
+          "min_ms": 0.003423,
+          "max_ms": 0.004275,
+          "median_ms": 0.0036315,
+          "throughput_per_sec": 273218.81821932364
+        },
+        "naive": {
+          "mean_ms": 0.004953715,
+          "std_ms": 0.0016447781047226402,
+          "min_ms": 0.004473,
+          "max_ms": 0.023792,
+          "median_ms": 0.004698,
+          "throughput_per_sec": 201868.69854240707
+        },
+        "speedup_vs_naive": 1.353448158095337
+      },
+      "100": {
+        "horner": {
+          "mean_ms": 0.006829715,
+          "std_ms": 0.0011632296865946123,
+          "min_ms": 0.006395,
+          "max_ms": 0.019624,
+          "median_ms": 0.006703499999999999,
+          "throughput_per_sec": 146418.99405758514
+        },
+        "naive": {
+          "mean_ms": 0.00919746,
+          "std_ms": 0.00092909229810606,
+          "min_ms": 0.008702,
+          "max_ms": 0.017809,
+          "median_ms": 0.0090735,
+          "throughput_per_sec": 108725.66991321518
+        },
+        "speedup_vs_naive": 1.3466828410848768
+      }
+    },
+    "alpha_estimation": {
+      "poly": {
+        "alpha": 0.0,
+        "ci": [
+          0.0,
+          0.0
+        ]
+      },
+      "sin": {
+        "alpha": 0.49295551386751113,
+        "ci": [
+          0.3230458604997741,
+          0.6628651672352481
+        ]
+      }
+    },
+    "koopman_branches": {
+      "exact_polynomial": {
+        "predicted": 0.6005973911285404,
+        "empirical_error": 0.20635747865342713,
+        "certified_error": 0.0,
+        "branch": "exact_polynomial"
+      },
+      "certified": {
+        "predicted": 0.6005973911285404,
+        "empirical_error": 0.20635747865342713,
+        "certified_error": 0.0,
+        "branch": "exact_polynomial"
+      }
+    }
+  }
+}

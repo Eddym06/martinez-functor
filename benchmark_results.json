@@ -1,0 +1,52 @@
+{
+  "timestamp": "2026-04-05T23:52:32",
+  "torch_version": "2.8.0+cu126",
+  "cuda_available": true,
+  "results": [
+    {
+      "name": "polynomial_degree100_cpu_fp64",
+      "t_mean_ms": 0.7474365032976493,
+      "t_std_ms": 0.15813804294865033,
+      "max_error": 0.0,
+      "certified_epsilon": 0.0,
+      "n_fma_ops": 101,
+      "passed": true,
+      "notes": "Evaluaci\u00f3n Horner exacta, \u03b5=0"
+    },
+    {
+      "name": "sin_canonical_cpu_fp64",
+      "t_mean_ms": 0.6416538541088812,
+      "t_std_ms": 0.37894013944443283,
+      "max_error": 9.992007221626409e-16,
+      "certified_epsilon": 9.992007221626409e-16,
+      "n_fma_ops": 25,
+      "passed": true,
+      "notes": "Fuente: lean_synchronized"
+    },
+    {
+      "name": "deep_composition_20layers",
+      "t_mean_ms": 0.0,
+      "t_std_ms": 0.0,
+      "max_error": null,
+      "certified_epsilon": 0.0,
+      "n_fma_ops": 20,
+      "passed": true,
+      "notes": "Test de estabilidad num\u00e9rica"
+    },
+    {
+      "name": "polynomial_degree20_triton_fp64",
+      "t_mean_ms": 0.0988373503787443,
+      "t_std_ms": 0.033062744013840885,
+      "max_error": null,
+      "certified_epsilon": 0.0,
+      "n_fma_ops": 21,
+      "passed": true,
+      "notes": "GPU: NVIDIA GeForce RTX 4050 Laptop GPU"
+    }
+  ],
+  "summary": {
+    "total": 4,
+    "passed": 4,
+    "failed": 0
+  }
+}

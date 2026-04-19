@@ -1,0 +1,17 @@
+{
+  "mode": "single-process",
+  "world_size": 1,
+  "device": "cuda:0",
+  "baseline_params": 1062412,
+  "phi_params": 590912,
+  "baseline_step_ms": 11.053657050069887,
+  "phi_step_ms": 1.1864217012771405,
+  "baseline_peak_mem_mb": 40.02099609375,
+  "phi_peak_mem_mb": 37.69140625,
+  "profile_name": "fast-relu",
+  "degree": 16,
+  "max_dimension": 32,
+  "precision": "fp32",
+  "observable_family": "polynomial",
+  "rank_budget": "low"
+}

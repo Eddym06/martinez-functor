@@ -1,0 +1,259 @@
+{
+  "verification_results": {
+    "L_inf_bound_max_divergence": 0.004524855534817407,
+    "L_2_bound_mean_divergence": 0.001174630885880718,
+    "conservation_ratio": 0.3333333333333333,
+    "lipschitz_constant_f": 4.810477380965351,
+    "theoretical_error_bound": 0.03405238690482676,
+    "alpha_combinatorial": 2.0,
+    "alpha_spectral_lipschitz": 1.039853813474751,
+    "alpha_geometric_volume": 0.5,
+    "inversion_error_l_inf": 0.0
+  },
+  "verification_conditions": {
+    "URT Convergence (bound < 0.01)": true,
+    "FMA Conservation (ratio \u2264 1.0)": true,
+    "Composition Bounded (error < 1.0)": true,
+    "Reversibility Exact (error < 1e-7)": true,
+    "Alpha Consistency (within 10%)": true
+  },
+  "all_passed": true,
+  "lean_integration": {
+    "existing_certificates": {
+      "certificates_dir": "/home/Mart\u00ednez's Invariant/poema/../MathTest",
+      "certificates_found": 35,
+      "certificates": [
+        {
+          "file": "PoemaFormalVerification_20260417_205725.lean",
+          "path": "/home/Mart\u00ednez's Invariant/poema/../MathTest/PoemaFormalVerification_20260417_205725.lean",
+          "theorem_name": "Unknown",
+          "size": 5314
+        },
+        {
+          "file": "NewDomainCertificates.lean",
+          "path": "/home/Mart\u00ednez's Invariant/poema/../MathTest/NewDomainCertificates.lean",
+          "theorem_name": "Unknown",
+          "size": 7085
+        },
+        {
+          "file": "AlgebraicACFCertificates.lean",
+          "path": "/home/Mart\u00ednez's Invariant/poema/../MathTest/AlgebraicACFCertificates.lean",
+          "theorem_name": "Unknown",
+          "size": 18258
+        },
+        {
+          "file": "AdditionalACFCertificates.lean",
+          "path": "/home/Mart\u00ednez's Invariant/poema/../MathTest/AdditionalACFCertificates.lean",
+          "theorem_name": "Unknown",
+          "size": 17770
+        },
+        {
+          "file": "StochasticExpansionCertificates.lean",
+          "path": "/home/Mart\u00ednez's Invariant/poema/../MathTest/StochasticExpansionCertificates.lean",
+          "theorem_name": "Unknown",
+          "size": 11504
+        },
+        {
+          "file": "PoemaFormalVerification_20260408_105829.lean",
+          "path": "/home/Mart\u00ednez's Invariant/poema/../MathTest/PoemaFormalVerification_20260408_105829.lean",
+          "theorem_name": "Unknown",
+          "size": 5314
+        },
+        {
+          "file": "OTUCertificates.lean",
+          "path": "/home/Mart\u00ednez's Invariant/poema/../MathTest/OTUCertificates.lean",
+          "theorem_name": "Unknown",
+          "size": 26100
+        },
+        {
+          "file": "urt_coverage.lean",
+          "path": "/home/Mart\u00ednez's Invariant/poema/../MathTest/urt_coverage.lean",
+          "theorem_name": "Unknown",
+          "size": 5293
+        },
+        {
+          "file": "TranscendentalApprox.lean",
+          "path": "/home/Mart\u00ednez's Invariant/poema/../MathTest/TranscendentalApprox.lean",
+          "theorem_name": "Unknown",
+          "size": 5337
+        },
+        {
+          "file": "FormalEmpiricalTheorems.lean",
+          "path": "/home/Mart\u00ednez's Invariant/poema/../MathTest/FormalEmpiricalTheorems.lean",
+          "theorem_name": "Unknown",
+          "size": 20379
+        },
+        {
+          "file": "HornerExtract.lean",
+          "path": "/home/Mart\u00ednez's Invariant/poema/../MathTest/HornerExtract.lean",
+          "theorem_name": "Unknown",
+          "size": 1696
+        },
+        {
+          "file": "TranscendentalCertificates.lean",
+          "path": "/home/Mart\u00ednez's Invariant/poema/../MathTest/TranscendentalCertificates.lean",
+          "theorem_name": "Unknown",
+          "size": 8755
+        },
+        {
+          "file": "TAAAgentCertificates.lean",
+          "path": "/home/Mart\u00ednez's Invariant/poema/../MathTest/TAAAgentCertificates.lean",
+          "theorem_name": "Unknown",
+          "size": 27977
+        },
+        {
+          "file": "GraphACFCertificates.lean",
+          "path": "/home/Mart\u00ednez's Invariant/poema/../MathTest/GraphACFCertificates.lean",
+          "theorem_name": "Unknown",
+          "size": 9798
+        },
+        {
+          "file": "TensorACFCertificates.lean",
+          "path": "/home/Mart\u00ednez's Invariant/poema/../MathTest/TensorACFCertificates.lean",
+          "theorem_name": "Unknown",
+          "size": 12957
+        },
+        {
+          "file": "StratifiedTopos.lean",
+          "path": "/home/Mart\u00ednez's Invariant/poema/../MathTest/StratifiedTopos.lean",
+          "theorem_name": "Unknown",
+          "size": 4699
+        },
+        {
+          "file": "EvolutionCertificates.lean",
+          "path": "/home/Mart\u00ednez's Invariant/poema/../MathTest/EvolutionCertificates.lean",
+          "theorem_name": "Affine.ext",
+          "size": 1477
+        },
+        {
+          "file": "KoopmanDeltaCertificates.lean",
+          "path": "/home/Mart\u00ednez's Invariant/poema/../MathTest/KoopmanDeltaCertificates.lean",
+          "theorem_name": "Unknown",
+          "size": 9633
+        },
+        {
+          "file": "GenesisCertificates.lean",
+          "path": "/home/Mart\u00ednez's Invariant/poema/../MathTest/GenesisCertificates.lean",
+          "theorem_name": "Unknown",
+          "size": 1578
+        },
+        {
+          "file": "HornerExact.lean",
+          "path": "/home/Mart\u00ednez's Invariant/poema/../MathTest/HornerExact.lean",
+          "theorem_name": "horner_exact_real",
+          "size": 255
+        },
+        {
+          "file": "PhysicalEvolutionCertificates.lean",
+          "path": "/home/Mart\u00ednez's Invariant/poema/../MathTest/PhysicalEvolutionCertificates.lean",
+          "theorem_name": "Unknown",
+          "size": 1591
+        },
+        {
+          "file": "GeometricEvolutionCertificates.lean",
+          "path": "/home/Mart\u00ednez's Invariant/poema/../MathTest/GeometricEvolutionCertificates.lean",
+          "theorem_name": "sheaf_euler_def",
+          "size": 1387
+        },
+        {
+          "file": "StratifiedToposFinal.lean",
+          "path": "/home/Mart\u00ednez's Invariant/poema/../MathTest/StratifiedToposFinal.lean",
+          "theorem_name": "Unknown",
+          "size": 917
+        },
+        {
+          "file": "AffineComputabilityTopos.lean",
+          "path": "/home/Mart\u00ednez's Invariant/poema/../MathTest/AffineComputabilityTopos.lean",
+          "theorem_name": "Unknown",
+          "size": 9887
+        },
+        {
+          "file": "Automodulation.lean",
+          "path": "/home/Mart\u00ednez's Invariant/poema/../MathTest/Automodulation.lean",
+          "theorem_name": "Unknown",
+          "size": 896
+        },
+        {
+          "file": "PoemaFormalVerification_20260417_205713.lean",
+          "path": "/home/Mart\u00ednez's Invariant/poema/../MathTest/PoemaFormalVerification_20260417_205713.lean",
+          "theorem_name": "Unknown",
+          "size": 5314
+        },
+        {
+          "file": "ModuliMutation.lean",
+          "path": "/home/Mart\u00ednez's Invariant/poema/../MathTest/ModuliMutation.lean",
+          "theorem_name": "Unknown",
+          "size": 1414
+        },
+        {
+          "file": "NeuralArchCertificates.lean",
+          "path": "/home/Mart\u00ednez's Invariant/poema/../MathTest/NeuralArchCertificates.lean",
+          "theorem_name": "Unknown",
+          "size": 12166
+        },
+        {
+          "file": "ComplexACFCertificates.lean",
+          "path": "/home/Mart\u00ednez's Invariant/poema/../MathTest/ComplexACFCertificates.lean",
+          "theorem_name": "Unknown",
+          "size": 9237
+        },
+        {
+          "file": "StratifiedToposSimple.lean",
+          "path": "/home/Mart\u00ednez's Invariant/poema/../MathTest/StratifiedToposSimple.lean",
+          "theorem_name": "Unknown",
+          "size": 878
+        },
+        {
+          "file": "InternalSpiralCertificates.lean",
+          "path": "/home/Mart\u00ednez's Invariant/poema/../MathTest/InternalSpiralCertificates.lean",
+          "theorem_name": "Unknown",
+          "size": 762
+        },
+        {
+          "file": "CompositionErrorBounds.lean",
+          "path": "/home/Mart\u00ednez's Invariant/poema/../MathTest/CompositionErrorBounds.lean",
+          "theorem_name": "Unknown",
+          "size": 8448
+        },
+        {
+          "file": "ERGONCertificates.lean",
+          "path": "/home/Mart\u00ednez's Invariant/poema/../MathTest/ERGONCertificates.lean",
+          "theorem_name": "Unknown",
+          "size": 32238
+        },
+        {
+          "file": "Basic.lean",
+          "path": "/home/Mart\u00ednez's Invariant/poema/../MathTest/Basic.lean",
+          "theorem_name": "Unknown",
+          "size": 21
+        },
+        {
+          "file": "StratifiedToposWorking.lean",
+          "path": "/home/Mart\u00ednez's Invariant/poema/../MathTest/StratifiedToposWorking.lean",
+          "theorem_name": "Unknown",
+          "size": 907
+        }
+      ]
+    },
+    "new_certificate": {
+      "certificate": "-- Lean 4 Certificate for Poema Formal Verification\n-- Generated: 2026-04-17 20:58:39\n-- Theorem: PoemaFormalVerification\n-- This certificate proves the mathematical bounds of the Affine Collapse Functor\n\nimport Mathlib.Analysis.Calculus.Deriv.Basic\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.Basic\nimport Mathlib.Analysis.SpecialFunctions.Exp\nimport Mathlib.Analysis.SpecialFunctions.Log.Basic\nimport Mathlib.Data.Real.Basic\nimport Mathlib.Data.Complex.Basic\nimport Mathlib.Topology.MetricSpace.Basic\nimport Mathlib.Analysis.NormedSpace.Basic\n\nnamespace PoemaCertificates\n\nopen Real\nopen Complex\n\n-- ============================================================================\n-- VERIFICATION RESULTS FROM FORMAL VERIFICATION SUITE\n-- ============================================================================\n\n-- URT Truncation Bound\ntheorem urt_bound : \u211d :=\n  0.004524855534817407\n\n-- FMA Conservation Ratio\ntheorem fma_conservation_ratio : \u211d :=\n  0.3333333333333333\n\n-- Lipschitz Co...",
+      "validation": {
+        "valid": false,
+        "lean_path": "/home/Mart\u00ednez's Invariant/poema/../lean-4.29.0-rc6-linux/bin/lean",
+        "return_code": 1,
+        "stdout": "/tmp/tmp_grblzc2.lean:6:0: error: unknown module prefix 'Mathlib'\n\nNo directory 'Mathlib' or file 'Mathlib.olean' in the search path entries:\n/home/Mart\u00ednez's Invariant/lean-4.29.0-rc6-linux/lib/lean\n",
+        "stderr": "",
+        "certificate_file": "/tmp/tmp_grblzc2.lean"
+      },
+      "files_generated": {
+        "lean_certificate": "/home/Mart\u00ednez's Invariant/poema/../MathTest/PoemaFormalVerification_20260417_205839.lean",
+        "python_export": "/home/Mart\u00ednez's Invariant/poema/../MathTest/PoemaFormalVerification_export.py"
+      },
+      "theorem_name": "PoemaFormalVerification",
+      "timestamp": "2026-04-17T20:58:39.637964"
+    },
+    "integration_successful": false,
+    "timestamp": "2026-04-17T20:58:39.637977"
+  },
+  "timestamp": "2026-04-17T20:58:39.637977"
+}

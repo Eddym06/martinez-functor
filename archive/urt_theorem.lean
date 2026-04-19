@@ -4,7 +4,7 @@ import Mathlib.Analysis.Calculus.Taylor
 /-!
 # The Universal Reduction Theorem (URT)
 # The Primordial Invariant Conjecture
-# Author: Eddy Manuel Martínez / Formalized by AXIOM-1
+# Author: Eddy Manuel ACF / Formalized by AXIOM-1
 -/
 
 -- Definimos el tipo de una operación FMA (Fused Multiply-Add)
@@ -28,11 +28,11 @@ def Energy_E {α : Type} [Ring α] (seq : List (FMA α)) : ℕ :=
   seq.length
 
 /-- 
-  Martínez's Invariant Conjecture (The Conservation Law)
+  Índice Afín α(f) Conjecture (The Conservation Law)
   Para cualquier función f que sea expresable polinómicamente, existe una constante c
   tal que la energía computacional de f, al expandirse, es idéntica a su rep FMA (Horner).
 -/
-theorem martinez_invariant {α : Type} [CommRing α] (p : Polynomial α) :
+theorem acf_invariant {α : Type} [CommRing α] (p : Polynomial α) :
   ∃ (seq : List (FMA α)), ApplyMorphism seq x = p.eval x ∧ Energy_E seq = p.natDegree := by
   sorry -- Sketched for constructivism via Horner's rule induction
 
@@ -43,5 +43,5 @@ theorem martinez_invariant {α : Type} [CommRing α] (p : Polynomial α) :
 -/
 theorem URT_approx_epsilon (f : ℝ → ℝ) (ε : ℝ) (h_eps : ε > 0) (h_analytic: ContDiff ℝ ⊤ f) :
   ∃ (seq : List (FMA ℝ)), ∀ x ∈ Set.Icc (-1 : ℝ) 1, |f x - ApplyMorphism seq x| < ε := by
-  sorry -- Proof follows from Weierstrass approximation or Taylor Series error bounds + Martínez Invariant
+  sorry -- Proof follows from Weierstrass approximation or Taylor Series error bounds + Affine Spectral Decay Index α(f)
 

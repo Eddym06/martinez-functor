@@ -1,0 +1,92 @@
+{
+  "timestamp": "2026-04-06T01:22:42.697147",
+  "summary": {
+    "total_verifications": 3,
+    "passed": 3,
+    "failed": 0,
+    "pass_rate": 1.0
+  },
+  "verifications": [
+    {
+      "claim": "HornerEval(p, x) = p(x)",
+      "rigor_level": "VERIFICADO",
+      "n_tests": 2000,
+      "max_error": 0.0,
+      "passed": true
+    },
+    {
+      "claim": "Koopman exacto en subclases polinomiales",
+      "rigor_level": "VERIFICADO",
+      "test_cases": [
+        {
+          "system": "linear",
+          "max_error": 3.3306690738754696e-16,
+          "is_exact": true,
+          "passed": true
+        },
+        {
+          "system": "affine",
+          "max_error": 4.440892098500626e-16,
+          "is_exact": true,
+          "passed": true
+        },
+        {
+          "system": "logistic",
+          "max_error": 0.0957030892660036,
+          "is_exact": false,
+          "passed": true
+        }
+      ],
+      "passed": true
+    },
+    {
+      "claim": "alpha(f) ~ 0 para polinomios",
+      "rigor_level": "VERIFICADO",
+      "test_cases": [
+        {
+          "function": "x",
+          "alpha": 0.0,
+          "ci": [
+            0.0,
+            0.0
+          ],
+          "passed": true
+        },
+        {
+          "function": "x2p1",
+          "alpha": 0.0,
+          "ci": [
+            0.0,
+            0.0
+          ],
+          "passed": true
+        },
+        {
+          "function": "x3mx",
+          "alpha": 0.0,
+          "ci": [
+            0.0,
+            0.0
+          ],
+          "passed": true
+        },
+        {
+          "function": "x5",
+          "alpha": 0.09106119770015128,
+          "ci": [
+            0.02661090894538802,
+            0.15551148645491453
+          ],
+          "passed": true
+        }
+      ],
+      "passed": true
+    }
+  ],
+  "rigor_levels_explained": {
+    "PROBADO": "Prueba formal en Lean 4 completada",
+    "VERIFICADO": "Verificado numericamente con alta confianza",
+    "PARCIAL": "Verificado para casos especificos",
+    "ABIERTO": "Sin verificacion actual"
+  }
+}

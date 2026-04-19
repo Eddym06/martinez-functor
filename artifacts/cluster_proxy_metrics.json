@@ -1,0 +1,11 @@
+{
+  "mode": "single-process",
+  "world_size": 1,
+  "device": "cuda:0",
+  "baseline_params": 2099712,
+  "phi_params": 1050112,
+  "baseline_step_ms": 10.67219264950836,
+  "phi_step_ms": 1.256519099115394,
+  "baseline_peak_mem_mb": 60.55517578125,
+  "phi_peak_mem_mb": 52.54931640625
+}

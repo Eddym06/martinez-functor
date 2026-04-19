@@ -1,0 +1,156 @@
+{
+  "schema": "periodic-cluster-plan-v1",
+  "items": [
+    {
+      "case": "lorenz",
+      "domain": "fluids",
+      "family": "fast",
+      "policy": {
+        "degree": 16,
+        "precision": "fp32",
+        "observable_family": "polynomial",
+        "max_dimension": 32,
+        "rank_budget": "low"
+      },
+      "drift_flag": false
+    },
+    {
+      "case": "stiff_two_scale",
+      "domain": "fluids",
+      "family": "fast",
+      "policy": {
+        "degree": 16,
+        "precision": "fp64",
+        "observable_family": "polynomial",
+        "max_dimension": 40,
+        "rank_budget": "low",
+        "stability_mode": "conservative"
+      },
+      "drift_flag": true
+    },
+    {
+      "case": "rossler",
+      "domain": "fluids",
+      "family": "slow",
+      "policy": {
+        "degree": 64,
+        "precision": "fp64",
+        "observable_family": "rich-lifted",
+        "max_dimension": 72,
+        "rank_budget": "high",
+        "stability_mode": "conservative"
+      },
+      "drift_flag": true
+    },
+    {
+      "case": "linear_stable",
+      "domain": "general",
+      "family": "fast",
+      "policy": {
+        "degree": 16,
+        "precision": "fp64",
+        "observable_family": "polynomial",
+        "max_dimension": 40,
+        "rank_budget": "low",
+        "stability_mode": "conservative"
+      },
+      "drift_flag": true
+    },
+    {
+      "case": "exp_decay",
+      "domain": "general",
+      "family": "fast",
+      "policy": {
+        "degree": 16,
+        "precision": "fp64",
+        "observable_family": "polynomial",
+        "max_dimension": 40,
+        "rank_budget": "low",
+        "stability_mode": "conservative"
+      },
+      "drift_flag": true
+    },
+    {
+      "case": "logistic",
+      "domain": "general",
+      "family": "algebraic",
+      "policy": {
+        "degree": 32,
+        "precision": "fp64",
+        "observable_family": "hybrid-polynomial-trig",
+        "max_dimension": 56,
+        "rank_budget": "medium",
+        "stability_mode": "conservative"
+      },
+      "drift_flag": true
+    },
+    {
+      "case": "relu",
+      "domain": "signals",
+      "family": "fast",
+      "policy": {
+        "degree": 16,
+        "precision": "fp32",
+        "observable_family": "polynomial",
+        "max_dimension": 32,
+        "rank_budget": "low"
+      },
+      "drift_flag": false
+    },
+    {
+      "case": "sin",
+      "domain": "signals",
+      "family": "fast",
+      "policy": {
+        "degree": 16,
+        "precision": "fp32",
+        "observable_family": "polynomial",
+        "max_dimension": 32,
+        "rank_budget": "low"
+      },
+      "drift_flag": false
+    },
+    {
+      "case": "rotation",
+      "domain": "signals",
+      "family": "algebraic",
+      "policy": {
+        "degree": 32,
+        "precision": "fp64",
+        "observable_family": "hybrid-polynomial-trig",
+        "max_dimension": 56,
+        "rank_budget": "medium",
+        "stability_mode": "conservative"
+      },
+      "drift_flag": true
+    },
+    {
+      "case": "step",
+      "domain": "signals",
+      "family": "algebraic",
+      "policy": {
+        "degree": 32,
+        "precision": "fp64",
+        "observable_family": "hybrid-polynomial-trig",
+        "max_dimension": 56,
+        "rank_budget": "medium",
+        "stability_mode": "conservative"
+      },
+      "drift_flag": true
+    },
+    {
+      "case": "square_wave",
+      "domain": "signals",
+      "family": "algebraic",
+      "policy": {
+        "degree": 32,
+        "precision": "fp64",
+        "observable_family": "hybrid-polynomial-trig",
+        "max_dimension": 56,
+        "rank_budget": "medium",
+        "stability_mode": "conservative"
+      },
+      "drift_flag": true
+    }
+  ]
+}

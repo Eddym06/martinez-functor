@@ -1,10 +1,10 @@
 import torch
-from martinez import MartinezFunctor
+from acf import ACFFunctor
 
 def test_api():
-    print("--- Probando Martinez Functor API ---")
+    print("--- Probando Affine Collapse Functor (ACF) API ---")
     # Inicializando el objeto
-    phi = MartinezFunctor(target_dim_d=512, precision="fp32")
+    phi = ACFFunctor(target_dim_d=512, precision="fp32")
     
     # Probando la reducción simbólica en los tres caminos
     print("\n1. Testing Path Routing:")

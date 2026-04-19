@@ -1,10 +1,10 @@
 from setuptools import setup, find_packages
 
 setup(
-    name="martinez-functor",
+    name="acf-functor",
     version="0.1.0",
     description="Mathematical Core Engine for Universal Reduction Theorem",
-    author="Eddy Martinez",
+    author="Eddy ACF",
     packages=find_packages(),
     install_requires=[
         "torch>=2.0.0",

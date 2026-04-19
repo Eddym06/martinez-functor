@@ -1,0 +1,10 @@
+/home/Martínez's Invariant/gideon_core/target/release/deps/autocfg-7f9bbf0ec7525e8e.d: /home/eddym/.cache/puccinialin/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/autocfg-1.5.0/src/lib.rs /home/eddym/.cache/puccinialin/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/autocfg-1.5.0/src/error.rs /home/eddym/.cache/puccinialin/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/autocfg-1.5.0/src/rustc.rs /home/eddym/.cache/puccinialin/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/autocfg-1.5.0/src/version.rs
+
+/home/Martínez's Invariant/gideon_core/target/release/deps/libautocfg-7f9bbf0ec7525e8e.rlib: /home/eddym/.cache/puccinialin/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/autocfg-1.5.0/src/lib.rs /home/eddym/.cache/puccinialin/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/autocfg-1.5.0/src/error.rs /home/eddym/.cache/puccinialin/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/autocfg-1.5.0/src/rustc.rs /home/eddym/.cache/puccinialin/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/autocfg-1.5.0/src/version.rs
+
+/home/Martínez's Invariant/gideon_core/target/release/deps/libautocfg-7f9bbf0ec7525e8e.rmeta: /home/eddym/.cache/puccinialin/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/autocfg-1.5.0/src/lib.rs /home/eddym/.cache/puccinialin/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/autocfg-1.5.0/src/error.rs /home/eddym/.cache/puccinialin/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/autocfg-1.5.0/src/rustc.rs /home/eddym/.cache/puccinialin/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/autocfg-1.5.0/src/version.rs
+
+/home/eddym/.cache/puccinialin/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/autocfg-1.5.0/src/lib.rs:
+/home/eddym/.cache/puccinialin/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/autocfg-1.5.0/src/error.rs:
+/home/eddym/.cache/puccinialin/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/autocfg-1.5.0/src/rustc.rs:
+/home/eddym/.cache/puccinialin/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/autocfg-1.5.0/src/version.rs:

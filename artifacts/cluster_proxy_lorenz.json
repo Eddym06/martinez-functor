@@ -1,0 +1,17 @@
+{
+  "mode": "single-process",
+  "world_size": 1,
+  "device": "cuda:0",
+  "baseline_params": 1062412,
+  "phi_params": 590912,
+  "baseline_step_ms": 23.351165548956487,
+  "phi_step_ms": 1.277391248731874,
+  "baseline_peak_mem_mb": 40.02099609375,
+  "phi_peak_mem_mb": 37.69140625,
+  "profile_name": "fast-lorenz",
+  "degree": 16,
+  "max_dimension": 32,
+  "precision": "fp32",
+  "observable_family": "polynomial",
+  "rank_budget": "low"
+}

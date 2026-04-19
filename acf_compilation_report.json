@@ -1,0 +1,160 @@
+{
+  "pipeline_config": {
+    "quantum_optimizations": true,
+    "auto_proof_generation": true,
+    "target_precision": "DOUBLE"
+  },
+  "compilation_results": {
+    "input_size": 180,
+    "ast_parsed": true,
+    "math_expressions_found": 5,
+    "optimizations_applied": 15,
+    "certificates_generated": [],
+    "discoveries_made": [
+      {
+        "pattern_id": "sym_odd_8311",
+        "expression": "f(x) = -f(-x)",
+        "confidence": 1.0,
+        "category": "SYMMETRY_PROPERTY",
+        "complexity": 1.63
+      },
+      {
+        "pattern_id": "sym_periodic \u03c0_6695",
+        "expression": "f(x) = f(x + \u03c0)",
+        "confidence": 1.0,
+        "category": "SYMMETRY_PROPERTY",
+        "complexity": 1.65
+      },
+      {
+        "pattern_id": "sym_periodic 2\u03c0_9597",
+        "expression": "f(x) = f(x + 2\u03c0)",
+        "confidence": 1.0,
+        "category": "SYMMETRY_PROPERTY",
+        "complexity": 1.66
+      },
+      {
+        "pattern_id": "const_0_5806",
+        "expression": "f(0) = 0",
+        "confidence": 1.0,
+        "category": "NUMERICAL_CONSTANT",
+        "complexity": 2.08
+      },
+      {
+        "pattern_id": "const_0_7591",
+        "expression": "f(\u03c0) = 0",
+        "confidence": 1.0,
+        "category": "NUMERICAL_CONSTANT",
+        "complexity": 2.08
+      },
+      {
+        "pattern_id": "sym_odd_8311",
+        "expression": "f(x) = -f(-x)",
+        "confidence": 1.0,
+        "category": "SYMMETRY_PROPERTY",
+        "complexity": 1.63
+      },
+      {
+        "pattern_id": "sym_periodic 2\u03c0_9597",
+        "expression": "f(x) = f(x + 2\u03c0)",
+        "confidence": 1.0,
+        "category": "SYMMETRY_PROPERTY",
+        "complexity": 1.66
+      },
+      {
+        "pattern_id": "const_0_5806",
+        "expression": "f(0) = 0",
+        "confidence": 1.0,
+        "category": "NUMERICAL_CONSTANT",
+        "complexity": 2.08
+      },
+      {
+        "pattern_id": "const_0_7591",
+        "expression": "f(\u03c0) = 0",
+        "confidence": 1.0,
+        "category": "NUMERICAL_CONSTANT",
+        "complexity": 2.08
+      },
+      {
+        "pattern_id": "sym_even_3105",
+        "expression": "f(x) = f(-x)",
+        "confidence": 1.0,
+        "category": "SYMMETRY_PROPERTY",
+        "complexity": 1.62
+      },
+      {
+        "pattern_id": "sym_periodic 2\u03c0_9597",
+        "expression": "f(x) = f(x + 2\u03c0)",
+        "confidence": 1.0,
+        "category": "SYMMETRY_PROPERTY",
+        "complexity": 1.66
+      },
+      {
+        "pattern_id": "const_1_5806",
+        "expression": "f(0) = 1",
+        "confidence": 1.0,
+        "category": "NUMERICAL_CONSTANT",
+        "complexity": 2.08
+      },
+      {
+        "pattern_id": "sym_even_3105",
+        "expression": "f(x) = f(-x)",
+        "confidence": 1.0,
+        "category": "SYMMETRY_PROPERTY",
+        "complexity": 1.62
+      },
+      {
+        "pattern_id": "const_0_5806",
+        "expression": "f(0) = 0",
+        "confidence": 1.0,
+        "category": "NUMERICAL_CONSTANT",
+        "complexity": 2.08
+      },
+      {
+        "pattern_id": "const_1_6293",
+        "expression": "f(1) = 1",
+        "confidence": 1.0,
+        "category": "NUMERICAL_CONSTANT",
+        "complexity": 2.08
+      }
+    ],
+    "theorems_generated": 0,
+    "theorems_proved": 0,
+    "quantum_optimizations": 3,
+    "errors": [],
+    "warnings": [],
+    "performance_metrics": {
+      "compilation_time": 31.392771244049072,
+      "optimizations_applied": 15,
+      "patterns_discovered": 15,
+      "theorems_generated": 0,
+      "cache_hits": 0,
+      "quantum_optimizations": 3,
+      "error_rate": 0.0
+    },
+    "execution_time": 31.39277219772339,
+    "quantum_discoveries": 0
+  },
+  "performance_metrics": {
+    "compilation_time": 31.392771244049072,
+    "optimizations_applied": 15,
+    "patterns_discovered": 15,
+    "theorems_generated": 0,
+    "cache_hits": 0,
+    "quantum_optimizations": 3,
+    "error_rate": 0.0
+  },
+  "discoveries_summary": {
+    "total": 15,
+    "by_category": {
+      "SYMMETRY_PROPERTY": 8,
+      "NUMERICAL_CONSTANT": 7
+    },
+    "average_confidence": 1.0,
+    "provable_count": 15
+  },
+  "optimizations_summary": {
+    "total_applied": 15,
+    "quantum_optimizations": 3,
+    "cache_efficiency": 0.0
+  }
+}

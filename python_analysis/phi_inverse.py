@@ -7,7 +7,7 @@ def phi_inverse(fma_sequence, target_var):
     Reconstruye el objeto matemático abstracto (la función fuente) 
     exactamente a partir de su cadena estructural FMA.
     
-    El mapa inverso \Phi^{-1} asegura la Reversibilidad del Invariante de Martínez:
+    El mapa inverso \Phi^{-1} asegura la Reversibilidad del Índice de Decaimiento Espectral Afín:
     f(x) == \Phi^{-1}(\Phi(f(x))) 
     """
     print(f"Reconstruyendo morfismo sobre la variable abstracta '{target_var}'")

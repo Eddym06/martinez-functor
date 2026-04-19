@@ -1,0 +1,130 @@
+{
+  "timestamp_utc": "2026-04-06T18:24:40.580790+00:00",
+  "consistency_threshold": 0.5,
+  "skip_geometric": true,
+  "fast_mode": true,
+  "summary": {
+    "n_functions": 4,
+    "n_consistent": 3,
+    "consistency_rate": 0.75,
+    "max_discrepancy_global": 0.8759784438720023,
+    "mean_discrepancy_global": 0.4474663028289424
+  },
+  "results": [
+    {
+      "function": "poly_cubic",
+      "domain": [
+        -1.0,
+        1.0
+      ],
+      "alpha_combinatorial": 0.0,
+      "alpha_spectral": 0.0,
+      "alpha_geometric": NaN,
+      "alpha_comb_ci": [
+        0.0,
+        0.0
+      ],
+      "alpha_spec_ci": [
+        0.0,
+        0.0
+      ],
+      "alpha_geo_ci": [
+        NaN,
+        NaN
+      ],
+      "definitions_consistent": true,
+      "max_discrepancy": 0.0,
+      "best_estimate": 0.0,
+      "best_definition": "geometric",
+      "n_fma_evaluations": 4,
+      "computation_time_s": 0.10409379005432129
+    },
+    {
+      "function": "sin",
+      "domain": [
+        -1.5707963267948966,
+        1.5707963267948966
+      ],
+      "alpha_combinatorial": 0.4191738249941722,
+      "alpha_spectral": 0.0,
+      "alpha_geometric": NaN,
+      "alpha_comb_ci": [
+        0.1092317164138889,
+        0.7291159335744555
+      ],
+      "alpha_spec_ci": [
+        0.0,
+        0.0
+      ],
+      "alpha_geo_ci": [
+        NaN,
+        NaN
+      ],
+      "definitions_consistent": true,
+      "max_discrepancy": 0.4191738249941722,
+      "best_estimate": 0.4191738249941722,
+      "best_definition": "combinatorial",
+      "n_fma_evaluations": 4,
+      "computation_time_s": 0.09208822250366211
+    },
+    {
+      "function": "exp",
+      "domain": [
+        -1.0,
+        1.0
+      ],
+      "alpha_combinatorial": 0.49471294244959524,
+      "alpha_spectral": 0.0,
+      "alpha_geometric": NaN,
+      "alpha_comb_ci": [
+        0.42752174707908824,
+        0.5619041378201022
+      ],
+      "alpha_spec_ci": [
+        0.0,
+        0.0
+      ],
+      "alpha_geo_ci": [
+        NaN,
+        NaN
+      ],
+      "definitions_consistent": true,
+      "max_discrepancy": 0.49471294244959524,
+      "best_estimate": 0.49471294244959524,
+      "best_definition": "combinatorial",
+      "n_fma_evaluations": 4,
+      "computation_time_s": 0.09551429748535156
+    },
+    {
+      "function": "tanh",
+      "domain": [
+        -2.0,
+        2.0
+      ],
+      "alpha_combinatorial": 0.8759784438720023,
+      "alpha_spectral": 0.0,
+      "alpha_geometric": NaN,
+      "alpha_comb_ci": [
+        0.7465580291840027,
+        1.0053988585600018
+      ],
+      "alpha_spec_ci": [
+        0.0,
+        0.0
+      ],
+      "alpha_geo_ci": [
+        NaN,
+        NaN
+      ],
+      "definitions_consistent": false,
+      "max_discrepancy": 0.8759784438720023,
+      "best_estimate": 0.8759784438720023,
+      "best_definition": "combinatorial",
+      "n_fma_evaluations": 4,
+      "computation_time_s": 0.08662605285644531
+    }
+  ],
+  "interpretation": {
+    "note": "This report quantifies empirical alignment between alpha definitions; it is not a formal proof of equivalence."
+  }
+}

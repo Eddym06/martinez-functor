@@ -1,0 +1,14 @@
+/home/Martínez's Invariant/gideon_core/target/release/deps/pyo3_build_config-48e6ed84b620b2be.d: /home/eddym/.cache/puccinialin/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/pyo3-build-config-0.22.6/src/lib.rs /home/eddym/.cache/puccinialin/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/pyo3-build-config-0.22.6/src/errors.rs /home/eddym/.cache/puccinialin/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/pyo3-build-config-0.22.6/src/impl_.rs /home/Martínez's\ Invariant/gideon_core/target/release/build/pyo3-build-config-a7122d8593d9c16b/out/pyo3-build-config-file.txt /home/Martínez's\ Invariant/gideon_core/target/release/build/pyo3-build-config-a7122d8593d9c16b/out/pyo3-build-config.txt
+
+/home/Martínez's Invariant/gideon_core/target/release/deps/libpyo3_build_config-48e6ed84b620b2be.rlib: /home/eddym/.cache/puccinialin/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/pyo3-build-config-0.22.6/src/lib.rs /home/eddym/.cache/puccinialin/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/pyo3-build-config-0.22.6/src/errors.rs /home/eddym/.cache/puccinialin/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/pyo3-build-config-0.22.6/src/impl_.rs /home/Martínez's\ Invariant/gideon_core/target/release/build/pyo3-build-config-a7122d8593d9c16b/out/pyo3-build-config-file.txt /home/Martínez's\ Invariant/gideon_core/target/release/build/pyo3-build-config-a7122d8593d9c16b/out/pyo3-build-config.txt
+
+/home/Martínez's Invariant/gideon_core/target/release/deps/libpyo3_build_config-48e6ed84b620b2be.rmeta: /home/eddym/.cache/puccinialin/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/pyo3-build-config-0.22.6/src/lib.rs /home/eddym/.cache/puccinialin/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/pyo3-build-config-0.22.6/src/errors.rs /home/eddym/.cache/puccinialin/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/pyo3-build-config-0.22.6/src/impl_.rs /home/Martínez's\ Invariant/gideon_core/target/release/build/pyo3-build-config-a7122d8593d9c16b/out/pyo3-build-config-file.txt /home/Martínez's\ Invariant/gideon_core/target/release/build/pyo3-build-config-a7122d8593d9c16b/out/pyo3-build-config.txt
+
+/home/eddym/.cache/puccinialin/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/pyo3-build-config-0.22.6/src/lib.rs:
+/home/eddym/.cache/puccinialin/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/pyo3-build-config-0.22.6/src/errors.rs:
+/home/eddym/.cache/puccinialin/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/pyo3-build-config-0.22.6/src/impl_.rs:
+/home/Martínez's\ Invariant/gideon_core/target/release/build/pyo3-build-config-a7122d8593d9c16b/out/pyo3-build-config-file.txt:
+/home/Martínez's\ Invariant/gideon_core/target/release/build/pyo3-build-config-a7122d8593d9c16b/out/pyo3-build-config.txt:
+
+# env-dep:CARGO_PKG_VERSION=0.22.6
+# env-dep:OUT_DIR=/home/Martínez's Invariant/gideon_core/target/release/build/pyo3-build-config-a7122d8593d9c16b/out

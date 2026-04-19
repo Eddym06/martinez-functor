@@ -1,0 +1,47 @@
+[package]
+name = "gideon_core"
+version = "1.0.0"
+edition = "2021"
+description = "GideonEngine core — concurrency-safe orchestration layer for Poema"
+authors = ["Poema Project"]
+license = "MIT"
+
+# Produce both a cdylib (Python extension) and rlib (for tests/benchmarks)
+[lib]
+name = "gideon_core"
+crate-type = ["cdylib", "rlib"]
+
+[dependencies]
+# Python bindings — pyo3 with abi3 for broad interpreter compatibility
+pyo3 = { version = "0.22", features = ["extension-module", "abi3-py39"] }
+
+# Parallel phase execution — Rayon provides a safe thread pool
+rayon = "1.10"
+
+# Serialization (telemetry DB, fold cache, profiles)
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+
+# Faster Mutex/RwLock than std (less contention in hot paths)
+parking_lot = "0.12"
+
+# Clock for timing (ns-precision, no syscall overhead)
+# Use std::time::Instant instead — zero deps
+
+[build-dependencies]
+# cc crate compiles C backends (AVX-512, GEMM) during `cargo build`
+cc = { version = "1.2", features = ["parallel"] }
+
+[features]
+default = []
+# Enable AVX-512 C kernels (requires hardware support + GCC ≥ 9)
+avx512 = []
+
+[profile.release]
+opt-level = 3
+lto = "thin"
+codegen-units = 1
+panic = "abort"          # No unwinding — smaller binary, faster
+
+[profile.dev]
+opt-level = 1            # Faster than opt-level=0 for numeric code in tests

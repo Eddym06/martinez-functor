@@ -1,13 +1,13 @@
 import Mathlib.Data.Real.Basic
 
-namespace MartinezTopos
+namespace ACFTopos
 
 /-- El espacio genérico computacional y su límite representacional -/
 def Comp := ℝ → ℝ
 
 -- Mantenemos los axiomas opacos fundacionales (no calculables mecánicamente, asumidos)
-opaque IsFMA : Comp → Prop
-opaque Phi : Comp → Comp
+axiom IsFMA : Comp → Prop
+axiom Phi : Comp → Comp
 
 /--
   INTRODUCCIÓN A LA LÓGICA DE MUTACIÓN:
@@ -16,11 +16,11 @@ opaque Phi : Comp → Comp
 -/
 
 -- M representa el conjunto de mapeos FMA posibles, el Espacio de Moduli
-opaque ModuliSpace (f : Comp) : Type
+axiom ModuliSpace (f : Comp) : Type
 
 -- Función geodésica: Si el objeto no es FMA exacto, entonces existe necesariamente 
 -- un camino de compresión geodésica en el Espacio de Moduli
-opaque geodesic_compression (f : Comp) : ¬ IsFMA f → ModuliSpace f
+axiom geodesic_compression (f : Comp) : ¬ IsFMA f → ModuliSpace f
 
 /--
   TEOREMA 3: LA MUTACIÓN ESTRUCTURAL POR PRESIÓN LÓGICA
@@ -33,4 +33,4 @@ theorem trigger_moduli_mutation (f : Comp) (h_not_fma : ¬ IsFMA f) : ModuliSpac
   -- obliga al Functor a buscar la curva óptima en el Espacio de Moduli.
   exact geodesic_compression f h_not_fma
 
-end MartinezTopos
+end ACFTopos

@@ -33,7 +33,7 @@ if __name__ == "__main__":
     
     print("═" * 60)
     print("AXIOM-1: Universal Reduction Morphism Discovery")
-    print("Primordial Invariant Conjecture — Eddy Manuel Martínez")
+    print("Primordial Invariant Conjecture — Eddy Manuel ACF")
     print("═" * 60)
     
     for f in test_functions:

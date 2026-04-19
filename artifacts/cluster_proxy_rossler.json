@@ -1,0 +1,17 @@
+{
+  "mode": "single-process",
+  "world_size": 1,
+  "device": "cuda:0",
+  "baseline_params": 3985712,
+  "phi_params": 2214512,
+  "baseline_step_ms": 12.174516249797307,
+  "phi_step_ms": 11.654416349483654,
+  "baseline_peak_mem_mb": 194.814453125,
+  "phi_peak_mem_mb": 166.29541015625,
+  "profile_name": "slow-rossler",
+  "degree": 64,
+  "max_dimension": 72,
+  "precision": "fp64",
+  "observable_family": "rich-lifted",
+  "rank_budget": "high"
+}

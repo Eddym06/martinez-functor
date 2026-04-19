@@ -1,0 +1,17 @@
+{
+  "mode": "single-process",
+  "world_size": 1,
+  "device": "cuda:0",
+  "baseline_params": 2479987,
+  "phi_params": 1378112,
+  "baseline_step_ms": 9.77779935055878,
+  "phi_step_ms": 1.2654267498874106,
+  "baseline_peak_mem_mb": 123.12646484375,
+  "phi_peak_mem_mb": 108.47119140625,
+  "profile_name": "algebraic-logistic",
+  "degree": 32,
+  "max_dimension": 56,
+  "precision": "fp64",
+  "observable_family": "hybrid-polynomial-trig",
+  "rank_budget": "medium"
+}
