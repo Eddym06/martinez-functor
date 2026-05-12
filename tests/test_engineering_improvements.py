@@ -265,7 +265,8 @@ class TestVerilogBackend:
         b = self._backend(str(tmp_path))
         result = b.compile(fma, None, module_name="sva_overflow")
         sva_path = os.path.join(str(tmp_path), "sva_overflow_assertions.sva")
-        sva_content = open(sva_path).read()
+        with open(sva_path, encoding="utf-8") as handle:
+            sva_content = handle.read()
         assert "no_overflow" in sva_content
 
     def test_no_callable_fn(self, tmp_path):

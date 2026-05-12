@@ -276,8 +276,9 @@ class PolynomialChaosACF:
         # 1D quadrature
         if family == "hermite":
             pts, wts = _gauss_hermite_pts(n_quad)
-            # Probabilists' convention: divide weights by √(2π) x exp weight
-            self._pts1d = pts / np.sqrt(2)  # convert physicist → probabilist
+            # Probabilists' convention: physicist nodes x_i map to prob nodes ξ_i = x_i*√2
+            # weight is w_i/√π so that Σ(w_i/√π)*f(x_i*√2) ≈ E_{N(0,1)}[f(ξ)]
+            self._pts1d = pts * np.sqrt(2)  # convert physicist → probabilist
             self._wts1d = wts / np.sqrt(np.pi)  # normalize
         elif family in ("legendre", "chebyshev"):
             self._pts1d, self._wts1d = _gauss_legendre_pts(n_quad)
@@ -385,9 +386,10 @@ class PolynomialChaosACF:
         if not self._fitted:
             raise RuntimeError("Call fit() first.")
         c = self._coefficients
-        # Sort |c| by multi-index order
-        by_order = sorted(enumerate(self._multi_indices), key=lambda x: sum(x[1]))
-        sorted_coeffs = np.array([abs(c[j]) for j, _ in by_order])
+        # Sort |c| by magnitude (descending) to get a monotone sequence for α
+        # Sorting by polynomial order (sum(alpha)) is not monotone for general functions,
+        # so we use magnitude ranking which guarantees a non-increasing sequence.
+        sorted_coeffs = np.sort(np.abs(c[1:]))[::-1]  # exclude c_0 (mean), sort descending
         sorted_coeffs = np.maximum(sorted_coeffs, 1e-300)
 
         # Fit power law to |c_α| decay

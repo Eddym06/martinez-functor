@@ -131,6 +131,10 @@ from .ergon import (
     ERGONReport,
     SRBMeasure,
 )
+from .formal_verification import (
+    ComplexDomainValidator,
+    StratifiedToposValidator,
+)
 
 __version__ = "2.4.0"
 
@@ -222,4 +226,8 @@ __all__ = [
     "ERGONAgent",
     "ERGONReport",
     "SRBMeasure",
+    # Epic 1: Complex domain unitarity validation
+    "ComplexDomainValidator",
+    # Epic 2: StratifiedTopos Lean-proof integration
+    "StratifiedToposValidator",
 ]

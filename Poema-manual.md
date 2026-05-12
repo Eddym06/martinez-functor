@@ -6485,7 +6485,6 @@ print(f"Delegar a TAA:       {report.handoff_to_taa}")
 | Axioma | Descripción | Bloqueado por |
 |---|---|---|
 | ERG-1 | ∃ μ_SRB: ℒμ* = μ* | Condiciones de Pesin en Mathlib |
-| ERG-6a | Fórmula de Pesin completa | Teoría de variedades invariantes en Lean 4 |
 | ERG-8 | Descomposición ergódica | Teorema de Rokhlin en Mathlib |
 
 ### 5.3 Independencia y Cooperación
@@ -6578,8 +6577,8 @@ import MathTest.ERGONCertificates
 
 ```
 TAA: 11 teoremas ✓ proved, 2 axioms (TAA-3a, TAA-6)
-ERGON: 12 teoremas ✓ proved, 5 axioms (ERG-1, ERG-5, ERG-6a, ERG-7a, ERG-8)
-Objetivo principal: ERG-6a (Fórmula de Pesin) — cierra también TAA-6
+ERGON: 13 teoremas/certificados derivados ✓, 4 axioms principales (ERG-1, ERG-5, ERG-7a, ERG-8)
+Objetivo principal: ERG-5 (saturación SRB) — desde ahí se recupera ERG-6a y se acerca TAA-6
 ```
 
 *Manual técnico Poema v1.4.0 — Martínez's Invariant, Mayo 2026*

@@ -596,7 +596,7 @@ def compile_with_acf_pipeline(poema_code: str, **kwargs) -> Dict[str, Any]:
     Returns:
         Reporte de compilación
     """
-    pipeline = CompilationPipeline.create_pipeline()
+    pipeline = CompilationPipeline.create_advanced_pipeline()
     return pipeline.compile_poema_code(poema_code, **kwargs)
 
 

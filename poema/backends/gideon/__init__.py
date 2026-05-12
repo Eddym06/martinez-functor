@@ -33,6 +33,26 @@ from .gideon_autotune import GideonHardwareProfiler, HardwareCapabilities
 from .ml_dispatcher import GideonTelemetry, MLDispatcher, ExecutionRecord
 from .koopman_gpu import KoopmanGPU, KoopmanGPUResult
 from .ns_acf_coupled import CoupledNSACFSolver, CoupledNSACFConfig, AdaptiveMeshController
+from .turbulence_thermostat import (
+    MultiOracleAMR,
+    CascadeAccelerator,
+    BayesianArbiter,
+    KoopmanOracle,
+    RuelleOracle,
+    ErgonOracle,
+    ThermodynamicOracle,
+    SpectralOracle,
+    OracleVote,
+    ThermostatState,
+)
+from .copoem_spectral_designer import (
+    CoPoemSpectralDesigner,
+    CoPoemOracle,
+    DesignerConfig,
+    SpectralDesignState,
+)
+from .ns3d_hit_solver import HIT3DSolver, HIT3DConfig
+from .rom_executor import GideonROMExecutor, ROMExecutionResult, EnsembleResult
 
 __all__ = [
     "GideonEngine",
@@ -62,7 +82,26 @@ __all__ = [
     "CoupledNSACFSolver",
     "CoupledNSACFConfig",
     "AdaptiveMeshController",
+    "MultiOracleAMR",
+    "CascadeAccelerator",
+    "BayesianArbiter",
+    "KoopmanOracle",
+    "RuelleOracle",
+    "ErgonOracle",
+    "ThermodynamicOracle",
+    "SpectralOracle",
+    "OracleVote",
+    "ThermostatState",
+    "CoPoemSpectralDesigner",
+    "CoPoemOracle",
+    "DesignerConfig",
+    "SpectralDesignState",
+    "HIT3DSolver",
+    "HIT3DConfig",
+    "GideonROMExecutor",
+    "ROMExecutionResult",
+    "EnsembleResult",
 ]
 
-__version__ = "1.3.0"
+__version__ = "1.6.0"
 __engine__ = "Gideon"

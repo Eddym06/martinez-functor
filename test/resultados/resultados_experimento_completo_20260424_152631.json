@@ -1,0 +1,308 @@
+{
+  "metadata": {
+    "total_tests": 45,
+    "successful_tests": 0,
+    "timestamp": "2026-04-24T15:26:31.524993",
+    "scenarios": [
+      "swiss_roll",
+      "s_curve",
+      "high_dim_noise",
+      "outliers",
+      "mnist_like",
+      "linear",
+      "nonlinear_mixture",
+      "sparse_high_dim",
+      "correlated_noise"
+    ],
+    "seeds": [
+      42,
+      123,
+      456,
+      789,
+      999
+    ]
+  },
+  "results": [
+    {
+      "scenario": "swiss_roll",
+      "seed": 42,
+      "error": "CCDEngine.__init__() got an unexpected keyword argument 'n_components'",
+      "timestamp": "2026-04-24T15:26:23.190888"
+    },
+    {
+      "scenario": "swiss_roll",
+      "seed": 123,
+      "error": "CCDEngine.__init__() got an unexpected keyword argument 'n_components'",
+      "timestamp": "2026-04-24T15:26:23.314254"
+    },
+    {
+      "scenario": "swiss_roll",
+      "seed": 456,
+      "error": "CCDEngine.__init__() got an unexpected keyword argument 'n_components'",
+      "timestamp": "2026-04-24T15:26:23.424231"
+    },
+    {
+      "scenario": "swiss_roll",
+      "seed": 789,
+      "error": "CCDEngine.__init__() got an unexpected keyword argument 'n_components'",
+      "timestamp": "2026-04-24T15:26:23.514146"
+    },
+    {
+      "scenario": "swiss_roll",
+      "seed": 999,
+      "error": "CCDEngine.__init__() got an unexpected keyword argument 'n_components'",
+      "timestamp": "2026-04-24T15:26:23.623833"
+    },
+    {
+      "scenario": "s_curve",
+      "seed": 42,
+      "error": "CCDEngine.__init__() got an unexpected keyword argument 'n_components'",
+      "timestamp": "2026-04-24T15:26:23.712200"
+    },
+    {
+      "scenario": "s_curve",
+      "seed": 123,
+      "error": "CCDEngine.__init__() got an unexpected keyword argument 'n_components'",
+      "timestamp": "2026-04-24T15:26:23.784000"
+    },
+    {
+      "scenario": "s_curve",
+      "seed": 456,
+      "error": "CCDEngine.__init__() got an unexpected keyword argument 'n_components'",
+      "timestamp": "2026-04-24T15:26:23.850739"
+    },
+    {
+      "scenario": "s_curve",
+      "seed": 789,
+      "error": "CCDEngine.__init__() got an unexpected keyword argument 'n_components'",
+      "timestamp": "2026-04-24T15:26:23.911010"
+    },
+    {
+      "scenario": "s_curve",
+      "seed": 999,
+      "error": "CCDEngine.__init__() got an unexpected keyword argument 'n_components'",
+      "timestamp": "2026-04-24T15:26:23.981859"
+    },
+    {
+      "scenario": "high_dim_noise",
+      "seed": 42,
+      "error": "CCDEngine.__init__() got an unexpected keyword argument 'n_components'",
+      "timestamp": "2026-04-24T15:26:24.197816"
+    },
+    {
+      "scenario": "high_dim_noise",
+      "seed": 123,
+      "error": "CCDEngine.__init__() got an unexpected keyword argument 'n_components'",
+      "timestamp": "2026-04-24T15:26:24.357992"
+    },
+    {
+      "scenario": "high_dim_noise",
+      "seed": 456,
+      "error": "CCDEngine.__init__() got an unexpected keyword argument 'n_components'",
+      "timestamp": "2026-04-24T15:26:24.462795"
+    },
+    {
+      "scenario": "high_dim_noise",
+      "seed": 789,
+      "error": "CCDEngine.__init__() got an unexpected keyword argument 'n_components'",
+      "timestamp": "2026-04-24T15:26:24.738405"
+    },
+    {
+      "scenario": "high_dim_noise",
+      "seed": 999,
+      "error": "CCDEngine.__init__() got an unexpected keyword argument 'n_components'",
+      "timestamp": "2026-04-24T15:26:24.859381"
+    },
+    {
+      "scenario": "outliers",
+      "seed": 42,
+      "error": "CCDEngine.__init__() got an unexpected keyword argument 'n_components'",
+      "timestamp": "2026-04-24T15:26:24.942847"
+    },
+    {
+      "scenario": "outliers",
+      "seed": 123,
+      "error": "CCDEngine.__init__() got an unexpected keyword argument 'n_components'",
+      "timestamp": "2026-04-24T15:26:25.121249"
+    },
+    {
+      "scenario": "outliers",
+      "seed": 456,
+      "error": "CCDEngine.__init__() got an unexpected keyword argument 'n_components'",
+      "timestamp": "2026-04-24T15:26:25.260090"
+    },
+    {
+      "scenario": "outliers",
+      "seed": 789,
+      "error": "CCDEngine.__init__() got an unexpected keyword argument 'n_components'",
+      "timestamp": "2026-04-24T15:26:25.412422"
+    },
+    {
+      "scenario": "outliers",
+      "seed": 999,
+      "error": "CCDEngine.__init__() got an unexpected keyword argument 'n_components'",
+      "timestamp": "2026-04-24T15:26:26.875467"
+    },
+    {
+      "scenario": "mnist_like",
+      "seed": 42,
+      "error": "CCDEngine.__init__() got an unexpected keyword argument 'n_components'",
+      "timestamp": "2026-04-24T15:26:27.068609"
+    },
+    {
+      "scenario": "mnist_like",
+      "seed": 123,
+      "error": "CCDEngine.__init__() got an unexpected keyword argument 'n_components'",
+      "timestamp": "2026-04-24T15:26:27.253577"
+    },
+    {
+      "scenario": "mnist_like",
+      "seed": 456,
+      "error": "CCDEngine.__init__() got an unexpected keyword argument 'n_components'",
+      "timestamp": "2026-04-24T15:26:27.368895"
+    },
+    {
+      "scenario": "mnist_like",
+      "seed": 789,
+      "error": "CCDEngine.__init__() got an unexpected keyword argument 'n_components'",
+      "timestamp": "2026-04-24T15:26:27.520248"
+    },
+    {
+      "scenario": "mnist_like",
+      "seed": 999,
+      "error": "CCDEngine.__init__() got an unexpected keyword argument 'n_components'",
+      "timestamp": "2026-04-24T15:26:27.701193"
+    },
+    {
+      "scenario": "linear",
+      "seed": 42,
+      "error": "CCDEngine.__init__() got an unexpected keyword argument 'n_components'",
+      "timestamp": "2026-04-24T15:26:27.909546"
+    },
+    {
+      "scenario": "linear",
+      "seed": 123,
+      "error": "CCDEngine.__init__() got an unexpected keyword argument 'n_components'",
+      "timestamp": "2026-04-24T15:26:28.070912"
+    },
+    {
+      "scenario": "linear",
+      "seed": 456,
+      "error": "CCDEngine.__init__() got an unexpected keyword argument 'n_components'",
+      "timestamp": "2026-04-24T15:26:28.282578"
+    },
+    {
+      "scenario": "linear",
+      "seed": 789,
+      "error": "CCDEngine.__init__() got an unexpected keyword argument 'n_components'",
+      "timestamp": "2026-04-24T15:26:28.378290"
+    },
+    {
+      "scenario": "linear",
+      "seed": 999,
+      "error": "CCDEngine.__init__() got an unexpected keyword argument 'n_components'",
+      "timestamp": "2026-04-24T15:26:28.575434"
+    },
+    {
+      "scenario": "nonlinear_mixture",
+      "seed": 42,
+      "error": "CCDEngine.__init__() got an unexpected keyword argument 'n_components'",
+      "timestamp": "2026-04-24T15:26:28.765734"
+    },
+    {
+      "scenario": "nonlinear_mixture",
+      "seed": 123,
+      "error": "CCDEngine.__init__() got an unexpected keyword argument 'n_components'",
+      "timestamp": "2026-04-24T15:26:28.898838"
+    },
+    {
+      "scenario": "nonlinear_mixture",
+      "seed": 456,
+      "error": "CCDEngine.__init__() got an unexpected keyword argument 'n_components'",
+      "timestamp": "2026-04-24T15:26:29.077480"
+    },
+    {
+      "scenario": "nonlinear_mixture",
+      "seed": 789,
+      "error": "CCDEngine.__init__() got an unexpected keyword argument 'n_components'",
+      "timestamp": "2026-04-24T15:26:29.209977"
+    },
+    {
+      "scenario": "nonlinear_mixture",
+      "seed": 999,
+      "error": "CCDEngine.__init__() got an unexpected keyword argument 'n_components'",
+      "timestamp": "2026-04-24T15:26:29.338326"
+    },
+    {
+      "scenario": "sparse_high_dim",
+      "seed": 42,
+      "error": "CCDEngine.__init__() got an unexpected keyword argument 'n_components'",
+      "timestamp": "2026-04-24T15:26:29.527508"
+    },
+    {
+      "scenario": "sparse_high_dim",
+      "seed": 123,
+      "error": "CCDEngine.__init__() got an unexpected keyword argument 'n_components'",
+      "timestamp": "2026-04-24T15:26:29.677448"
+    },
+    {
+      "scenario": "sparse_high_dim",
+      "seed": 456,
+      "error": "CCDEngine.__init__() got an unexpected keyword argument 'n_components'",
+      "timestamp": "2026-04-24T15:26:29.822682"
+    },
+    {
+      "scenario": "sparse_high_dim",
+      "seed": 789,
+      "error": "CCDEngine.__init__() got an unexpected keyword argument 'n_components'",
+      "timestamp": "2026-04-24T15:26:29.990195"
+    },
+    {
+      "scenario": "sparse_high_dim",
+      "seed": 999,
+      "error": "CCDEngine.__init__() got an unexpected keyword argument 'n_components'",
+      "timestamp": "2026-04-24T15:26:30.166392"
+    },
+    {
+      "scenario": "correlated_noise",
+      "seed": 42,
+      "error": "CCDEngine.__init__() got an unexpected keyword argument 'n_components'",
+      "timestamp": "2026-04-24T15:26:30.333647"
+    },
+    {
+      "scenario": "correlated_noise",
+      "seed": 123,
+      "error": "CCDEngine.__init__() got an unexpected keyword argument 'n_components'",
+      "timestamp": "2026-04-24T15:26:30.733808"
+    },
+    {
+      "scenario": "correlated_noise",
+      "seed": 456,
+      "error": "CCDEngine.__init__() got an unexpected keyword argument 'n_components'",
+      "timestamp": "2026-04-24T15:26:30.987733"
+    },
+    {
+      "scenario": "correlated_noise",
+      "seed": 789,
+      "error": "CCDEngine.__init__() got an unexpected keyword argument 'n_components'",
+      "timestamp": "2026-04-24T15:26:31.211876"
+    },
+    {
+      "scenario": "correlated_noise",
+      "seed": 999,
+      "error": "CCDEngine.__init__() got an unexpected keyword argument 'n_components'",
+      "timestamp": "2026-04-24T15:26:31.524477"
+    }
+  ],
+  "statistical_summary": {
+    "mean_improvement": null,
+    "std_improvement": null,
+    "min_improvement": null,
+    "max_improvement": null,
+    "wins": 0,
+    "ties": 0,
+    "losses": 0,
+    "t_statistic": null,
+    "p_value": null
+  }
+}

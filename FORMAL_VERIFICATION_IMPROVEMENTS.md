@@ -183,4 +183,17 @@ python3 test_lean_integration.py
 ls -la MathTest/PoemaFormalVerification*
 ```
 
+## Changelog de TAAAgentCertificates.lean
+
+### 2026-05-06 — 4 axiomas cerrados como teoremas (verificado por `lake build`)
+
+| Axioma → Teorema | Técnica | Lemmas clave |
+|---|---|---|
+| `exponential_cheaper_than_polynomial` (TAA-4b) | Testigo $\varepsilon_0 = \rho^{-1}$; reduce a $1 < \rho^{1/s}$ | `Real.rpow_lt_rpow`, `Real.one_rpow` |
+| `spectral_entropy_bounded` (TAA-7) | Argumento KL: $\sum p_k\log(p_kd)\geq 0\Rightarrow H\leq\log d$ | `Real.add_one_le_exp`, `Real.log_inv`, `Finset.sum_sub_distrib` |
+| `taa_ergon_lyapunov_calibration` (TAA-9 compat) | Delega a `_proved` via `neg_mul` | `neg_mul`, `rwa` |
+| `taa_budget_is_logarithmic` (TAA-11b) | Testigo $C=1/\Gamma+1/\log(1/\varepsilon)$; $\lceil x\rceil\leq x+1$ | `Nat.lt_floor_add_one`, `Nat.ceil_le`, `Nat.floor_le` |
+
+**Estado post-sesión:** 24 teoremas, 3 axiomas restantes (TAA-3a, TAA-6, TAA-12).
+
 **Estado:** ✅ TODAS LAS MEJORAS IMPLEMENTADAS Y VALIDADAS

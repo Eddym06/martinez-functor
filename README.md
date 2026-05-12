@@ -131,6 +131,62 @@ model = torch.compile(my_model, backend=acf_backend)
 
 Al utilizar la API oficial de backends personalizados de `torch.compile` y acceder directamente a recursos vía Triton, se eliminan los cuellos de botella mediante hardware-aware FMA en Tensor Cores.
 
+---
+
+## Campo de Curvatura Dinámica (CCD Engine) — Solución Geométrica a la Maldición de la Dimensionalidad
+
+El **CCD Engine** (`acf_functor/ccd_engine.py`) es el motor del ecosistema para procesar problemas en alta dimensión, escapando de la **Maldición de la Dimensionalidad (CoD)** mediante geometría diferencial adaptativa.
+
+### Fundamento matemático
+
+Dado un sistema en $\mathbb{R}^d$ con dimensión intrínseca $m \ll d$, la complejidad de una grilla $\varepsilon$-densa escala como $O(\varepsilon^{-d})$. El CCD Engine detecta y explota la variedad de baja dimensión para reducir esto a $O(\varepsilon^{-k})$ con $k \approx m$. La reducción de CoD es:
+
+$$\log_{10} \text{CoD} = (d - k) \cdot \log_{10}(1/\varepsilon)$$
+
+Para $d=50$, $k=3$ (Lorenz), $\varepsilon=0.01$: reducción de $\mathbf{10^{94}}$ operaciones.
+
+### Arquitectura de 5 capas
+
+| Capa | Clase | Rol |
+|------|-------|-----|
+| 1 — Expansión espectral | `ChebyshevShell` | Expansión en $T_0 \ldots T_{m-1}$, compresión SVD al rango efectivo |
+| 2 — Geometría difusiva | `DiffusionGeometry` | Mapas de difusión adaptativos (Coifman & Lafon 2006), coordenadas intrínsecas |
+| 3 — Modos normales | `CoupledOscillators` | Eigendescomposición de covarianza, grupos de resonancia y coherencia adaptativa |
+| 4 — Entropía local | `LocalEntropyOperator` | $H_\text{local}(x) = \text{std}(\log d_1,\ldots,\log d_k)$, temperatura adaptativa $T(x)$ |
+| 5 — Purificador Langevin | `LangevinPurifier` | $dx = -\nabla U(x)\,dt + \sqrt{2T(x)}\,dW_t$, Euler-Maruyama con clipping de gradiente |
+
+### Uso rápido
+
+```python
+from acf_functor import CCDEngine, preprocess_high_dim, estimate_intrinsic_dimension
+
+# 1. Dimensión intrínseca
+result = estimate_intrinsic_dimension(X_high_dim)
+print(f"Ambient d={result['d_ambient']}, intrinsic ≈ {result['spectral_gap_dim']}")
+
+# 2. Pipeline completo (fit + transform)
+Z, engine = preprocess_high_dim(X_train, d_threshold=5)
+# Z: coordenadas difusivas (n, k_eff) con k_eff << d
+
+# 3. Motor completo
+engine = CCDEngine(d_threshold=5, n_diffusion_components=10).fit(X_train)
+Z_diff = engine.transform(X_train)          # coordenadas difusivas
+Z_res  = engine.transform_resonance(X)     # modos normales
+X_pure = engine.langevin_purify(X_noisy)   # denoising geométrico
+
+# 4. Certificado formal
+cert = engine.certificate()
+print(cert)
+# CCDCertificate(d_input=50, k_effective=3, curse_escaped=True,
+#                cod_reduction_log10=94.0, ...)
+```
+
+### Integración en el ecosistema
+
+- **`AutopoieticScientist._observe()`**: cuando la trayectoria tiene $d \geq$ `ccd_d_threshold`, aplica automáticamente `CCDEngine.transform()` antes de la estimación Koopman, reduciendo la dimensión al espacio difusivo donde el aprendizaje de operador es tractable.
+- **Versión paquete**: `acf_functor.__version__ == "5.1.0"`
+- **Tests**: `tests/test_ccd_engine.py` — 74 tests, 9 clases, **74/74 pasando**.
+
 ### Ruta 3 — El Plugin JAX (Opcional pero Poderoso)
 
 Para la comunidad científica en Google Research que utiliza JAX, el framework se registra limpiamente como una primitiva nativa:

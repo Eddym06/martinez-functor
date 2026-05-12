@@ -3,6 +3,8 @@
 > Motor de Ejecución Nativo de Poema v1.0.0  
 > **Este documento es la referencia técnica oficial para ingenieros que trabajan con Gideon.**
 
+**Nota de estado formal actual:** para la integración con agentes, la referencia canónica ya no es “ERG-6a como axioma objetivo”. Hoy TAA-3b está probado, ERG-6a está derivado desde ERG-4 + ERG-5, y el punto geométrico abierto dominante pasó a ERG-5.
+
 ---
 
 ## Índice

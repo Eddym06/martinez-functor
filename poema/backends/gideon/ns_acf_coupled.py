@@ -3,38 +3,36 @@ ns_acf_coupled.py — Simulación Acoplada Navier-Stokes + ACF (PDE-ACF).
 
 Integra el solver de Navier-Stokes DENTRO de Gideon, permitiendo:
   1. Análisis Koopman en tiempo real durante la simulación
-  2. Refinamiento Adaptativo de Malla guiado por modos dominantes
-  3. Retroalimentación ACF → NS: resolución asignada proporcionalmente
-     a la energía de los modos Koopman dominantes
+  2. Refinamiento Adaptativo de Malla MULTI-ORÁCULO (5 oráculos ACF)
+  3. Termostato de Turbulencia: conduce el flujo a turbulencia
+     completamente desarrollada y lo MANTIENE ahí
   4. Auto-evolución del functor durante la simulación
 
-Esto elimina el pipeline secuencial (simular → analizar) y permite
-que el ACF guíe la simulación en tiempo real.
-
-Flujo:
-  ┌─────────────────────────────────────────────┐
-  │     Navier-Stokes Solver (pseudo-spectral)  │
-  │              ω(t) → ω(t+dt)                 │
-  └──────────────┬──────────────────────────────┘
-                 │ snapshots cada T_analysis
-                 ▼
-  ┌─────────────────────────────────────────────┐
-  │     KoopmanGPU (Triton GEMM Collider)       │
-  │     PCA + EDMD → eigenvalores, modos        │
-  └──────────────┬──────────────────────────────┘
-                 │ modos dominantes, d_95
-                 ▼
-  ┌─────────────────────────────────────────────┐
-  │     Adaptive Mesh Refinement Controller     │
-  │     → focalizar resolución en regiones      │
-  │       de alta actividad modal               │
-  └──────────────┬──────────────────────────────┘
-                 │ forcing adaptado, ν₄ local
-                 ▼
-  ┌─────────────────────────────────────────────┐
-  │     Gideon Engine (backend dispatch)        │
-  │     → certifica ε, registra telemetría      │
-  └─────────────────────────────────────────────┘
+Flujo v2 (Multi-Oracle):
+  ┌──────────────────────────────────────────────────────┐
+  │              NS Solver (RK4-IF, pseudo-spectral)     │
+  │                   ω(t) → ω(t+dt)                    │
+  └───────────────────┬──────────────────────────────────┘
+                      │ snapshots cada T_analysis
+          ┌───────────┼──────────────┐
+          ▼           ▼              ▼
+  ┌──────────┐ ┌──────────┐ ┌──────────┐
+  │ O1:Koop  │ │ O2:Ruelle│ │ O3:ERGON │
+  └─────┬────┘ └─────┬────┘ └─────┬────┘
+        │            │             │
+        ▼            ▼             ▼
+  ┌──────────────────────────────────────────┐
+  │  O4:Thermo        O5:Spectral           │
+  └────────────────┬─────────────────────────┘
+                   ▼
+  ┌──────────────────────────────────────────┐
+  │     Bayesian Arbiter → fuse votes        │
+  └────────────────┬─────────────────────────┘
+                   ▼
+  ┌──────────────────────────────────────────┐
+  │     Cascade Accelerator (termostato)     │
+  │     → ν₄_new, A_new, α_new              │
+  └──────────────────────────────────────────┘
 
 Martínez's Invariant — Abril 2026
 """
@@ -72,6 +70,19 @@ class CoupledNSACFConfig:
     n_koopman_modes: int = 60          # Modos máximos a computar
     adaptive_hyper: bool = True        # Adaptar ν₄ basado en espectro
     auto_evolve: bool = True           # Evolución automática del functor
+
+    # Multi-Oracle AMR + Cascade Accelerator
+    use_multi_oracle: bool = False     # Activar AMR multi-oráculo
+    d_target: int = 30                 # Dimensión objetivo para d_95
+    h_ks_target: float = 0.1          # Entropía KS objetivo
+
+    # CoPoem Inverse Spectral Design
+    use_copoem: bool = False           # Activar CoPoem inverse spectral solver
+    k_force_min: int = 4               # Banda ancha: k mínimo
+    k_force_max: int = 10              # Banda ancha: k máximo
+    copoem_learning_rate: float = 0.4  # Learning rate del optimizador
+    copoem_target_slope: float = -3.0  # Pendiente objetivo E(k) ~ k^slope
+    copoem_max_power: float = 5000.0   # Presupuesto de potencia total
 
     # Snapshot management
     snapshot_interval: float = 0.05    # Guardar snapshot cada T segundos
@@ -216,12 +227,29 @@ class CoupledNSACFSolver:
 
         # Forcing
         self.forcing_hat = np.zeros((N, N), dtype=complex)
-        force_band = (np.abs(self.k_mag - cfg.k_force) < 1.0) & (self.k_mag > 0)
         np.random.seed(42)
         phases = np.random.uniform(0, 2 * np.pi, (N, N))
-        self.forcing_hat[force_band] = cfg.force_amplitude * np.exp(1j * phases[force_band])
+        self.force_phases = phases
 
-        # Adaptive mesh controller
+        if cfg.use_copoem:
+            # Broadband forcing: k ∈ [k_force_min, k_force_max]
+            force_band = np.zeros((N, N), dtype=bool)
+            for k_shell in range(cfg.k_force_min, cfg.k_force_max + 1):
+                force_band |= (np.abs(self.k_mag - k_shell) < 0.8) & (self.k_mag > 0)
+            self.force_band = force_band
+            # Initial uniform amplitude across all shells
+            self.forcing_hat[force_band] = cfg.force_amplitude * np.exp(1j * phases[force_band])
+        else:
+            # Single-band forcing at k_force
+            force_band = (np.abs(self.k_mag - cfg.k_force) < 1.0) & (self.k_mag > 0)
+            self.force_band = force_band
+            self.forcing_hat[force_band] = cfg.force_amplitude * np.exp(1j * phases[force_band])
+
+        self.current_force_amp = cfg.force_amplitude
+        self.current_nu4 = cfg.nu4_coeff
+        self.current_friction = cfg.friction
+
+        # Adaptive mesh controller (legacy, used if multi_oracle=False)
         self.mesh_ctrl = AdaptiveMeshController(N, cfg.nu4_coeff, cfg.force_amplitude)
 
     def _setup_acf(self):
@@ -237,6 +265,67 @@ class CoupledNSACFSolver:
                 self._koopman_available = True
             except ImportError:
                 self._koopman_available = False
+
+        # Multi-Oracle AMR controller
+        self._multi_oracle = None
+        if self.config.use_multi_oracle:
+            try:
+                from .turbulence_thermostat import MultiOracleAMR
+                self._multi_oracle = MultiOracleAMR(
+                    N=self.config.N,
+                    nu4_base=self.config.nu4_coeff,
+                    force_base=self.config.force_amplitude,
+                    friction_base=self.config.friction,
+                    d_target=self.config.d_target,
+                    h_ks_target=self.config.h_ks_target,
+                )
+            except ImportError:
+                try:
+                    from poema.backends.gideon.turbulence_thermostat import MultiOracleAMR
+                    self._multi_oracle = MultiOracleAMR(
+                        N=self.config.N,
+                        nu4_base=self.config.nu4_coeff,
+                        force_base=self.config.force_amplitude,
+                        friction_base=self.config.friction,
+                        d_target=self.config.d_target,
+                        h_ks_target=self.config.h_ks_target,
+                    )
+                except ImportError:
+                    pass
+
+        # CoPoem Inverse Spectral Designer
+        self._copoem_designer = None
+        self._copoem_oracle = None
+        self._copoem_history: List[Dict] = []
+        if self.config.use_copoem:
+            try:
+                from .copoem_spectral_designer import (
+                    CoPoemSpectralDesigner,
+                    CoPoemOracle,
+                    DesignerConfig,
+                )
+            except ImportError:
+                from poema.backends.gideon.copoem_spectral_designer import (
+                    CoPoemSpectralDesigner,
+                    CoPoemOracle,
+                    DesignerConfig,
+                )
+
+            dcfg = DesignerConfig(
+                target_slope=self.config.copoem_target_slope,
+                k_force_min=self.config.k_force_min,
+                k_force_max=self.config.k_force_max,
+                initial_amplitude=self.config.force_amplitude,
+                learning_rate=self.config.copoem_learning_rate,
+                max_total_power=self.config.copoem_max_power,
+            )
+            self._copoem_designer = CoPoemSpectralDesigner(
+                cfg=dcfg,
+                N=self.config.N,
+                nu=1.0 / self.config.Re,
+                nu4=self.config.nu4_coeff,
+            )
+            self._copoem_oracle = CoPoemOracle(self._copoem_designer)
 
     def _init_vorticity(self) -> np.ndarray:
         """Inicializar campo de vorticidad."""
@@ -337,6 +426,63 @@ class CoupledNSACFSolver:
             print(f"  ⚠ Koopman analysis failed: {e}")
             return None
 
+    def _apply_control_action(self, action: Dict[str, float]):
+        """Apply control action from AMR controller: update ν₄, forcing, friction."""
+        cfg = self.config
+        N = cfg.N
+        k2_full = self.kx**2 + self.ky**2
+
+        new_nu4 = action.get("nu4", self.current_nu4)
+        new_force = action.get("force_amplitude", self.current_force_amp)
+        new_friction = action.get("friction", self.current_friction)
+
+        # Update linear operator with new ν₄ and friction
+        self.linear_op = -new_friction - (1.0 / cfg.Re) * k2_full - new_nu4 * k2_full**4
+        self.linear_op[0, 0] = 0.0
+
+        # Update forcing amplitude
+        if abs(new_force - self.current_force_amp) > 1e-12:
+            self.forcing_hat = np.zeros((N, N), dtype=complex)
+            self.forcing_hat[self.force_band] = new_force * np.exp(
+                1j * self.force_phases[self.force_band]
+            )
+
+        self.current_nu4 = new_nu4
+        self.current_force_amp = new_force
+        self.current_friction = new_friction
+
+    def _apply_copoem_action(self, action: Dict[str, Any]):
+        """Apply CoPoem per-mode control: update broadband forcing + viscosity profile."""
+        cfg = self.config
+        N = cfg.N
+        k2_full = self.kx**2 + self.ky**2
+
+        # Update forcing with per-mode amplitudes from CoPoem designer
+        self.forcing_hat = self._copoem_designer.get_broadband_forcing(
+            self.kx, self.ky, self.force_phases
+        )
+
+        # Update viscosity profile if designer provides it
+        nu4_eff = action.get("nu4_effective", self.current_nu4)
+        friction = self.current_friction
+
+        # Build linear operator with CoPoem-designed viscosity profile
+        if self._copoem_designer.cfg.enable_nu_design:
+            # Use per-scale viscosity
+            nu4_dissipation = self._copoem_designer.get_nu4_profile(self.kx, self.ky)
+            self.linear_op = (
+                -friction
+                - (1.0 / cfg.Re) * k2_full
+                + nu4_dissipation  # already includes the minus sign and k^8
+            )
+        else:
+            self.linear_op = -friction - (1.0 / cfg.Re) * k2_full - nu4_eff * k2_full**4
+        self.linear_op[0, 0] = 0.0
+
+        # Track effective amplitude (mean across modes)
+        self.current_nu4 = nu4_eff
+        self.current_force_amp = float(np.mean(action.get("amplitudes", [cfg.force_amplitude])))
+
     def simulate(self) -> Dict[str, Any]:
         """
         Ejecutar simulación acoplada NS + ACF.
@@ -355,6 +501,12 @@ class CoupledNSACFSolver:
         print(f"  T_total = {cfg.T_total}, análisis cada {cfg.analysis_interval}s")
         print(f"  Backend: {cfg.backend}, auto_evolve: {cfg.auto_evolve}")
         print(f"  Koopman GPU: {'disponible' if self._koopman_available else 'CPU fallback'}")
+        if self._multi_oracle:
+            print(f"  Multi-Oracle AMR: ACTIVO (d_target={cfg.d_target}, h_ks_target={cfg.h_ks_target})")
+        if self._copoem_designer:
+            print(f"  CoPoem Spectral Designer: ACTIVO (target={cfg.copoem_target_slope}, "
+                  f"k∈[{cfg.k_force_min},{cfg.k_force_max}], "
+                  f"P_max={cfg.copoem_max_power})")
         print()
 
         # Initialize
@@ -417,20 +569,113 @@ class CoupledNSACFSolver:
                     E_curr = energies[-1] if energies else 0
                     Z_curr = enstrophies[-1] if enstrophies else 0
 
-                    # Adaptive mesh refinement
-                    if cfg.adaptive_hyper:
+                    if self._copoem_oracle and cfg.use_copoem:
+                        # CoPoem Inverse Spectral Design — broadband per-mode control
+                        k_bins, E_k = self._energy_spectrum(omega_hat)
+
+                        # Get Koopman spectral radius for stability constraint
+                        spec_rad = 1.0
+                        if hasattr(koopman_result, 'eigenvalues') and koopman_result.eigenvalues is not None:
+                            spec_rad = float(np.max(np.abs(koopman_result.eigenvalues)))
+
+                        copoem_action = self._copoem_oracle.vote(
+                            k_bins=k_bins,
+                            E_k=E_k,
+                            koopman_spectral_radius=spec_rad,
+                            energy=E_curr,
+                            enstrophy=Z_curr,
+                            t=t,
+                        )
+                        self._apply_copoem_action(copoem_action)
+                        self._copoem_history.append({
+                            "t": t,
+                            "misfit": copoem_action["misfit"],
+                            "slope": copoem_action["slope_actual"],
+                            "phase": copoem_action["phase"],
+                            "adjunction_gap": copoem_action["adjunction_gap"],
+                            "total_power": copoem_action["total_power"],
+                            "amplitudes": copoem_action["amplitudes"].tolist(),
+                            "d_95": koopman_result.d_95,
+                        })
+
+                        # Also run multi-oracle AMR if available (for d_95 tracking)
+                        if self._multi_oracle and cfg.use_multi_oracle:
+                            Z_series = np.array(enstrophies)
+                            mo_action = self._multi_oracle.control(
+                                koopman_result=koopman_result,
+                                enstrophy_series=Z_series,
+                                k_bins=k_bins,
+                                E_k=E_k,
+                                energy=E_curr,
+                                enstrophy=Z_curr,
+                                t=t,
+                            )
+                            # Don't apply mo_action — CoPoem takes priority
+                            # but log the multi-oracle diagnostics
+                            self.adaptation_log.append({
+                                "t": t,
+                                "phase": copoem_action["phase"],
+                                "nu4": copoem_action["nu4_effective"],
+                                "force": float(np.mean(copoem_action["amplitudes"])),
+                                "friction": self.current_friction,
+                                "d_95": koopman_result.d_95,
+                                "misfit": copoem_action["misfit"],
+                                "slope": copoem_action["slope_actual"],
+                            })
+
+                        t_k1 = time.time()
+                        print(f"    ✓ CoPoem: J={copoem_action['misfit']:.3f}, "
+                              f"slope={copoem_action['slope_actual']:.2f}, "
+                              f"phase={copoem_action['phase']}, "
+                              f"d_95={koopman_result.d_95}, "
+                              f"Ā={float(np.mean(copoem_action['amplitudes'])):.1f}, "
+                              f"gap={copoem_action['adjunction_gap']:.3f} "
+                              f"[{(t_k1-t_k0)*1000:.0f}ms]")
+
+                    elif self._multi_oracle and cfg.use_multi_oracle:
+                        # Multi-Oracle AMR + Cascade Accelerator
+                        k_bins, E_k = self._energy_spectrum(omega_hat)
+                        Z_series = np.array(enstrophies)
+
+                        action = self._multi_oracle.control(
+                            koopman_result=koopman_result,
+                            enstrophy_series=Z_series,
+                            k_bins=k_bins,
+                            E_k=E_k,
+                            energy=E_curr,
+                            enstrophy=Z_curr,
+                            t=t,
+                        )
+                        self._apply_control_action(action)
+                        self.adaptation_log.append({
+                            "t": t,
+                            "phase": self._multi_oracle.cascade.phase,
+                            "nu4": action["nu4"],
+                            "force": action["force_amplitude"],
+                            "friction": action["friction"],
+                            "d_95": koopman_result.d_95,
+                        })
+
+                        t_k1 = time.time()
+                        phase = self._multi_oracle.cascade.phase
+                        print(f"    ✓ d_95={koopman_result.d_95}, coherent={koopman_result.n_coherent}, "
+                              f"phase={phase}, A={action['force_amplitude']:.1f}, "
+                              f"ν₄={action['nu4']:.1e} [{(t_k1-t_k0)*1000:.0f}ms]")
+
+                    elif cfg.adaptive_hyper:
+                        # Legacy single-oracle Koopman AMR
                         adaptation = self.mesh_ctrl.adapt(koopman_result, E_curr, Z_curr)
                         self.adaptation_log.append(adaptation)
+                        self._apply_control_action({
+                            "nu4": adaptation["nu4"],
+                            "force_amplitude": adaptation["force_amplitude"],
+                            "friction": cfg.friction,
+                        })
 
-                        # Apply adapted parameters
-                        k2_full = self.kx**2 + self.ky**2
-                        new_nu4 = adaptation["nu4"]
-                        self.linear_op = -cfg.friction - (1.0/cfg.Re) * k2_full - new_nu4 * k2_full**4
-                        self.linear_op[0, 0] = 0.0
+                        t_k1 = time.time()
+                        print(f"    ✓ d_95={koopman_result.d_95}, coherent={koopman_result.n_coherent}, "
+                              f"backend={koopman_result.backend} [{(t_k1-t_k0)*1000:.0f}ms]")
 
-                    t_k1 = time.time()
-                    print(f"    ✓ d_95={koopman_result.d_95}, coherent={koopman_result.n_coherent}, "
-                          f"backend={koopman_result.backend} [{(t_k1-t_k0)*1000:.0f}ms]")
                     last_koopman = koopman_result
 
                 # Reset analysis buffer (keep last 20% for overlap)
@@ -444,8 +689,15 @@ class CoupledNSACFSolver:
                 Z = self._compute_enstrophy(omega_hat)
                 elapsed = time.time() - t_start
                 d95_str = f"d95={last_koopman.d_95}" if last_koopman else "d95=?"
-                print(f"  t={t:6.2f}/{cfg.T_total:.0f}  E={E:.4f}  Z={Z:.2f}  "
-                      f"dt={dt_actual:.2e}  {d95_str}  [{elapsed:.1f}s]")
+                phase_str = ""
+                if self._copoem_history:
+                    last_cp = self._copoem_history[-1]
+                    phase_str = f"  [{last_cp['phase']}|J={last_cp['misfit']:.2f}|s={last_cp['slope']:.1f}]"
+                elif self._multi_oracle and self._multi_oracle.cascade.history:
+                    phase_str = f"  [{self._multi_oracle.cascade.phase}]"
+                print(f"  t={t:6.2f}/{cfg.T_total:.0f}  E={E:.4f}  Z={Z:.4f}  "
+                      f"dt={dt_actual:.2e}  {d95_str}  A={self.current_force_amp:.1f}  "
+                      f"ν₄={self.current_nu4:.1e}{phase_str}  [{elapsed:.1f}s]")
                 t_next_print = t + max(cfg.T_total / 10, 2.0)
 
         elapsed_total = time.time() - t_start
@@ -466,11 +718,44 @@ class CoupledNSACFSolver:
             "koopman_results": self.koopman_results,
             "adaptation_log": self.adaptation_log,
             "last_koopman": last_koopman,
+            "thermostat_history": (
+                self._multi_oracle.cascade.history
+                if self._multi_oracle else []
+            ),
+            "oracle_vote_log": (
+                self._multi_oracle.vote_log
+                if self._multi_oracle else []
+            ),
+            "copoem_history": self._copoem_history,
+            "copoem_designer_history": (
+                [
+                    {
+                        "t": s.t,
+                        "misfit": s.misfit,
+                        "slope_actual": s.slope_actual,
+                        "adjunction_gap": s.adjunction_gap,
+                        "phase": s.phase,
+                        "total_power": s.total_power,
+                        "amplitudes": s.amplitudes.tolist(),
+                        "nu_profile": s.nu_profile.tolist(),
+                        "k_shells": s.k_shells.tolist(),
+                    }
+                    for s in self._copoem_designer.history
+                ]
+                if self._copoem_designer else []
+            ),
             "params": {
                 "N": N, "Re": cfg.Re, "nu": 1.0 / cfg.Re, "nu4": cfg.nu4_coeff,
                 "k_force": cfg.k_force, "T_total": cfg.T_total,
                 "coupled": True, "auto_evolve": cfg.auto_evolve,
                 "backend": cfg.backend,
+                "multi_oracle": cfg.use_multi_oracle,
+                "use_copoem": cfg.use_copoem,
+                "d_target": cfg.d_target,
+                "h_ks_target": cfg.h_ks_target,
+                "copoem_target_slope": cfg.copoem_target_slope,
+                "k_force_min": cfg.k_force_min,
+                "k_force_max": cfg.k_force_max,
             },
             "elapsed_total": elapsed_total,
             "n_steps": step,

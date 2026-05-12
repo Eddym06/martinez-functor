@@ -1,0 +1,99 @@
+{
+  "total_findings": 6,
+  "findings_by_category": {
+    "ChebyshevShell": [
+      {
+        "category": "ChebyshevShell",
+        "issue": "Destroys distance correlation",
+        "severity": "critical",
+        "evidence": "Distance correlation \u03c1=0.240 (should be close to 1.0)",
+        "recommendation": "Replace ChebyshevShell with SpectralPreprocessor as Layer 1"
+      },
+      {
+        "category": "ChebyshevShell",
+        "issue": "Poor reconstruction quality",
+        "severity": "high",
+        "evidence": "Reconstruction error 0.7723 vs 0.0000 for SpectralPreprocessor",
+        "recommendation": "Use learned decoder instead of T_1(x)=x approximation"
+      }
+    ],
+    "Reconstruction": [
+      {
+        "category": "Reconstruction",
+        "issue": "High reconstruction error",
+        "severity": "critical",
+        "evidence": "Default configuration error: 4.5467",
+        "recommendation": "Increase decoder capacity and training epochs"
+      }
+    ],
+    "CoupledOscillators": [
+      {
+        "category": "CoupledOscillators",
+        "issue": "Low coherence in detected groups",
+        "severity": "low",
+        "evidence": "Group 0 coherence: 0.129",
+        "recommendation": "Improve resonance detection algorithm"
+      },
+      {
+        "category": "CoupledOscillators",
+        "issue": "Low coherence in detected groups",
+        "severity": "low",
+        "evidence": "Group 1 coherence: 0.071",
+        "recommendation": "Improve resonance detection algorithm"
+      }
+    ],
+    "Performance": [
+      {
+        "category": "Performance",
+        "issue": "Computational bottleneck in ChebyshevShell",
+        "severity": "high",
+        "evidence": "Complexity: O(n\u00b7d\u00b7m) where m = n_coeffs (typically 8)",
+        "recommendation": "Optimize ChebyshevShell algorithm"
+      }
+    ]
+  },
+  "findings": [
+    {
+      "category": "ChebyshevShell",
+      "issue": "Destroys distance correlation",
+      "severity": "critical",
+      "evidence": "Distance correlation \u03c1=0.240 (should be close to 1.0)",
+      "recommendation": "Replace ChebyshevShell with SpectralPreprocessor as Layer 1"
+    },
+    {
+      "category": "ChebyshevShell",
+      "issue": "Poor reconstruction quality",
+      "severity": "high",
+      "evidence": "Reconstruction error 0.7723 vs 0.0000 for SpectralPreprocessor",
+      "recommendation": "Use learned decoder instead of T_1(x)=x approximation"
+    },
+    {
+      "category": "Reconstruction",
+      "issue": "High reconstruction error",
+      "severity": "critical",
+      "evidence": "Default configuration error: 4.5467",
+      "recommendation": "Increase decoder capacity and training epochs"
+    },
+    {
+      "category": "CoupledOscillators",
+      "issue": "Low coherence in detected groups",
+      "severity": "low",
+      "evidence": "Group 0 coherence: 0.129",
+      "recommendation": "Improve resonance detection algorithm"
+    },
+    {
+      "category": "CoupledOscillators",
+      "issue": "Low coherence in detected groups",
+      "severity": "low",
+      "evidence": "Group 1 coherence: 0.071",
+      "recommendation": "Improve resonance detection algorithm"
+    },
+    {
+      "category": "Performance",
+      "issue": "Computational bottleneck in ChebyshevShell",
+      "severity": "high",
+      "evidence": "Complexity: O(n\u00b7d\u00b7m) where m = n_coeffs (typically 8)",
+      "recommendation": "Optimize ChebyshevShell algorithm"
+    }
+  ]
+}

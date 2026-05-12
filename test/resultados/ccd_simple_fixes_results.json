@@ -1,0 +1,74 @@
+{
+  "test_configuration": {
+    "n_samples": 500,
+    "n_features": 50,
+    "n_clusters": 2,
+    "n_components": 10,
+    "timestamp": "2026-04-23 22:50:48"
+  },
+  "ccd_simple_results": {
+    "name": "CCD Mejorado Simplificado",
+    "transform_time": 0.0006127357482910156,
+    "reconstruct_time": 0.018812179565429688,
+    "total_time": 0.019424915313720703,
+    "mse": 0.023178097443183433,
+    "relative_error": 0.00845000675258045,
+    "neighborhood_preservation": 0.268,
+    "distance_correlation": 0.49703774468403084,
+    "reconstruction_quality": 0.9916207975645802,
+    "fit_time": 0.025252819061279297
+  },
+  "pca_results": {
+    "name": "PCA",
+    "transform_time": 0.0005240440368652344,
+    "reconstruct_time": 0.00026488304138183594,
+    "total_time": 0.0007889270782470703,
+    "mse": 0.07179100315272921,
+    "relative_error": 0.026172746184285913,
+    "neighborhood_preservation": 0.273,
+    "distance_correlation": 0.34221999534434383,
+    "reconstruction_quality": 0.9744947950707066,
+    "fit_time": 0.009070396423339844
+  },
+  "original_metrics": {
+    "ChebyshevShell": {
+      "distance_correlation": 0.24,
+      "reconstruction_error": 0.7723,
+      "time": 0.595
+    },
+    "SpectralPreprocessor": {
+      "distance_correlation": 0.971,
+      "reconstruction_error": 0.0,
+      "time": 0.01
+    },
+    "FullPipeline": {
+      "mse": 4.55,
+      "mse_no_decoder": 3.28,
+      "neighborhood_preservation": 0.45,
+      "time": 1.99,
+      "distance_correlation": 0.008
+    },
+    "PCA": {
+      "mse": 0.0058,
+      "time": 0.067,
+      "neighborhood_preservation": 1.0
+    }
+  },
+  "improvement_analysis": {
+    "mse_improvement_ratio": 196.30601740084293,
+    "time_improvement_ratio": 102.44574907332401,
+    "preservation_improvement_ratio": 0.5955555555555556,
+    "pca_mse_ratio": 0.3228551827570095,
+    "pca_time_ratio": 24.621940163191297,
+    "positive_improvements": 3,
+    "total_improvements": 5,
+    "success_rate": 0.6
+  },
+  "recommendations": [
+    "Eliminar ChebyshevShell del c\u00f3digo base",
+    "Reemplazar ManifoldDecoder con m\u00e9todo simple (k-NN)",
+    "Usar SpectralPreprocessor (PCA) como \u00fanica capa de reducci\u00f3n",
+    "Validar con datasets de alta dimensi\u00f3n reales",
+    "Optimizar k-NN para mejor reconstrucci\u00f3n"
+  ]
+}

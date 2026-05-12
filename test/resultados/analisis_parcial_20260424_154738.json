@@ -1,0 +1,201 @@
+{
+  "metadata": {
+    "total_tests": 22,
+    "timestamp": "2026-04-24T15:47:38.318468",
+    "scenarios": [
+      "mnist_like",
+      "s_curve",
+      "outliers",
+      "swiss_roll",
+      "high_dim_noise"
+    ]
+  },
+  "results": [
+    {
+      "scenario": "swiss_roll",
+      "seed": 42,
+      "trust_pca": 0.8566,
+      "trust_ccd": 0.8575,
+      "improvement": 0.0008,
+      "alpha_learned": 0.2
+    },
+    {
+      "scenario": "swiss_roll",
+      "seed": 123,
+      "trust_pca": 0.8662,
+      "trust_ccd": 0.8658,
+      "improvement": -0.0005,
+      "alpha_learned": 0.45
+    },
+    {
+      "scenario": "swiss_roll",
+      "seed": 456,
+      "trust_pca": 0.8722,
+      "trust_ccd": 0.8713,
+      "improvement": -0.0008,
+      "alpha_learned": 0.3
+    },
+    {
+      "scenario": "swiss_roll",
+      "seed": 789,
+      "trust_pca": 0.8599,
+      "trust_ccd": 0.8585,
+      "improvement": -0.0014,
+      "alpha_learned": 0.35
+    },
+    {
+      "scenario": "swiss_roll",
+      "seed": 999,
+      "trust_pca": 0.8708,
+      "trust_ccd": 0.8706,
+      "improvement": -0.0001,
+      "alpha_learned": 0.5
+    },
+    {
+      "scenario": "s_curve",
+      "seed": 42,
+      "trust_pca": 0.8601,
+      "trust_ccd": 0.8602,
+      "improvement": 0.0001,
+      "alpha_learned": 0.5
+    },
+    {
+      "scenario": "s_curve",
+      "seed": 123,
+      "trust_pca": 0.8747,
+      "trust_ccd": 0.8742,
+      "improvement": -0.0006,
+      "alpha_learned": 0.5
+    },
+    {
+      "scenario": "s_curve",
+      "seed": 456,
+      "trust_pca": 0.8548,
+      "trust_ccd": 0.8595,
+      "improvement": 0.0046,
+      "alpha_learned": 0.1
+    },
+    {
+      "scenario": "s_curve",
+      "seed": 789,
+      "trust_pca": 0.8683,
+      "trust_ccd": 0.8681,
+      "improvement": -0.0002,
+      "alpha_learned": 0.45
+    },
+    {
+      "scenario": "s_curve",
+      "seed": 999,
+      "trust_pca": 0.8619,
+      "trust_ccd": 0.8652,
+      "improvement": 0.0034,
+      "alpha_learned": 0.1
+    },
+    {
+      "scenario": "high_dim_noise",
+      "seed": 42,
+      "trust_pca": 0.5766,
+      "trust_ccd": 0.577,
+      "improvement": 0.0004,
+      "alpha_learned": 0.513
+    },
+    {
+      "scenario": "high_dim_noise",
+      "seed": 123,
+      "trust_pca": 0.5738,
+      "trust_ccd": 0.5736,
+      "improvement": -0.0002,
+      "alpha_learned": 0.306
+    },
+    {
+      "scenario": "high_dim_noise",
+      "seed": 456,
+      "trust_pca": 0.582,
+      "trust_ccd": 0.5806,
+      "improvement": -0.0013,
+      "alpha_learned": 0.169
+    },
+    {
+      "scenario": "high_dim_noise",
+      "seed": 789,
+      "trust_pca": 0.5755,
+      "trust_ccd": 0.5745,
+      "improvement": -0.001,
+      "alpha_learned": 0.169
+    },
+    {
+      "scenario": "high_dim_noise",
+      "seed": 999,
+      "trust_pca": 0.5755,
+      "trust_ccd": 0.5733,
+      "improvement": -0.0022,
+      "alpha_learned": 0.1
+    },
+    {
+      "scenario": "outliers",
+      "seed": 42,
+      "trust_pca": 0.5949,
+      "trust_ccd": 0.5941,
+      "improvement": -0.0008,
+      "alpha_learned": 0.3
+    },
+    {
+      "scenario": "outliers",
+      "seed": 123,
+      "trust_pca": 0.5969,
+      "trust_ccd": 0.5962,
+      "improvement": -0.0007,
+      "alpha_learned": 0.3
+    },
+    {
+      "scenario": "outliers",
+      "seed": 456,
+      "trust_pca": 0.5894,
+      "trust_ccd": 0.5902,
+      "improvement": 0.0008,
+      "alpha_learned": 0.3
+    },
+    {
+      "scenario": "outliers",
+      "seed": 789,
+      "trust_pca": 0.5934,
+      "trust_ccd": 0.5909,
+      "improvement": -0.0025,
+      "alpha_learned": 0.781
+    },
+    {
+      "scenario": "outliers",
+      "seed": 999,
+      "trust_pca": 0.5987,
+      "trust_ccd": 0.5993,
+      "improvement": 0.0006,
+      "alpha_learned": 0.644
+    },
+    {
+      "scenario": "mnist_like",
+      "seed": 42,
+      "trust_pca": 0.7073,
+      "trust_ccd": 0.7073,
+      "improvement": -0.0,
+      "alpha_learned": 0.1
+    },
+    {
+      "scenario": "mnist_like",
+      "seed": 123,
+      "trust_pca": 0.7134,
+      "trust_ccd": 0.7143,
+      "improvement": 0.0009,
+      "alpha_learned": 0.169
+    }
+  ],
+  "statistical_summary": {
+    "mean_improvement": -3.1818181818181854e-05,
+    "std_improvement": 0.001559832847582296,
+    "min_improvement": -0.0025,
+    "max_improvement": 0.0046,
+    "mean_alpha": 0.3318636363636363,
+    "wins": 2,
+    "ties": 16,
+    "losses": 4
+  }
+}

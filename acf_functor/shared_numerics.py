@@ -572,3 +572,52 @@ class AgentOrchestrator:
             domain=system.domain,
             run_otu=run_otu,
         )
+
+
+# ---------------------------------------------------------------------------
+# Unified PF Matrix Builder — Gauss-Legendre quadrature
+# ---------------------------------------------------------------------------
+
+def build_transfer_matrix_gauss(
+    T,  # Callable[[np.ndarray], np.ndarray]
+    grid: np.ndarray,
+    n_quad: int = 8,
+) -> np.ndarray:
+    """
+    Build PF transfer matrix using Gauss-Legendre quadrature.
+
+    This is the STANDARD implementation shared by OTU and ERGON.
+    Gauss-Legendre converges exponentially (O(e^{-cN})) vs Monte Carlo (O(1/√N)).
+
+    Eliminates the 80% discrepancy between ERGON and OTU matrices (§24.3 OTU.md).
+
+    Returns:
+        Column-stochastic PF matrix L (n, n) where n = len(grid)
+    """
+    n = len(grid)
+    h = grid[1] - grid[0] if n > 1 else 1.0
+    a, b = grid[0] - h / 2, grid[-1] + h / 2
+
+    xi, wi = np.polynomial.legendre.leggauss(n_quad)
+    L = np.zeros((n, n))
+
+    for j in range(n):
+        x_left = grid[j] - h / 2
+        x_right = grid[j] + h / 2
+        x_pts = 0.5 * (x_right - x_left) * xi + 0.5 * (x_right + x_left)
+        x_pts = np.clip(x_pts, a + 1e-14, b - 1e-14)
+        try:
+            y_pts = T(x_pts)
+        except Exception:
+            continue
+        for idx, (y, w) in enumerate(zip(y_pts, wi)):
+            if not np.isfinite(y):
+                continue
+            i = int(np.floor((y - a) / h))
+            if 0 <= i < n:
+                L[i, j] += w * 0.5
+
+    col_sums = L.sum(axis=0)
+    col_sums[col_sums == 0] = 1.0
+    L /= col_sums
+    return L

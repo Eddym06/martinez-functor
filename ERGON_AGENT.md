@@ -2,8 +2,10 @@
 ### Agente Perron-Frobenius Autocomputable para Sistemas Dinámicos Caóticos
 
 **Autor:** Fundamento teórico por Eddy Manuel Piantini — Derivación formal basada en la dualidad TAA ↔ ERGON  
-**Fecha:** Abril 2026  
-**Versión:** 0.1 — Especificación fundacional  
+**Fecha:** Abril 2026 — **Actualizado Mayo 2026** (integración con teoría de distribuciones)  
+**Versión:** 0.2 — Especificación fundacional con integración distribución-Gelfand  
+
+> **Actualización Mayo 2026 — Integración con Teoría de Distribuciones:** Las medidas SRB que ERGON computa viven naturalmente en $\Phi'$ (el espacio de distribuciones temperadas del triple de Gel'fand). El módulo `distribution_theory.py` + `distribution_gelfand.py` proporciona la infraestructura para tratar $\mu_{SRB}$ como una distribución dual (espectral + singularidades), permitiendo su diferenciación, integración y convolución. El `DistributionTransferOperator` implementa $\Lambda$ actuando sobre $\mu_{SRB}$ como punto fijo. Suite completa: 172 tests (61 distribución + 32 cierres + 21 estabilidad + 58 ecosistema). Ver `MATHLIB_ROADMAP.md` para gaps de certificación formal.  
 
 > **Nomenclatura:** ERGON proviene del griego ἔργον — trabajo, acción, operación. Es la raíz etimológica exacta de "ergódico" (erg + hodos: el camino del trabajo). El ERGON no huye del caos. Lo habita. Recorre su trayectoria hasta que el trabajo revela la ley.
 
@@ -2220,3 +2222,78 @@ for cp in report["change_points"]:
 **CERTIFICADO ERG-22:** ERGONRealWorld verificado con 22 tests que cubren las 4 barreras. Tiempo total de verificación: ~16 segundos.
 
 ---
+
+## §30. Level-5 Autonomy — ERGON como Agente de Descubrimiento
+
+### Integración con el Motor de Descubrimiento Autónomo
+
+ERGON ahora se integra con los componentes Level-5 del ecosistema:
+
+| Componente Level-5 | Rol en ERGON |
+|---|---|
+| `TopologicalOperatorAnalyzer` | Analiza el operador de Perron-Frobenius/Koopman via TDA persistente |
+| `KoopmanStructuralAnalyzer` | Detecta estructura de grupo y multiresolución en el espectro ERGON |
+| `OperatorGrammarSearch` | Busca factorizaciones parsimoniosas del operador de transferencia |
+| `AutonomousRuleInduction` | Induce reglas reutilizables: "IF h_KS > threshold AND cyclic THEN butterfly" |
+
+### El Operador de Perron-Frobenius como Objeto de Level-5
+
+El operador PF $\mathcal{L}_f[\rho](x) = \sum_{y: f(y)=x} \frac{\rho(y)}{|f'(y)|}$ es un operador lineal — exactamente el tipo de objeto que Level-5 analiza:
+
+1. **TDA Fingerprint** del PF → detecta simetrías ocultas en la dinámica
+2. **Koopman Spectrum** del PF → frecuencias propias de la dinámica invariante
+3. **Grammar Search** del PF → ¿admite el operador factorización butterfly/Kronecker?
+4. **Rule Induction** → generaliza patrones de operadores PF entre familias de mapas
+
+### Certificados Level-5
+
+- **AD-5/ERGON**: TDA fingerprint del PF es estable bajo perturbación del mapa dinámico
+- **AD-6/ERGON**: Grammar search aplicable a operadores de transferencia de baja dimensión
+- **AD-7/ERGON**: Reglas inducidas generalizan entre familias de mapas (logístico, tent, Hénon)
+
+---
+
+## §31. ERGON y el Koopman RL Truncation Policy (Epic 6)
+
+### §31.1 Contribución de ERGON al estado RL
+
+El estado `KoopmanState` que consume el agente RL (`acf_functor/koopman_rl_policy.py`) incluye dos dimensiones directamente derivadas de diagnósticos ERGON:
+
+| Dimensión en KoopmanState | Fuente ERGON |
+|---|---|
+| `spectral_entropy` $H = -\sum p_k \log p_k$ | Entropía espectral del operador de Koopman, análoga a $h_{KS}$ |
+| `alpha_A` (pendiente de decaimiento) | Clasificación `DecayClass` de TAAAgent alimentada por métricas ERGON |
+
+La **entropía de KS** $h_{KS} = \sum_{\lambda_i > 0} \lambda_i$ (fórmula de Pesin) que ERGON certifica con ERG-1 es la contrapartida continua de la entropía espectral discreta del estado RL. Sistemas con $h_{KS}$ alto → alta `spectral_entropy` → política RL elige δ pequeño (retener más modos).
+
+### §31.2 Reward y disipatividad ERGON
+
+La penalización URT del agente RL (−10 cuando la truncación produce espectro no disipativo) es la misma condición que la **clausura termodinámica ERGON** garantiza:
+$$\nu_t > \frac{\lambda_{\max}(\mathbf{L} + \mathbf{L}^T)/2}{k_{\min}^2} \implies \frac{d}{dt}\|\mathbf{a}\|^2 < 0$$
+El agente aprende empíricamente la misma región de δ-space que ERGON delimita analíticamente.
+
+### §31.3 Ciclo completo
+
+```
+ERGON (h_KS, P''(1)) → KoopmanState.spectral_entropy
+                     → KoopmanRLAgent → δ_opt
+                     → TAAAgent.build(delta=δ_opt)
+                     → ROM disipativo certificado por PSAL-2
+```
+
+**CERTIFICADO ERG-RL-1:** Métricas ERGON (h_KS, spectral decay) alimentan el estado del agente RL de truncación. La penalización URT del agente es consistente con la cota de disipatividad ERGON.
+
+---
+
+## §32. Changelog de Verificación Formal (TAAAgentCertificates.lean)
+
+### 2026-05-06 — Cierre de 4 axiomas TAA con impacto directo en la interfaz TAA ↔ ERGON
+
+El teorema `taa_ergon_lyapunov_calibration` (TAA-9) ahora es una demostración máquina-verificada en lugar de un axioma. Esto fortalece la garantía del canal de medida ERGON → TAA:
+
+- **TAA-9 compat** (`taa_ergon_lyapunov_calibration`): La calibración Lyapunov $d^*(\varepsilon)$ a partir de la tasa de decaimiento $\lambda_{\min}$ que provee ERGON es ahora un **teorema Lean 4** verificado, no un axioma. Delega a `taa_ergon_lyapunov_calibration_proved` via `neg_mul`. Esto significa que la promesa de ERGON de entregar $\lambda_{\min}$ para calibrar TAA tiene ahora respaldo formal completo.
+
+- **TAA-7 / entropía espectral** (`spectral_entropy_bounded`): La cota $H(K) \leq \log d$ — usada en `§31.1` para relacionar `spectral_entropy` del estado RL con $h_{KS}$ — es ahora un **teorema probado** (argumento KL completo), no un axioma.
+
+**Estado de axiomas abiertos con relevancia para ERGON:**
+- `taa_defer_to_ergon` (TAA-6): sigue siendo axioma — requiere la Fórmula de Pesin para afirmar que $\lambda_{\max} > 0$ implica necesidad de $\mu_{SRB}$.

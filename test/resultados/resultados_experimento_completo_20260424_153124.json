@@ -1,0 +1,508 @@
+{
+  "metadata": {
+    "total_tests": 45,
+    "successful_tests": 40,
+    "timestamp": "2026-04-24T15:31:24.434120",
+    "scenarios": [
+      "swiss_roll",
+      "s_curve",
+      "high_dim_noise",
+      "outliers",
+      "mnist_like",
+      "linear",
+      "nonlinear_mixture",
+      "sparse_high_dim",
+      "correlated_noise"
+    ],
+    "seeds": [
+      42,
+      123,
+      456,
+      789,
+      999
+    ]
+  },
+  "results": [
+    {
+      "scenario": "swiss_roll",
+      "seed": 42,
+      "trust_pca": 0.8566237052131092,
+      "trust_ccd": 0.856925539140771,
+      "improvement": 0.00030183392766180983,
+      "alpha_learned": 0.5,
+      "ccd_time": 0.08116722106933594,
+      "ecosystem_info": {},
+      "timestamp": "2026-04-24T15:30:09.852327"
+    },
+    {
+      "scenario": "swiss_roll",
+      "seed": 123,
+      "trust_pca": 0.8662056376294787,
+      "trust_ccd": 0.8678645780268297,
+      "improvement": 0.0016589403973510386,
+      "alpha_learned": 0.5,
+      "ccd_time": 0.08561325073242188,
+      "ecosystem_info": {},
+      "timestamp": "2026-04-24T15:30:10.207956"
+    },
+    {
+      "scenario": "swiss_roll",
+      "seed": 456,
+      "trust_pca": 0.8721595347257599,
+      "trust_ccd": 0.8710401596196298,
+      "improvement": -0.0011193751061301382,
+      "alpha_learned": 0.5,
+      "ccd_time": 0.0868675708770752,
+      "ecosystem_info": {},
+      "timestamp": "2026-04-24T15:30:10.518384"
+    },
+    {
+      "scenario": "swiss_roll",
+      "seed": 789,
+      "trust_pca": 0.8598875870266599,
+      "trust_ccd": 0.8592284768211921,
+      "improvement": -0.0006591102054678277,
+      "alpha_learned": 0.5,
+      "ccd_time": 0.10044288635253906,
+      "ecosystem_info": {},
+      "timestamp": "2026-04-24T15:30:10.845174"
+    },
+    {
+      "scenario": "swiss_roll",
+      "seed": 999,
+      "trust_pca": 0.8707738155883851,
+      "trust_ccd": 0.8706304126337239,
+      "improvement": -0.00014340295466119812,
+      "alpha_learned": 0.5,
+      "ccd_time": 0.08075594902038574,
+      "ecosystem_info": {},
+      "timestamp": "2026-04-24T15:30:11.188530"
+    },
+    {
+      "scenario": "s_curve",
+      "seed": 42,
+      "trust_pca": 0.8600883002207506,
+      "trust_ccd": 0.8601888266259128,
+      "improvement": 0.00010052640516222677,
+      "alpha_learned": 0.5,
+      "ccd_time": 0.0783073902130127,
+      "ecosystem_info": {},
+      "timestamp": "2026-04-24T15:30:11.516595"
+    },
+    {
+      "scenario": "s_curve",
+      "seed": 123,
+      "trust_pca": 0.8747236372898625,
+      "trust_ccd": 0.8745722533537104,
+      "improvement": -0.00015138393615210521,
+      "alpha_learned": 0.5,
+      "ccd_time": 0.09145617485046387,
+      "ecosystem_info": {},
+      "timestamp": "2026-04-24T15:30:11.876136"
+    },
+    {
+      "scenario": "s_curve",
+      "seed": 456,
+      "trust_pca": 0.8548354559347937,
+      "trust_ccd": 0.855201392426558,
+      "improvement": 0.0003659364917643071,
+      "alpha_learned": 0.5,
+      "ccd_time": 0.08913230895996094,
+      "ecosystem_info": {},
+      "timestamp": "2026-04-24T15:30:12.211838"
+    },
+    {
+      "scenario": "s_curve",
+      "seed": 789,
+      "trust_pca": 0.8683309560196978,
+      "trust_ccd": 0.8698556631006962,
+      "improvement": 0.0015247070809983887,
+      "alpha_learned": 0.5,
+      "ccd_time": 0.08126664161682129,
+      "ecosystem_info": {},
+      "timestamp": "2026-04-24T15:30:12.545035"
+    },
+    {
+      "scenario": "s_curve",
+      "seed": 999,
+      "trust_pca": 0.8618778230599422,
+      "trust_ccd": 0.8633601630157921,
+      "improvement": 0.0014823399558498984,
+      "alpha_learned": 0.5,
+      "ccd_time": 0.10137391090393066,
+      "ecosystem_info": {},
+      "timestamp": "2026-04-24T15:30:12.902181"
+    },
+    {
+      "scenario": "high_dim_noise",
+      "seed": 42,
+      "trust_pca": 0.5765982339955851,
+      "trust_ccd": 0.5753541348276447,
+      "improvement": -0.0012440991679403268,
+      "alpha_learned": 0.5,
+      "ccd_time": 1.3895654678344727,
+      "ecosystem_info": {},
+      "timestamp": "2026-04-24T15:30:14.690402"
+    },
+    {
+      "scenario": "high_dim_noise",
+      "seed": 123,
+      "trust_pca": 0.5737721175072168,
+      "trust_ccd": 0.5736175921209035,
+      "improvement": -0.00015452538631333113,
+      "alpha_learned": 0.5,
+      "ccd_time": 1.7182486057281494,
+      "ecosystem_info": {},
+      "timestamp": "2026-04-24T15:30:16.942931"
+    },
+    {
+      "scenario": "high_dim_noise",
+      "seed": 456,
+      "trust_pca": 0.5819927831550349,
+      "trust_ccd": 0.5808312956359314,
+      "improvement": -0.001161487519103499,
+      "alpha_learned": 0.5,
+      "ccd_time": 1.6714451313018799,
+      "ecosystem_info": {},
+      "timestamp": "2026-04-24T15:30:19.335918"
+    },
+    {
+      "scenario": "high_dim_noise",
+      "seed": 789,
+      "trust_pca": 0.5754692647308541,
+      "trust_ccd": 0.5764102564102564,
+      "improvement": 0.0009409916794023143,
+      "alpha_learned": 0.5,
+      "ccd_time": 2.8521053791046143,
+      "ecosystem_info": {},
+      "timestamp": "2026-04-24T15:30:22.663042"
+    },
+    {
+      "scenario": "high_dim_noise",
+      "seed": 999,
+      "trust_pca": 0.5755115469519443,
+      "trust_ccd": 0.5744156902699948,
+      "improvement": -0.0010958566819494475,
+      "alpha_learned": 0.5,
+      "ccd_time": 1.5218536853790283,
+      "ecosystem_info": {},
+      "timestamp": "2026-04-24T15:30:24.658074"
+    },
+    {
+      "scenario": "outliers",
+      "seed": 42,
+      "error": "operands could not be broadcast together with shapes (1000,8) (3,) ",
+      "timestamp": "2026-04-24T15:30:25.282330"
+    },
+    {
+      "scenario": "outliers",
+      "seed": 123,
+      "error": "operands could not be broadcast together with shapes (1000,8) (3,) ",
+      "timestamp": "2026-04-24T15:30:25.653213"
+    },
+    {
+      "scenario": "outliers",
+      "seed": 456,
+      "error": "operands could not be broadcast together with shapes (1000,8) (3,) ",
+      "timestamp": "2026-04-24T15:30:25.924381"
+    },
+    {
+      "scenario": "outliers",
+      "seed": 789,
+      "error": "operands could not be broadcast together with shapes (1000,8) (3,) ",
+      "timestamp": "2026-04-24T15:30:26.176682"
+    },
+    {
+      "scenario": "outliers",
+      "seed": 999,
+      "error": "operands could not be broadcast together with shapes (1000,8) (3,) ",
+      "timestamp": "2026-04-24T15:30:26.524949"
+    },
+    {
+      "scenario": "mnist_like",
+      "seed": 42,
+      "trust_pca": 0.7073192392596366,
+      "trust_ccd": 0.7080168959076244,
+      "improvement": 0.000697656647987821,
+      "alpha_learned": 0.5,
+      "ccd_time": 1.3843979835510254,
+      "ecosystem_info": {},
+      "timestamp": "2026-04-24T15:30:28.219968"
+    },
+    {
+      "scenario": "mnist_like",
+      "seed": 123,
+      "trust_pca": 0.7134498217014773,
+      "trust_ccd": 0.7143328239089828,
+      "improvement": 0.0008830022075054789,
+      "alpha_learned": 0.5,
+      "ccd_time": 1.6517701148986816,
+      "ecosystem_info": {},
+      "timestamp": "2026-04-24T15:30:30.389533"
+    },
+    {
+      "scenario": "mnist_like",
+      "seed": 456,
+      "trust_pca": 0.716466972321277,
+      "trust_ccd": 0.716444218033622,
+      "improvement": -2.275428765496912e-05,
+      "alpha_learned": 0.5,
+      "ccd_time": 1.739741325378418,
+      "ecosystem_info": {},
+      "timestamp": "2026-04-24T15:30:32.630609"
+    },
+    {
+      "scenario": "mnist_like",
+      "seed": 789,
+      "trust_pca": 0.7314308031923926,
+      "trust_ccd": 0.7313838512480897,
+      "improvement": -4.6951944302930926e-05,
+      "alpha_learned": 0.5,
+      "ccd_time": 1.6333653926849365,
+      "ecosystem_info": {},
+      "timestamp": "2026-04-24T15:30:34.941320"
+    },
+    {
+      "scenario": "mnist_like",
+      "seed": 999,
+      "trust_pca": 0.7208599932076754,
+      "trust_ccd": 0.7213286636101206,
+      "improvement": 0.00046867040244524816,
+      "alpha_learned": 0.5,
+      "ccd_time": 1.6263725757598877,
+      "ecosystem_info": {},
+      "timestamp": "2026-04-24T15:30:37.039064"
+    },
+    {
+      "scenario": "linear",
+      "seed": 42,
+      "trust_pca": 0.5807875700458482,
+      "trust_ccd": 0.5786567328918322,
+      "improvement": -0.002130837154016074,
+      "alpha_learned": 0.5,
+      "ccd_time": 1.6292431354522705,
+      "ecosystem_info": {},
+      "timestamp": "2026-04-24T15:30:39.159849"
+    },
+    {
+      "scenario": "linear",
+      "seed": 123,
+      "trust_pca": 0.5763550687722874,
+      "trust_ccd": 0.5768018339276617,
+      "improvement": 0.00044676515537434014,
+      "alpha_learned": 0.5,
+      "ccd_time": 1.6664021015167236,
+      "ecosystem_info": {},
+      "timestamp": "2026-04-24T15:30:41.369588"
+    },
+    {
+      "scenario": "linear",
+      "seed": 456,
+      "trust_pca": 0.5733108337578536,
+      "trust_ccd": 0.5737686364408219,
+      "improvement": 0.00045780268296824467,
+      "alpha_learned": 0.5,
+      "ccd_time": 1.7303948402404785,
+      "ecosystem_info": {},
+      "timestamp": "2026-04-24T15:30:43.742883"
+    },
+    {
+      "scenario": "linear",
+      "seed": 789,
+      "trust_pca": 0.5784918492103923,
+      "trust_ccd": 0.578320767532688,
+      "improvement": -0.00017108167770429894,
+      "alpha_learned": 0.5,
+      "ccd_time": 1.6446051597595215,
+      "ecosystem_info": {},
+      "timestamp": "2026-04-24T15:30:45.920143"
+    },
+    {
+      "scenario": "linear",
+      "seed": 999,
+      "trust_pca": 0.5812712684666328,
+      "trust_ccd": 0.5830828663610121,
+      "improvement": 0.0018115978943793465,
+      "alpha_learned": 0.5,
+      "ccd_time": 1.636274814605713,
+      "ecosystem_info": {},
+      "timestamp": "2026-04-24T15:30:48.059873"
+    },
+    {
+      "scenario": "nonlinear_mixture",
+      "seed": 42,
+      "trust_pca": 0.9283293428425878,
+      "trust_ccd": 0.9282578536254033,
+      "improvement": -7.148921718458379e-05,
+      "alpha_learned": 0.5,
+      "ccd_time": 1.6160826683044434,
+      "ecosystem_info": {},
+      "timestamp": "2026-04-24T15:30:50.232667"
+    },
+    {
+      "scenario": "nonlinear_mixture",
+      "seed": 123,
+      "trust_pca": 0.9286831380539989,
+      "trust_ccd": 0.9286853455595178,
+      "improvement": 2.2075055188253145e-06,
+      "alpha_learned": 0.5,
+      "ccd_time": 1.62445068359375,
+      "ecosystem_info": {},
+      "timestamp": "2026-04-24T15:30:52.625215"
+    },
+    {
+      "scenario": "nonlinear_mixture",
+      "seed": 456,
+      "trust_pca": 0.9151961283749364,
+      "trust_ccd": 0.9151678553234844,
+      "improvement": -2.8273051451921383e-05,
+      "alpha_learned": 0.5,
+      "ccd_time": 2.760045289993286,
+      "ecosystem_info": {},
+      "timestamp": "2026-04-24T15:30:55.977016"
+    },
+    {
+      "scenario": "nonlinear_mixture",
+      "seed": 789,
+      "trust_pca": 0.9153170317541178,
+      "trust_ccd": 0.9157232976736288,
+      "improvement": 0.0004062659195109841,
+      "alpha_learned": 0.5,
+      "ccd_time": 1.674910545349121,
+      "ecosystem_info": {},
+      "timestamp": "2026-04-24T15:30:58.128043"
+    },
+    {
+      "scenario": "nonlinear_mixture",
+      "seed": 999,
+      "trust_pca": 0.9391974868398709,
+      "trust_ccd": 0.9392071659025302,
+      "improvement": 9.679062659251336e-06,
+      "alpha_learned": 0.5,
+      "ccd_time": 1.6780486106872559,
+      "ecosystem_info": {},
+      "timestamp": "2026-04-24T15:31:00.523579"
+    },
+    {
+      "scenario": "sparse_high_dim",
+      "seed": 42,
+      "trust_pca": 0.5501069791136016,
+      "trust_ccd": 0.5497790796400068,
+      "improvement": -0.0003278994735947949,
+      "alpha_learned": 0.5,
+      "ccd_time": 1.7907228469848633,
+      "ecosystem_info": {},
+      "timestamp": "2026-04-24T15:31:02.969445"
+    },
+    {
+      "scenario": "sparse_high_dim",
+      "seed": 123,
+      "trust_pca": 0.5576117337408728,
+      "trust_ccd": 0.5570768381728647,
+      "improvement": -0.0005348955680081202,
+      "alpha_learned": 0.5,
+      "ccd_time": 1.72629976272583,
+      "ecosystem_info": {},
+      "timestamp": "2026-04-24T15:31:05.190859"
+    },
+    {
+      "scenario": "sparse_high_dim",
+      "seed": 456,
+      "trust_pca": 0.5576120733571065,
+      "trust_ccd": 0.5578896247240619,
+      "improvement": 0.0002775513669553975,
+      "alpha_learned": 0.5,
+      "ccd_time": 1.6910874843597412,
+      "ecosystem_info": {},
+      "timestamp": "2026-04-24T15:31:07.626635"
+    },
+    {
+      "scenario": "sparse_high_dim",
+      "seed": 789,
+      "trust_pca": 0.5574541518084565,
+      "trust_ccd": 0.5575258108337579,
+      "improvement": 7.16590253013738e-05,
+      "alpha_learned": 0.5,
+      "ccd_time": 1.5915653705596924,
+      "ecosystem_info": {},
+      "timestamp": "2026-04-24T15:31:09.802982"
+    },
+    {
+      "scenario": "sparse_high_dim",
+      "seed": 999,
+      "trust_pca": 0.5580218203430124,
+      "trust_ccd": 0.5583686534216336,
+      "improvement": 0.000346833078621156,
+      "alpha_learned": 0.5,
+      "ccd_time": 1.5735557079315186,
+      "ecosystem_info": {},
+      "timestamp": "2026-04-24T15:31:11.881802"
+    },
+    {
+      "scenario": "correlated_noise",
+      "seed": 42,
+      "trust_pca": 0.6196349974528783,
+      "trust_ccd": 0.6208934454066904,
+      "improvement": 0.0012584479538121363,
+      "alpha_learned": 0.5,
+      "ccd_time": 1.475846767425537,
+      "ecosystem_info": {},
+      "timestamp": "2026-04-24T15:31:14.546605"
+    },
+    {
+      "scenario": "correlated_noise",
+      "seed": 123,
+      "trust_pca": 0.6318949736797419,
+      "trust_ccd": 0.6311729495669893,
+      "improvement": -0.0007220241127525728,
+      "alpha_learned": 0.5,
+      "ccd_time": 1.3982200622558594,
+      "ecosystem_info": {},
+      "timestamp": "2026-04-24T15:31:17.118471"
+    },
+    {
+      "scenario": "correlated_noise",
+      "seed": 456,
+      "trust_pca": 0.6252481745627441,
+      "trust_ccd": 0.6260694515197827,
+      "improvement": 0.0008212769570385969,
+      "alpha_learned": 0.5,
+      "ccd_time": 1.6593992710113525,
+      "ecosystem_info": {},
+      "timestamp": "2026-04-24T15:31:19.352063"
+    },
+    {
+      "scenario": "correlated_noise",
+      "seed": 789,
+      "trust_pca": 0.6276029886228562,
+      "trust_ccd": 0.6281441670911869,
+      "improvement": 0.0005411784683306831,
+      "alpha_learned": 0.5,
+      "ccd_time": 1.6710436344146729,
+      "ecosystem_info": {},
+      "timestamp": "2026-04-24T15:31:21.979864"
+    },
+    {
+      "scenario": "correlated_noise",
+      "seed": 999,
+      "trust_pca": 0.6328028527763627,
+      "trust_ccd": 0.6330942435048396,
+      "improvement": 0.0002913907284768369,
+      "alpha_learned": 0.5,
+      "ccd_time": 1.6049044132232666,
+      "ecosystem_info": {},
+      "timestamp": "2026-04-24T15:31:24.429895"
+    }
+  ],
+  "statistical_summary": {
+    "mean_improvement": 0.0001345453387671891,
+    "std_improvement": 0.0008245786483405104,
+    "min_improvement": -0.002130837154016074,
+    "max_improvement": 0.0018115978943793465,
+    "wins": 5,
+    "ties": 30,
+    "losses": 5,
+    "t_statistic": 1.0189875434998583,
+    "p_value": 0.3144887406345964
+  }
+}

@@ -1,0 +1,193 @@
+{
+  "n_tests": 4,
+  "n_issues": 7,
+  "critical_issues": [
+    "High reconstruction error (2.830) for d=200",
+    "High reconstruction error (2.458) for d=100",
+    "CCD reconstruction error (3.0849) worse than PCA (0.0058)",
+    "CCD is 29.6x slower than PCA",
+    "High reconstruction error (3.681) for d=30",
+    "High reconstruction error (3.400) for d=10",
+    "High reconstruction error (2.572) for d=50"
+  ],
+  "results": [
+    {
+      "test_name": "Scalability with Ambient Dimensions",
+      "dimensions": [
+        500,
+        200
+      ],
+      "metrics": {
+        "d10": {
+          "time_fit": 2.5213115215301514,
+          "time_transform": 0.0031173229217529297,
+          "reconstruction_error": 3.399617137667778,
+          "k_effective": 4,
+          "neighborhood_correlation": 0.4627389139990006,
+          "curse_escaped": true,
+          "cod_reduction": 12.0
+        },
+        "d30": {
+          "time_fit": 2.2348341941833496,
+          "time_transform": 0.004130363464355469,
+          "reconstruction_error": 3.6809551046027376,
+          "k_effective": 6,
+          "neighborhood_correlation": 0.4790921254118321,
+          "curse_escaped": true,
+          "cod_reduction": 48.0
+        },
+        "d50": {
+          "time_fit": 2.403170108795166,
+          "time_transform": 0.004971504211425781,
+          "reconstruction_error": 2.5716251017898797,
+          "k_effective": 1,
+          "neighborhood_correlation": 0.5285045470311788,
+          "curse_escaped": true,
+          "cod_reduction": 98.0
+        },
+        "d100": {
+          "time_fit": 20.450385093688965,
+          "time_transform": 0.019036054611206055,
+          "reconstruction_error": 2.458483687249002,
+          "k_effective": 6,
+          "neighborhood_correlation": 0.3872130143058374,
+          "curse_escaped": true,
+          "cod_reduction": 188.0
+        },
+        "d200": {
+          "time_fit": 42.77369451522827,
+          "time_transform": 0.02171945571899414,
+          "reconstruction_error": 2.829565740303572,
+          "k_effective": 1,
+          "neighborhood_correlation": 0.34423765859657646,
+          "curse_escaped": true,
+          "cod_reduction": 398.0
+        }
+      },
+      "issues": [
+        "High reconstruction error (3.400) for d=10",
+        "High reconstruction error (3.681) for d=30",
+        "High reconstruction error (2.572) for d=50",
+        "High reconstruction error (2.458) for d=100",
+        "High reconstruction error (2.830) for d=200"
+      ]
+    },
+    {
+      "test_name": "Scalability with Sample Sizes",
+      "dimensions": [
+        5000,
+        50
+      ],
+      "metrics": {
+        "n100": {
+          "time_fit": 0.21741294860839844,
+          "time_transform": 0.0018665790557861328,
+          "k_effective": 8,
+          "time_per_sample_fit": 0.002174129486083984,
+          "time_per_sample_transform": 1.866579055786133e-05
+        },
+        "n500": {
+          "time_fit": 2.2401068210601807,
+          "time_transform": 0.011254310607910156,
+          "k_effective": 6,
+          "time_per_sample_fit": 0.0044802136421203615,
+          "time_per_sample_transform": 2.2508621215820313e-05
+        },
+        "n1000": {
+          "time_fit": 1.452864408493042,
+          "time_transform": 0.02621603012084961,
+          "k_effective": 6,
+          "time_per_sample_fit": 0.001452864408493042,
+          "time_per_sample_transform": 2.621603012084961e-05
+        },
+        "n2000": {
+          "time_fit": 3.2768189907073975,
+          "time_transform": 0.09530091285705566,
+          "k_effective": 6,
+          "time_per_sample_fit": 0.0016384094953536988,
+          "time_per_sample_transform": 4.765045642852783e-05
+        },
+        "n5000": {
+          "time_fit": 4.871830224990845,
+          "time_transform": 3.7413527965545654,
+          "k_effective": 6,
+          "time_per_sample_fit": 0.000974366044998169,
+          "time_per_sample_transform": 0.0007482705593109131
+        }
+      },
+      "issues": []
+    },
+    {
+      "test_name": "Comparison with Baselines",
+      "dimensions": [
+        1000,
+        50
+      ],
+      "metrics": {
+        "methods": {
+          "PCA": {
+            "time": 0.06715011596679688,
+            "error": 0.005759661816814874,
+            "correlation": 0.9999974828113827,
+            "Z": "[[-7.04535133e-01 -9.86247468e+00  2.69618797e+00 ...  1.86922296e+00\n  -9.31062460e-03 -1.16349366e-01]\n [-1.60781637e+01  2.18373230e+00  4.40404967e+00 ... -5.50433186e-01\n   1.05578683e+00 -5.85765730e-03]\n [ 3.07743648e+00 -3.10873828e+00  5.01354394e-01 ... -8.96766838e-01\n  -1.89578329e-02  1.84811379e-01]\n ...\n [-1.29688993e+00  2.60618663e+00 -3.86193528e+00 ... -2.92595587e-01\n  -2.16151971e-01 -2.02009515e-01]\n [-1.47298112e+01 -8.44415634e+00 -1.02678483e+01 ... -5.20163182e-01\n   1.78236630e-01  1.89856251e-03]\n [ 3.69782426e+00  7.40063434e+00  3.76979478e+00 ... -1.05940225e+00\n  -5.29215696e-01  2.01176631e-01]]"
+          },
+          "UMAP": {
+            "time": 7.817326545715332,
+            "error": 0.2650843674742315,
+            "correlation": 0.7765951325806031,
+            "Z": "[[5.436523  6.034372  6.303702  ... 5.639108  6.361579  3.5505831]\n [8.213711  5.4320474 6.498522  ... 5.8140993 5.390043  4.2356606]\n [5.351053  5.1529098 5.4435334 ... 5.9016614 6.4421716 3.5958915]\n ...\n [6.172666  5.4007444 4.735295  ... 5.7334247 5.9210863 4.791896 ]\n [7.398092  6.5237164 5.9130864 ... 5.0770473 6.6182323 3.7530468]\n [5.486712  3.8963037 5.554226  ... 6.583943  5.914961  3.6457162]]"
+          },
+          "t-SNE": {
+            "time": 2.1523118019104004,
+            "error": null,
+            "correlation": 0.6755697975192144,
+            "Z": "[[  0.12243691 -23.36491   ]\n [-29.309332     6.386022  ]\n [  5.03933    -16.162037  ]\n ...\n [  5.891244    14.866195  ]\n [-30.90637    -16.93663   ]\n [  7.8971906    9.049309  ]]"
+          },
+          "CCD": {
+            "time_fit": 1.9631099700927734,
+            "time_transform": 0.026573657989501953,
+            "total_time": 1.9896836280822754,
+            "error": 3.084871609165743,
+            "correlation": 0.45032585980702744,
+            "k_effective": 6,
+            "curse_escaped": true,
+            "Z": "[[-0.00489369  0.0078653  -0.01880549 ...  0.00603663 -0.00541434\n   0.01135086]\n [ 0.0051847   0.00305432  0.00014    ...  0.02159774  0.00708816\n  -0.00389282]\n [-0.00186113  0.00076954 -0.00168661 ... -0.01289094  0.00414279\n  -0.01202364]\n ...\n [-0.00584533  0.00036606  0.00064044 ...  0.00026878 -0.00629674\n   0.00550953]\n [ 0.00017579  0.00128426  0.00059757 ...  0.00141289  0.00856187\n  -0.00019245]\n [ 0.00148134  0.00082916 -0.00149649 ...  0.00054022  0.01002949\n  -0.00389883]]"
+          }
+        }
+      },
+      "issues": [
+        "CCD reconstruction error (3.0849) worse than PCA (0.0058)",
+        "CCD is 29.6x slower than PCA"
+      ]
+    },
+    {
+      "test_name": "Numerical Stability",
+      "dimensions": [
+        500,
+        50
+      ],
+      "metrics": {
+        "Low rank data": {
+          "rank": 3,
+          "k_effective": 3
+        },
+        "High condition number": {
+          "condition_number": 1000000.0
+        },
+        "Near-duplicate points": {
+          "n_groups": 5,
+          "k_effective": 4
+        },
+        "Outliers": {
+          "n_outliers": 20
+        },
+        "Very high dimension": {
+          "d": 500,
+          "n": 100,
+          "k_effective": 4
+        }
+      },
+      "issues": []
+    }
+  ]
+}

@@ -1,16 +1,9 @@
 import torch
+from poema.ast_nodes import InputNode, ScaleNode, ShiftNode
 
 def input_eval(self, x): return x
-def scale_eval(self, x): return self.scale * self.children[0].evaluate(x)
-def shift_eval(self, x): return self.shift + self.children[0].evaluate(x)
-InputNode.evaluate = input_eval
-ScaleNode.evaluate = scale_eval
-ShiftNode.evaluate = shift_eval
-
-
-def input_eval(self, x): return x
-def scale_eval(self, x): return self.scale * self.children[0].evaluate(x)
-def shift_eval(self, x): return self.shift + self.children[0].evaluate(x)
+def scale_eval(self, x): return self.factor * self.children[0].evaluate(x)
+def shift_eval(self, x): return self.value + self.children[0].evaluate(x)
 InputNode.evaluate = input_eval
 ScaleNode.evaluate = scale_eval
 ShiftNode.evaluate = shift_eval
@@ -42,8 +35,8 @@ assert isinstance(ast_if, PiecewiseNode), "Parsed node is not an 'if' / Piecewis
 print("SUCCESS: `if/else` control flow evaluated correctly.")
 
 print("\n=== AST MANUAL EXECUTION OF LOOP AND DEF ===")
-from poema.ast_nodes import InputNode, ConstantNode
-from poema.ast_nodes import ShiftNode, ScaleNode; body_expr = ShiftNode(torch.tensor([1.0]), InputNode("x"))
+from poema.ast_nodes import ConstantNode
+body_expr = ShiftNode(torch.tensor([1.0]), InputNode("x"))
 cond_expr = ShiftNode(torch.tensor([10.0]), ScaleNode(torch.tensor([-1.0]), InputNode("x")))
 
 loop_node = LoopNode(init=InputNode("x"), cond=cond_expr, body=body_expr)

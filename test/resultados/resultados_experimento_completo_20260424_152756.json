@@ -1,0 +1,308 @@
+{
+  "metadata": {
+    "total_tests": 45,
+    "successful_tests": 0,
+    "timestamp": "2026-04-24T15:27:56.057191",
+    "scenarios": [
+      "swiss_roll",
+      "s_curve",
+      "high_dim_noise",
+      "outliers",
+      "mnist_like",
+      "linear",
+      "nonlinear_mixture",
+      "sparse_high_dim",
+      "correlated_noise"
+    ],
+    "seeds": [
+      42,
+      123,
+      456,
+      789,
+      999
+    ]
+  },
+  "results": [
+    {
+      "scenario": "swiss_roll",
+      "seed": 42,
+      "error": "'CCDEngine' object has no attribute 'fit_transform'",
+      "timestamp": "2026-04-24T15:27:47.667781"
+    },
+    {
+      "scenario": "swiss_roll",
+      "seed": 123,
+      "error": "'CCDEngine' object has no attribute 'fit_transform'",
+      "timestamp": "2026-04-24T15:27:47.919665"
+    },
+    {
+      "scenario": "swiss_roll",
+      "seed": 456,
+      "error": "'CCDEngine' object has no attribute 'fit_transform'",
+      "timestamp": "2026-04-24T15:27:48.054578"
+    },
+    {
+      "scenario": "swiss_roll",
+      "seed": 789,
+      "error": "'CCDEngine' object has no attribute 'fit_transform'",
+      "timestamp": "2026-04-24T15:27:48.267911"
+    },
+    {
+      "scenario": "swiss_roll",
+      "seed": 999,
+      "error": "'CCDEngine' object has no attribute 'fit_transform'",
+      "timestamp": "2026-04-24T15:27:48.397695"
+    },
+    {
+      "scenario": "s_curve",
+      "seed": 42,
+      "error": "'CCDEngine' object has no attribute 'fit_transform'",
+      "timestamp": "2026-04-24T15:27:48.511016"
+    },
+    {
+      "scenario": "s_curve",
+      "seed": 123,
+      "error": "'CCDEngine' object has no attribute 'fit_transform'",
+      "timestamp": "2026-04-24T15:27:48.622096"
+    },
+    {
+      "scenario": "s_curve",
+      "seed": 456,
+      "error": "'CCDEngine' object has no attribute 'fit_transform'",
+      "timestamp": "2026-04-24T15:27:48.745152"
+    },
+    {
+      "scenario": "s_curve",
+      "seed": 789,
+      "error": "'CCDEngine' object has no attribute 'fit_transform'",
+      "timestamp": "2026-04-24T15:27:48.865463"
+    },
+    {
+      "scenario": "s_curve",
+      "seed": 999,
+      "error": "'CCDEngine' object has no attribute 'fit_transform'",
+      "timestamp": "2026-04-24T15:27:49.058717"
+    },
+    {
+      "scenario": "high_dim_noise",
+      "seed": 42,
+      "error": "'CCDEngine' object has no attribute 'fit_transform'",
+      "timestamp": "2026-04-24T15:27:49.366003"
+    },
+    {
+      "scenario": "high_dim_noise",
+      "seed": 123,
+      "error": "'CCDEngine' object has no attribute 'fit_transform'",
+      "timestamp": "2026-04-24T15:27:49.623358"
+    },
+    {
+      "scenario": "high_dim_noise",
+      "seed": 456,
+      "error": "'CCDEngine' object has no attribute 'fit_transform'",
+      "timestamp": "2026-04-24T15:27:49.808182"
+    },
+    {
+      "scenario": "high_dim_noise",
+      "seed": 789,
+      "error": "'CCDEngine' object has no attribute 'fit_transform'",
+      "timestamp": "2026-04-24T15:27:50.096942"
+    },
+    {
+      "scenario": "high_dim_noise",
+      "seed": 999,
+      "error": "'CCDEngine' object has no attribute 'fit_transform'",
+      "timestamp": "2026-04-24T15:27:50.320952"
+    },
+    {
+      "scenario": "outliers",
+      "seed": 42,
+      "error": "'CCDEngine' object has no attribute 'fit_transform'",
+      "timestamp": "2026-04-24T15:27:50.626477"
+    },
+    {
+      "scenario": "outliers",
+      "seed": 123,
+      "error": "'CCDEngine' object has no attribute 'fit_transform'",
+      "timestamp": "2026-04-24T15:27:50.827648"
+    },
+    {
+      "scenario": "outliers",
+      "seed": 456,
+      "error": "'CCDEngine' object has no attribute 'fit_transform'",
+      "timestamp": "2026-04-24T15:27:50.961341"
+    },
+    {
+      "scenario": "outliers",
+      "seed": 789,
+      "error": "'CCDEngine' object has no attribute 'fit_transform'",
+      "timestamp": "2026-04-24T15:27:51.147944"
+    },
+    {
+      "scenario": "outliers",
+      "seed": 999,
+      "error": "'CCDEngine' object has no attribute 'fit_transform'",
+      "timestamp": "2026-04-24T15:27:51.302782"
+    },
+    {
+      "scenario": "mnist_like",
+      "seed": 42,
+      "error": "'CCDEngine' object has no attribute 'fit_transform'",
+      "timestamp": "2026-04-24T15:27:51.448782"
+    },
+    {
+      "scenario": "mnist_like",
+      "seed": 123,
+      "error": "'CCDEngine' object has no attribute 'fit_transform'",
+      "timestamp": "2026-04-24T15:27:51.594846"
+    },
+    {
+      "scenario": "mnist_like",
+      "seed": 456,
+      "error": "'CCDEngine' object has no attribute 'fit_transform'",
+      "timestamp": "2026-04-24T15:27:51.782759"
+    },
+    {
+      "scenario": "mnist_like",
+      "seed": 789,
+      "error": "'CCDEngine' object has no attribute 'fit_transform'",
+      "timestamp": "2026-04-24T15:27:51.961494"
+    },
+    {
+      "scenario": "mnist_like",
+      "seed": 999,
+      "error": "'CCDEngine' object has no attribute 'fit_transform'",
+      "timestamp": "2026-04-24T15:27:52.203819"
+    },
+    {
+      "scenario": "linear",
+      "seed": 42,
+      "error": "'CCDEngine' object has no attribute 'fit_transform'",
+      "timestamp": "2026-04-24T15:27:52.362995"
+    },
+    {
+      "scenario": "linear",
+      "seed": 123,
+      "error": "'CCDEngine' object has no attribute 'fit_transform'",
+      "timestamp": "2026-04-24T15:27:52.490561"
+    },
+    {
+      "scenario": "linear",
+      "seed": 456,
+      "error": "'CCDEngine' object has no attribute 'fit_transform'",
+      "timestamp": "2026-04-24T15:27:52.634283"
+    },
+    {
+      "scenario": "linear",
+      "seed": 789,
+      "error": "'CCDEngine' object has no attribute 'fit_transform'",
+      "timestamp": "2026-04-24T15:27:52.798280"
+    },
+    {
+      "scenario": "linear",
+      "seed": 999,
+      "error": "'CCDEngine' object has no attribute 'fit_transform'",
+      "timestamp": "2026-04-24T15:27:52.956800"
+    },
+    {
+      "scenario": "nonlinear_mixture",
+      "seed": 42,
+      "error": "'CCDEngine' object has no attribute 'fit_transform'",
+      "timestamp": "2026-04-24T15:27:53.103609"
+    },
+    {
+      "scenario": "nonlinear_mixture",
+      "seed": 123,
+      "error": "'CCDEngine' object has no attribute 'fit_transform'",
+      "timestamp": "2026-04-24T15:27:53.306703"
+    },
+    {
+      "scenario": "nonlinear_mixture",
+      "seed": 456,
+      "error": "'CCDEngine' object has no attribute 'fit_transform'",
+      "timestamp": "2026-04-24T15:27:53.477800"
+    },
+    {
+      "scenario": "nonlinear_mixture",
+      "seed": 789,
+      "error": "'CCDEngine' object has no attribute 'fit_transform'",
+      "timestamp": "2026-04-24T15:27:53.638457"
+    },
+    {
+      "scenario": "nonlinear_mixture",
+      "seed": 999,
+      "error": "'CCDEngine' object has no attribute 'fit_transform'",
+      "timestamp": "2026-04-24T15:27:53.830450"
+    },
+    {
+      "scenario": "sparse_high_dim",
+      "seed": 42,
+      "error": "'CCDEngine' object has no attribute 'fit_transform'",
+      "timestamp": "2026-04-24T15:27:54.027910"
+    },
+    {
+      "scenario": "sparse_high_dim",
+      "seed": 123,
+      "error": "'CCDEngine' object has no attribute 'fit_transform'",
+      "timestamp": "2026-04-24T15:27:54.190252"
+    },
+    {
+      "scenario": "sparse_high_dim",
+      "seed": 456,
+      "error": "'CCDEngine' object has no attribute 'fit_transform'",
+      "timestamp": "2026-04-24T15:27:54.371896"
+    },
+    {
+      "scenario": "sparse_high_dim",
+      "seed": 789,
+      "error": "'CCDEngine' object has no attribute 'fit_transform'",
+      "timestamp": "2026-04-24T15:27:54.607140"
+    },
+    {
+      "scenario": "sparse_high_dim",
+      "seed": 999,
+      "error": "'CCDEngine' object has no attribute 'fit_transform'",
+      "timestamp": "2026-04-24T15:27:54.739454"
+    },
+    {
+      "scenario": "correlated_noise",
+      "seed": 42,
+      "error": "'CCDEngine' object has no attribute 'fit_transform'",
+      "timestamp": "2026-04-24T15:27:55.036837"
+    },
+    {
+      "scenario": "correlated_noise",
+      "seed": 123,
+      "error": "'CCDEngine' object has no attribute 'fit_transform'",
+      "timestamp": "2026-04-24T15:27:55.297254"
+    },
+    {
+      "scenario": "correlated_noise",
+      "seed": 456,
+      "error": "'CCDEngine' object has no attribute 'fit_transform'",
+      "timestamp": "2026-04-24T15:27:55.582930"
+    },
+    {
+      "scenario": "correlated_noise",
+      "seed": 789,
+      "error": "'CCDEngine' object has no attribute 'fit_transform'",
+      "timestamp": "2026-04-24T15:27:55.849351"
+    },
+    {
+      "scenario": "correlated_noise",
+      "seed": 999,
+      "error": "'CCDEngine' object has no attribute 'fit_transform'",
+      "timestamp": "2026-04-24T15:27:56.056688"
+    }
+  ],
+  "statistical_summary": {
+    "mean_improvement": null,
+    "std_improvement": null,
+    "min_improvement": null,
+    "max_improvement": null,
+    "wins": 0,
+    "ties": 0,
+    "losses": 0,
+    "t_statistic": null,
+    "p_value": null
+  }
+}

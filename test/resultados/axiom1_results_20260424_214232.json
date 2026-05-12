@@ -1,0 +1,63 @@
+{
+  "tests": {
+    "test1_chaotic": {
+      "passed": true,
+      "score": 0.875,
+      "system_kind": "chaotic",
+      "law_r2": 1.0,
+      "op_gap": 5.086480644593301e-10
+    },
+    "test2_quasiperiodic": {
+      "passed": true,
+      "score": 0.875,
+      "system_kind": "unknown",
+      "law_r2": 0.8231641334641325
+    },
+    "test3_evolution": {
+      "passed": true,
+      "rules_generated": 2
+    },
+    "test4_knowledge_base": {
+      "passed": true,
+      "n_discoveries": 2,
+      "n_validated": 2,
+      "summary": {
+        "discoveries": 2,
+        "validated": 2,
+        "best_score": 0.875,
+        "mean_score": 0.875,
+        "known_rules": 2
+      }
+    },
+    "test5_autonomous_loop": {
+      "passed": true,
+      "cycles": 4,
+      "mean_score": 0.875,
+      "validation_rate": 1.0
+    },
+    "test6_operator_apply": {
+      "passed": "True",
+      "output_norm": 40742.578869023564
+    },
+    "test7_space_project": {
+      "passed": "True",
+      "proj_dim": 10,
+      "recon_error": 2.4781859104316644e-15
+    },
+    "test8_law_predict": {
+      "passed": true,
+      "rmse": 1.2535259621725707e-15,
+      "r2": 1.0
+    }
+  },
+  "kb": {
+    "discoveries": 4,
+    "validated": 4,
+    "best_score": 0.875,
+    "mean_score": 0.875,
+    "known_rules": 4
+  },
+  "n_pass": 8,
+  "n_total": 8,
+  "passed": true
+}

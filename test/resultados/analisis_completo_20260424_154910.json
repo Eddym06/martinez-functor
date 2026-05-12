@@ -1,0 +1,109 @@
+{
+  "metadata": {
+    "total_tests": 45,
+    "successful_tests": 45,
+    "timestamp": "2026-04-24T15:49:10.506944",
+    "result_file": "resultados_experimento_completo_20260424_154640.json"
+  },
+  "global_statistics": {
+    "mean_improvement": 7.862681836191173e-05,
+    "std_improvement": 0.0012642509379116845,
+    "min_improvement": -0.002477670232637119,
+    "max_improvement": 0.00462625233486158,
+    "mean_alpha": 0.3324166666666667,
+    "std_alpha": 0.19392266499818941,
+    "wins": 6,
+    "ties": 33,
+    "losses": 6,
+    "t_statistic": 0.41253780740181556,
+    "p_value": 0.6819485415185991
+  },
+  "scenario_statistics": {
+    "correlated_noise": {
+      "tests": 5,
+      "mean_improvement": 0.0005456953642383633,
+      "std_improvement": 0.0008948734499669418,
+      "mean_alpha": 0.24300000000000002,
+      "wins": 2,
+      "ties": 2,
+      "losses": 1
+    },
+    "high_dim_noise": {
+      "tests": 5,
+      "mean_improvement": -0.0008518424180675499,
+      "std_improvement": 0.0009185078994890738,
+      "mean_alpha": 0.25125000000000003,
+      "wins": 0,
+      "ties": 3,
+      "losses": 2
+    },
+    "linear": {
+      "tests": 5,
+      "mean_improvement": -0.0001591781287145988,
+      "std_improvement": 0.0013279084453829359,
+      "mean_alpha": 0.27875,
+      "wins": 1,
+      "ties": 3,
+      "losses": 1
+    },
+    "mnist_like": {
+      "tests": 5,
+      "mean_improvement": 0.0001453727288164286,
+      "std_improvement": 0.00043807114763940835,
+      "mean_alpha": 0.265,
+      "wins": 0,
+      "ties": 5,
+      "losses": 0
+    },
+    "nonlinear_mixture": {
+      "tests": 5,
+      "mean_improvement": -0.00011580913567668105,
+      "std_improvement": 0.0001767151308687546,
+      "mean_alpha": 0.45125000000000004,
+      "wins": 0,
+      "ties": 5,
+      "losses": 0
+    },
+    "outliers": {
+      "tests": 5,
+      "mean_improvement": -0.0004996773645780328,
+      "std_improvement": 0.0011852504211918387,
+      "mean_alpha": 0.465,
+      "wins": 0,
+      "ties": 4,
+      "losses": 1
+    },
+    "s_curve": {
+      "tests": 5,
+      "mean_improvement": 0.0014608422482594642,
+      "std_improvement": 0.0021153754770778703,
+      "mean_alpha": 0.33000000000000007,
+      "wins": 2,
+      "ties": 3,
+      "losses": 0
+    },
+    "sparse_high_dim": {
+      "tests": 5,
+      "mean_improvement": 0.0005688571913737617,
+      "std_improvement": 0.0006671199037309257,
+      "mean_alpha": 0.34750000000000003,
+      "wins": 1,
+      "ties": 4,
+      "losses": 0
+    },
+    "swiss_roll": {
+      "tests": 5,
+      "mean_improvement": -0.0003866191203939495,
+      "std_improvement": 0.000738166586333589,
+      "mean_alpha": 0.36000000000000004,
+      "wins": 0,
+      "ties": 4,
+      "losses": 1
+    }
+  },
+  "alpha_distribution": {
+    "low_alpha": 18,
+    "medium_alpha": 25,
+    "high_alpha": 2
+  }
+}

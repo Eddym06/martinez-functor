@@ -1,0 +1,229 @@
+{
+  "problem_formulation": "\n        \\begin{cases}\n        \\frac{\\partial \\mathbf{u}}{\\partial t} + (\\mathbf{u} \\cdot \\nabla) \\mathbf{u} = -\\nabla p + \\nu \\Delta \\mathbf{u} + \\mathbf{f} \\\\\n        \\nabla \\cdot \\mathbf{u} = 0 \\\\\n        \\mathbf{u}(\\mathbf{x}, 0) = \\mathbf{u}_0(\\mathbf{x}), \\quad \\mathbf{u}_0 \\in L^2(\\mathbb{R}^3) \\cap L^\\infty(\\mathbb{R}^3) \\\\\n        \\int_{\\mathbb{R}^3} |\\mathbf{u}_0|^2 \\, d\\mathbf{x} < \\infty\n        \\end{cases}\n        ",
+  "simulation_data": {
+    "grid_size": 32,
+    "time_steps": 100,
+    "viscosity": 1.0,
+    "initial_energy": 684.4840326587921,
+    "final_energy": 109.22388232731248
+  },
+  "taa_analysis": {
+    "spectral_analysis": {
+      "eigenvalues": "[-4.00537055+0.00865875j -4.00537055-0.00865875j -3.99182294+0.01703971j\n -3.99182294-0.01703971j -3.96020132+0.01480979j -3.96020132-0.01480979j\n -3.94625678+0.j         -3.93234265+0.j         -3.92776205+0.j\n -3.88099951+0.01713708j -3.88099951-0.01713708j -3.82597721+0.j\n -3.79350074+0.01461211j -3.79350074-0.01461211j -3.77472097+0.j\n -3.74981088+0.j         -3.58184309+0.j         -3.6521752 +0.j\n -3.63628901+0.j         -3.53475454+0.j         -3.53946586+0.j\n -3.48915635+0.j         -3.43084706+0.j         -3.30106861+0.j\n -3.32071421+0.j         -3.24203013+0.j          0.02748073+0.j\n  0.01894065+0.j         -3.19195443+0.j         -3.12924966+0.j\n -0.00960209+0.j         -0.01123082+0.j         -0.02331353+0.01590286j\n -0.02331353-0.01590286j -2.27863874+0.j         -2.21922222+0.j\n -2.15541161+0.j         -2.09194611+0.j         -2.3440489 +0.j\n -2.58782165+0.j         -2.64183448+0.j         -2.02503429+0.j\n -1.97921479+0.j         -0.05622664+0.01399068j -0.05622664-0.01399068j\n -2.50232931+0.j         -1.90406149+0.j         -0.08247968+0.j\n -2.69528637+0.j         -1.83041641+0.j         -0.09972007+0.j\n -0.1166533 +0.j         -1.71261783+0.j         -2.75275174+0.j\n -1.65980282+0.j         -1.59719869+0.j         -0.17215338+0.00717942j\n -0.17215338-0.00717942j -1.53135761+0.j         -0.23016658+0.00392879j\n -0.23016658-0.00392879j -3.0675777 +0.j         -1.4824295 +0.j\n -1.41559423+0.j         -0.27352041+0.j         -1.35570051+0.j\n -0.49789594+0.j         -0.45280705+0.j         -0.39908152+0.j\n -0.54096524+0.j         -0.37513946+0.j         -1.31586623+0.j\n -0.5610775 +0.j         -3.05119988+0.j         -0.33674886+0.j\n -2.81270217+0.j         -0.62469345+0.j         -1.02793448+0.j\n -0.95778511+0.j         -0.91694321+0.j         -1.06967393+0.j\n -0.85165868+0.j         -0.81218097+0.j         -0.66607541+0.j\n -2.97222494+0.j         -1.24138195+0.j         -1.12889403+0.j\n -2.41491805+0.j         -0.74880592+0.j         -2.87889409+0.j\n -1.169193  +0.j         -3.71029394+0.j         -0.71041831+0.j\n -3.38611073+0.j         -0.13516132+0.j         -2.91745399+0.j\n -3.87347302+0.j         -2.45161942+0.j         -1.77889938+0.j\n -0.31954686+0.j        ]",
+      "spectral_gap": 0.01894064919923423,
+      "unstable_modes": 2,
+      "neutral_modes": 0,
+      "max_growth_rate": 0.027480727073527934,
+      "resonant_frequencies": "[ 0.00865875 -0.00865875  0.01703971 -0.01703971  0.01480979 -0.01480979\n  0.01713708 -0.01713708  0.01461211 -0.01461211  0.01590286 -0.01590286\n  0.01399068 -0.01399068  0.00717942 -0.00717942  0.00392879 -0.00392879]",
+      "classification": "MIXED"
+    },
+    "regularity_implications": {
+      "regularity_prediction": "UNCERTAIN",
+      "explanation": "Espectro mixto, an\u00e1lisis adicional necesario",
+      "confidence": 0.4,
+      "key_indicators": {
+        "max_growth_rate": 0.027480727073527934,
+        "unstable_modes": 2,
+        "spectral_classification": "MIXED"
+      }
+    }
+  },
+  "ergon_analysis": {
+    "energy_analysis": {
+      "kinetic_energy": 54.61194116365624,
+      "dissipation_rate": 346.31972221247304,
+      "pressure_work": -0.02431279810015049,
+      "energy_rate": -346.3440350105732,
+      "energy_spectrum": "[191.43794837 136.46245105 102.29050303  74.56624886  64.90536626\n  52.5133049   38.33696003  32.69199626  28.13020376  22.68942743\n  21.07048534  17.78189948  17.80130083  16.42861737  16.10405087\n  15.81845864  15.50815004  14.97024375  14.39902808  14.41231213\n  13.90746416  12.84684836  12.82915305  11.13743817  12.01344246\n  10.08414755   6.15765377  10.18906771   0.        ]",
+      "cascade_direction": "DIRECT_CASCADE",
+      "kolmogorov_scaling": {
+        "kolmogorov_law": "False",
+        "exponent": 0.8882743005375285,
+        "r_squared": 0.96380806855909,
+        "deviation": 0.7783923661291382
+      }
+    },
+    "regularity_implications": {
+      "regularity_prediction": "UNCERTAIN",
+      "explanation": "Comportamiento energ\u00e9tico at\u00edpico",
+      "confidence": 0.4,
+      "key_indicators": {
+        "dissipation_rate": 346.31972221247304,
+        "energy_rate": -346.3440350105732,
+        "cascade_direction": "DIRECT_CASCADE",
+        "kolmogorov_scaling": 0.8882743005375285
+      }
+    }
+  },
+  "otu_analysis": {
+    "singularity_analysis": {
+      "strain_tensor_eigenvalues": "[[ 0.04454612 -0.01482769 -0.05759008]\n [ 0.0596174  -0.02037941 -0.03426026]\n [ 0.05451279 -0.04878228  0.00690293]\n ...\n [-0.01447214  0.06376228  0.05060119]\n [ 0.09703792 -0.05265287 -0.02159746]\n [-0.0797127   0.01643034  0.05383337]]",
+      "max_strain_rate": 0.18127538277435207,
+      "vorticity_magnitude": 9.048787357612738,
+      "blowup_criteria": {
+        "beale_kato_majda": {
+          "criterion": "\u222b\u2080\u1d57 \u2016\u03c9(\u03c4)\u2016_\u221e d\u03c4 < \u221e \u21d2 regularidad",
+          "avg_vorticity_magnitude": 0.04560915437145763,
+          "integral_estimate": 0.4560915437145763,
+          "blowup_risk": 0.009121830874291526
+        },
+        "constantin_feferman_majda": {
+          "criterion": "Control de traza(S\u00b2) como medida de estiramiento",
+          "avg_stretching": 0.00310611548957693,
+          "blowup_risk": 0.015530577447884652
+        },
+        "pressure_accumulation": {
+          "criterion": "Acumulaci\u00f3n de presi\u00f3n en regiones peque\u00f1as",
+          "max_pressure_gradient": 0.0011516520034078215,
+          "blowup_risk": 2.303304006815643e-05
+        },
+        "vortex_stretching": {
+          "criterion": "Estiramiento de v\u00f3rtices \u03c9\u00b7S\u03c9",
+          "avg_vortex_stretching": -1.4348303771343093e-08,
+          "blowup_risk": 0.0
+        }
+      },
+      "self_similarity": {
+        "scaling_exponent": 0.08113814877262616,
+        "self_similar": "False",
+        "scale_factors": [
+          0.019480564362520207,
+          0.01930155072374405,
+          0.02000622576267543,
+          0.023218131616825458
+        ]
+      },
+      "singularity_indicators": {
+        "strain_ratio": 1.1542503643897073,
+        "vorticity_magnitude": 9.048787357612738,
+        "pressure_gradient": 0.0011098770319867843,
+        "composite_singularity_index": 0.03966123015471604
+      }
+    },
+    "regularity_implications": {
+      "regularity_prediction": "LIKELY_REGULAR",
+      "explanation": "Indicadores de singularidad bajos",
+      "confidence": 0.9556340868173607,
+      "total_risk": 0.044365913182639244,
+      "component_risks": {
+        "blowup_criteria_avg": 0.006168860340561083,
+        "self_similarity": 0.1,
+        "composite_index": 0.03966123015471604
+      }
+    }
+  },
+  "ccd_analysis": {
+    "ccd_analysis": {
+      "original_dimension": 98304,
+      "reduced_dimension": 2,
+      "reduction_ratio": 49152.0,
+      "ecosystem_diagnosis": {
+        "alpha_class": "POLYNOMIAL",
+        "alpha_rate": 8.315887105448999,
+        "d_star": 2,
+        "d_star_taa": 2,
+        "n_signal_mp": 7,
+        "gamma_otu": 4.592575184201233,
+        "optimal_n_components": 2,
+        "optimal_n_neighbors": 15,
+        "optimal_diffusion_alpha": 1.0,
+        "optimal_diffusion_time": 0.21773801975806872,
+        "optimal_langevin_steps": 6,
+        "thermo_beta_c": 1.0,
+        "thermo_d_star": 100,
+        "strategy": "diffusion_deep_calibrated",
+        "dual_budget_verified": false,
+        "dual_budget_ratio": 3.0,
+        "correlation_dimension": 2.243155655897663
+      },
+      "manifold_analysis": {
+        "average_curvature": 0.00282591341594014,
+        "intrinsic_dimension": "1",
+        "homology_groups": {
+          "betti_0": 1,
+          "betti_1": 2451,
+          "betti_2": 0
+        },
+        "volume_growth": 0.036088059268991265,
+        "fractal_dimension": 0.90082097500318
+      },
+      "singularity_detection": {
+        "singularity_detected": true,
+        "singularity_type": "BLOWUP",
+        "confidence": 0.8,
+        "high_density_points": 10,
+        "max_curvature": 0.014187737994066474
+      },
+      "skip_alpha": 0.2,
+      "effective_dimension": 4
+    },
+    "regularity_implications": {
+      "regularity_prediction": "UNCERTAIN",
+      "explanation": "Variedad con caracter\u00edsticas mixtas",
+      "confidence": 0.49500000000000005,
+      "key_factors": {
+        "reduction_ratio": 49152.0,
+        "skip_alpha": 0.2,
+        "singularity_detected": true,
+        "average_curvature": 0.00282591341594014
+      }
+    }
+  },
+  "final_conclusions": {
+    "final_prediction": "LIKELY_REGULAR",
+    "consensus_value": 0.7123032998599809,
+    "final_confidence": 0.7123032998599809,
+    "conclusion": "El an\u00e1lisis sugiere que las soluciones son probablemente globalmente suaves.",
+    "agent_predictions": {
+      "TAA": {
+        "regularity_prediction": "UNCERTAIN",
+        "explanation": "Espectro mixto, an\u00e1lisis adicional necesario",
+        "confidence": 0.4,
+        "key_indicators": {
+          "max_growth_rate": 0.027480727073527934,
+          "unstable_modes": 2,
+          "spectral_classification": "MIXED"
+        }
+      },
+      "Ergon": {
+        "regularity_prediction": "UNCERTAIN",
+        "explanation": "Comportamiento energ\u00e9tico at\u00edpico",
+        "confidence": 0.4,
+        "key_indicators": {
+          "dissipation_rate": 346.31972221247304,
+          "energy_rate": -346.3440350105732,
+          "cascade_direction": "DIRECT_CASCADE",
+          "kolmogorov_scaling": 0.8882743005375285
+        }
+      },
+      "OTU": {
+        "regularity_prediction": "LIKELY_REGULAR",
+        "explanation": "Indicadores de singularidad bajos",
+        "confidence": 0.9556340868173607,
+        "total_risk": 0.044365913182639244,
+        "component_risks": {
+          "blowup_criteria_avg": 0.006168860340561083,
+          "self_similarity": 0.1,
+          "composite_index": 0.03966123015471604
+        }
+      },
+      "CCD": {
+        "regularity_prediction": "UNCERTAIN",
+        "explanation": "Variedad con caracter\u00edsticas mixtas",
+        "confidence": 0.49500000000000005,
+        "key_factors": {
+          "reduction_ratio": 49152.0,
+          "skip_alpha": 0.2,
+          "singularity_detected": true,
+          "average_curvature": 0.00282591341594014
+        }
+      }
+    },
+    "recommendations": [
+      "1. Continuar con an\u00e1lisis matem\u00e1tico riguroso de los criterios de explosi\u00f3n.",
+      "2. Estudiar soluciones auto-similares y su estabilidad.",
+      "3. Analizar el papel de la presi\u00f3n en la formaci\u00f3n de singularidades."
+    ]
+  },
+  "mathematical_analysis": "MathematicalAnalysis(regularity_class='LIKELY_REGULAR', energy_estimate=0.95, enstrophy_growth=0.3, pressure_bounds=(-10.0, 10.0), vorticity_amplification=2.5, scaling_exponent=-1.2, singularity_risk=np.float64(0.28769670014001913), singularity_type=None, proof_strategy='\\n            Estrategia para probar regularidad global:\\n            1. Establecer estimativas de energ\u00eda uniformes\\n            2. Controlar la norma L\u221e de la vorticidad usando el criterio de Beale-Kato-Majda\\n            3. Demostrar que \u222b\u2080\u1d57 \u2016\u03c9(\u03c4)\u2016_\u221e d\u03c4 permanece finito para todo t\\n            4. Usar estimativas de regularidad bootstrap para extender la soluci\u00f3n suavemente\\n            ', invariants={'energy_conservation': 0.98, 'helicity': 0.85, 'circulation': 0.92, 'topological_invariants': 0.75})"
+}

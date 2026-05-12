@@ -1,0 +1,126 @@
+{
+  "summary": {
+    "passed": 3,
+    "total": 6,
+    "success_rate": 50.0
+  },
+  "results": [
+    {
+      "test_name": "ChebyshevShell vs SpectralPreprocessor",
+      "passed": "False",
+      "metrics": {
+        "chebyshev_time": 2.02348256111145,
+        "chebyshev_error": 0.8335361261641413,
+        "chebyshev_correlation": 0.21516667024711328,
+        "chebyshev_rank": 12,
+        "chebyshev_var_explained": 1.0,
+        "spectral_time": 0.033987998962402344,
+        "spectral_error": 0.2751399900574423,
+        "spectral_correlation": 0.8650256024896885,
+        "spectral_rank": 30,
+        "spectral_var_explained": 0.9999999999999726
+      },
+      "issues": [
+        "ChebyshevShell destroys distance correlation: \u03c1=0.215"
+      ],
+      "recommendations": [
+        "Replace ChebyshevShell with SpectralPreprocessor as Layer 1",
+        "ChebyshevShell is 59.5x slower than SpectralPreprocessor"
+      ]
+    },
+    {
+      "test_name": "DiffusionGeometry Scalability",
+      "passed": true,
+      "metrics": {
+        "time_n100": 0.0834190845489502,
+        "mem_n100": 0.024,
+        "time_n500": 1.5262439250946045,
+        "mem_n500": 0.12,
+        "time_n1000": 0.08356046676635742,
+        "mem_n1000": 0.24,
+        "time_n2000": 0.10162854194641113,
+        "mem_n2000": 0.48
+      },
+      "issues": [],
+      "recommendations": []
+    },
+    {
+      "test_name": "CoupledOscillators Resonance Detection",
+      "passed": true,
+      "metrics": {
+        "n_groups": 2,
+        "group_sizes": [
+          10,
+          20
+        ],
+        "transform_shape": [
+          500,
+          2
+        ],
+        "coherence_shape": [
+          500,
+          2
+        ],
+        "explained_variance": 0.9811357368388776
+      },
+      "issues": [],
+      "recommendations": []
+    },
+    {
+      "test_name": "Langevin Purification",
+      "passed": "True",
+      "metrics": {
+        "error_before": 0.9439698258983178,
+        "error_after": 0.5425224473915055,
+        "improvement": 0.4252756470523617,
+        "time_purify": 0.03809785842895508
+      },
+      "issues": [],
+      "recommendations": []
+    },
+    {
+      "test_name": "Full CCD Pipeline",
+      "passed": "False",
+      "metrics": {
+        "time_fit": 2.2852349281311035,
+        "time_transform": 0.004781246185302734,
+        "reconstruction_error": 5.750026211159442,
+        "k_effective": 8,
+        "d_ambient": 50,
+        "reduction_ratio": 6.25,
+        "neighborhood_correlation": 0.007696549163865459,
+        "curse_escaped": true,
+        "cod_reduction": 84.0
+      },
+      "issues": [
+        "High reconstruction error: 5.750",
+        "Poor neighborhood preservation: \u03c1=0.008"
+      ],
+      "recommendations": [
+        "Increase decoder capacity or training epochs",
+        "Adjust diffusion parameters or use different kernel"
+      ]
+    },
+    {
+      "test_name": "Comparison with Baselines",
+      "passed": false,
+      "metrics": {},
+      "issues": [
+        "Comparison test failed: No module named 'sklearn'"
+      ],
+      "recommendations": []
+    }
+  ],
+  "critical_issues": [
+    "High reconstruction error: 5.750",
+    "Comparison test failed: No module named 'sklearn'",
+    "ChebyshevShell destroys distance correlation: \u03c1=0.215",
+    "Poor neighborhood preservation: \u03c1=0.008"
+  ],
+  "recommendations": [
+    "Increase decoder capacity or training epochs",
+    "Replace ChebyshevShell with SpectralPreprocessor as Layer 1",
+    "ChebyshevShell is 59.5x slower than SpectralPreprocessor",
+    "Adjust diffusion parameters or use different kernel"
+  ]
+}

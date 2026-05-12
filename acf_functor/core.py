@@ -21,6 +21,16 @@ import numpy as np
 import torch
 
 
+_EMITTED_WARNINGS: set[str] = set()
+
+
+def _warn_once(message: str) -> None:
+    if message in _EMITTED_WARNINGS:
+        return
+    _EMITTED_WARNINGS.add(message)
+    warnings.warn(message, stacklevel=2)
+
+
 class ReductionPath(Enum):
     HORNER_EXACT = auto()
     CHEBYSHEV_APPROX = auto()
@@ -275,13 +285,13 @@ class ChebyshevReducer:
 
         mono_coeffs = cls._chebyshev_to_monomial(cheb_coeffs, domain)
         if not torch.isfinite(mono_coeffs).all():
-            warnings.warn(
+            _warn_once(
                 "Monomial conversion became ill-conditioned; keeping Chebyshev/Clenshaw as primary runtime path."
             )
             mono_coeffs = torch.zeros_like(mono_coeffs)
 
         if cur_degree >= 80:
-            warnings.warn(
+            _warn_once(
                 "High Chebyshev degree detected. Prefer Clenshaw evaluation to avoid monomial conditioning issues."
             )
 
@@ -447,7 +457,7 @@ class KoopmanReducer:
             candidate_errors = {}
 
         if rec_error > 1e-2:
-            warnings.warn(
+            _warn_once(
                 "High EDMD reconstruction error. Consider richer observables (mixed/rbf) or larger rank."
             )
 

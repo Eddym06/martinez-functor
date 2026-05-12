@@ -131,14 +131,14 @@ print(json.dumps(exact_result, indent=4))
 print("\n[6] ALPHA INVARIANCE VERIFICATION")
 print("-"*40)
 
-def test_function(x):
+def alpha_test_function(x):
     return torch.sin(x) + 0.5*x**2
 
 def reduced_function(x):
     # Reduced approximation: x - x^3/6 + 0.5*x^2
     return x + 0.5*x**2 - (x**3)/6.0
 
-alpha_result = suite.verify_alpha_invariance(test_function, reduced_function)
+alpha_result = suite.verify_alpha_invariance(alpha_test_function, reduced_function)
 print("  Alpha invariance test:")
 print(json.dumps(alpha_result, indent=4))
 

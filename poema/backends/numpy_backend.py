@@ -50,7 +50,7 @@ class NumpyBackend(BackendProtocol):
             arr = np.asarray(x, dtype=dtype)
             y = arr.copy()
             for w, b in instructions:
-                y = np.fma(y, dtype(w), dtype(b)) if hasattr(np, "fma") else w * y + b
+                y = dtype(w) * y + dtype(b)
             return y
 
         # Also emit readable C-like pseudocode for inspection

@@ -1,0 +1,48 @@
+{
+  "timestamp": "20260423_234002",
+  "config": {
+    "n_samples": 1000,
+    "target_dim": 50,
+    "input_dimension": 784
+  },
+  "results": [
+    {
+      "method": "PCA",
+      "mse": 0.010941426269710064,
+      "relative_error": 0.3121105432510376,
+      "neighborhood_preservation": 0.848888888888889,
+      "distance_correlation": 0.9855216966828271,
+      "distance_correlation_pvalue": 0.0,
+      "input_dimension": 784,
+      "output_dimension": 50,
+      "reduction_ratio": 15.68,
+      "fit_time": 1.6872756481170654,
+      "explained_variance": 0.8378692269325256
+    },
+    {
+      "method": "CCDEngine Mejorado",
+      "mse": 9.391162962470018e-16,
+      "relative_error": 9.14391860817623e-08,
+      "neighborhood_preservation": 0.37066666666666664,
+      "distance_correlation": 0.2973421811426272,
+      "distance_correlation_pvalue": 0.0,
+      "input_dimension": 784,
+      "output_dimension": 50,
+      "reduction_ratio": 15.68,
+      "fit_time": 11.216166019439697,
+      "effective_dimension": 4,
+      "certificate": {
+        "curse_escaped": true,
+        "reduction_ratio": 196.0,
+        "explained_variance_top_k": 0.07045335388741515,
+        "cod_reduction_log10": 1560.0
+      }
+    }
+  ],
+  "comparison": {
+    "mse_improvement": 11650768188599.62,
+    "time_ratio": 6.647500680731395,
+    "preservation_ratio": 0.43664921465968576,
+    "correlation_ratio": 0.30171043635411876
+  }
+}

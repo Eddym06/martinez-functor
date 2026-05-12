@@ -443,7 +443,8 @@ class GideonHardwareProfiler:
         # L1d en index0, L2 en index2, L3 en index3
         for idx, attr in [(0, "cpu_l1d_kb"), (2, "cpu_l2_kb")]:
             try:
-                val = open(f"/sys/devices/system/cpu/cpu0/cache/index{idx}/size").read().strip()
+                with open(f"/sys/devices/system/cpu/cpu0/cache/index{idx}/size", encoding="utf-8") as handle:
+                    val = handle.read().strip()
                 n = int(re.sub(r"[KkMm].*", "", val))
                 if "M" in val.upper():
                     n *= 1024
@@ -451,7 +452,8 @@ class GideonHardwareProfiler:
             except Exception:
                 pass
         try:
-            l3_str = open("/sys/devices/system/cpu/cpu0/cache/index3/size").read().strip()
+            with open("/sys/devices/system/cpu/cpu0/cache/index3/size", encoding="utf-8") as handle:
+                l3_str = handle.read().strip()
             n = int(re.sub(r"[KkMm].*", "", l3_str))
             caps.cpu_l3_mb = n / 1024 if "K" in l3_str.upper() else float(n)
         except Exception:

@@ -12,105 +12,105 @@
     "certificates_generated": [],
     "discoveries_made": [
       {
-        "pattern_id": "sym_odd_8311",
+        "pattern_id": "sym_odd_7143",
         "expression": "f(x) = -f(-x)",
         "confidence": 1.0,
         "category": "SYMMETRY_PROPERTY",
         "complexity": 1.63
       },
       {
-        "pattern_id": "sym_periodic \u03c0_6695",
+        "pattern_id": "sym_periodic \u03c0_1627",
         "expression": "f(x) = f(x + \u03c0)",
         "confidence": 1.0,
         "category": "SYMMETRY_PROPERTY",
         "complexity": 1.65
       },
       {
-        "pattern_id": "sym_periodic 2\u03c0_9597",
+        "pattern_id": "sym_periodic 2\u03c0_9300",
         "expression": "f(x) = f(x + 2\u03c0)",
         "confidence": 1.0,
         "category": "SYMMETRY_PROPERTY",
         "complexity": 1.66
       },
       {
-        "pattern_id": "const_0_5806",
+        "pattern_id": "const_0_8782",
         "expression": "f(0) = 0",
         "confidence": 1.0,
         "category": "NUMERICAL_CONSTANT",
         "complexity": 2.08
       },
       {
-        "pattern_id": "const_0_7591",
+        "pattern_id": "const_0_6791",
         "expression": "f(\u03c0) = 0",
         "confidence": 1.0,
         "category": "NUMERICAL_CONSTANT",
         "complexity": 2.08
       },
       {
-        "pattern_id": "sym_odd_8311",
+        "pattern_id": "sym_odd_7143",
         "expression": "f(x) = -f(-x)",
         "confidence": 1.0,
         "category": "SYMMETRY_PROPERTY",
         "complexity": 1.63
       },
       {
-        "pattern_id": "sym_periodic 2\u03c0_9597",
+        "pattern_id": "sym_periodic 2\u03c0_9300",
         "expression": "f(x) = f(x + 2\u03c0)",
         "confidence": 1.0,
         "category": "SYMMETRY_PROPERTY",
         "complexity": 1.66
       },
       {
-        "pattern_id": "const_0_5806",
+        "pattern_id": "const_0_8782",
         "expression": "f(0) = 0",
         "confidence": 1.0,
         "category": "NUMERICAL_CONSTANT",
         "complexity": 2.08
       },
       {
-        "pattern_id": "const_0_7591",
+        "pattern_id": "const_0_6791",
         "expression": "f(\u03c0) = 0",
         "confidence": 1.0,
         "category": "NUMERICAL_CONSTANT",
         "complexity": 2.08
       },
       {
-        "pattern_id": "sym_even_3105",
+        "pattern_id": "sym_even_2209",
         "expression": "f(x) = f(-x)",
         "confidence": 1.0,
         "category": "SYMMETRY_PROPERTY",
         "complexity": 1.62
       },
       {
-        "pattern_id": "sym_periodic 2\u03c0_9597",
+        "pattern_id": "sym_periodic 2\u03c0_9300",
         "expression": "f(x) = f(x + 2\u03c0)",
         "confidence": 1.0,
         "category": "SYMMETRY_PROPERTY",
         "complexity": 1.66
       },
       {
-        "pattern_id": "const_1_5806",
+        "pattern_id": "const_1_8782",
         "expression": "f(0) = 1",
         "confidence": 1.0,
         "category": "NUMERICAL_CONSTANT",
         "complexity": 2.08
       },
       {
-        "pattern_id": "sym_even_3105",
+        "pattern_id": "sym_even_2209",
         "expression": "f(x) = f(-x)",
         "confidence": 1.0,
         "category": "SYMMETRY_PROPERTY",
         "complexity": 1.62
       },
       {
-        "pattern_id": "const_0_5806",
+        "pattern_id": "const_0_8782",
         "expression": "f(0) = 0",
         "confidence": 1.0,
         "category": "NUMERICAL_CONSTANT",
         "complexity": 2.08
       },
       {
-        "pattern_id": "const_1_6293",
+        "pattern_id": "const_1_4931",
         "expression": "f(1) = 1",
         "confidence": 1.0,
         "category": "NUMERICAL_CONSTANT",
@@ -123,7 +123,7 @@
     "errors": [],
     "warnings": [],
     "performance_metrics": {
-      "compilation_time": 31.392771244049072,
+      "compilation_time": 55.931729316711426,
       "optimizations_applied": 15,
       "patterns_discovered": 15,
       "theorems_generated": 0,
@@ -131,11 +131,11 @@
       "quantum_optimizations": 3,
       "error_rate": 0.0
     },
-    "execution_time": 31.39277219772339,
+    "execution_time": 55.931731939315796,
     "quantum_discoveries": 0
   },
   "performance_metrics": {
-    "compilation_time": 31.392771244049072,
+    "compilation_time": 55.931729316711426,
     "optimizations_applied": 15,
     "patterns_discovered": 15,
     "theorems_generated": 0,

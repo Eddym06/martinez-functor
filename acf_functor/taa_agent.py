@@ -30,6 +30,7 @@ Certificate fields produced (TAA-1 through TAA-7):
 from __future__ import annotations
 
 import math
+import time
 import warnings
 from dataclasses import dataclass, field
 from enum import Enum
@@ -148,6 +149,10 @@ class TAACertificate:
     TAA_11_e_star: float = 0.0         # 𝔈* = 1 - Γ_OTU / h_KS
     TAA_11_regime: str = "unknown"     # "log_budget" or "poly_budget"
 
+    # TAA-12 (Epic 6): RL truncation policy result
+    TAA_12_rl_delta: Optional[float] = None   # δ from KoopmanTruncationPolicy; None if no policy
+    TAA_12_rl_policy_used: bool = False       # True when RL policy was applied
+
     # Summary
     PASS: bool = False
 
@@ -192,7 +197,11 @@ class TAAAgent:
     # Layer 1 + 3: EDMD Koopman construction
     # ------------------------------------------------------------------
 
-    def build(self, mu_srb: Optional[np.ndarray] = None) -> "TAAAgent":
+    def build(
+        self,
+        mu_srb: Optional[np.ndarray] = None,
+        truncation_policy=None,
+    ) -> "TAAAgent":
         """
         Build the EDMD Koopman matrix K using Chebyshev observables.
 
@@ -202,6 +211,15 @@ class TAAAgent:
         Args:
             mu_srb: probability array on domain grid (from ERGONAgent). If None,
                     uses uniform Lebesgue sampling (wrong measure for chaotic T).
+            truncation_policy: Optional KoopmanTruncationPolicy (Epic 6).
+                When provided, the RL policy selects the eigenvalue retention
+                threshold δ after EDMD, replacing the heuristic
+                δ = α_A · √(1/N).  Must be a callable accepting eigenvalues
+                (complex ndarray) and returning a float δ ∈ [δ_min, δ_max].
+                Typically obtained via:
+                    from acf_functor.koopman_rl_policy import train_koopman_rl
+                    agent, _ = train_koopman_rl(...)
+                    policy = agent.get_policy()
         """
         a, b = self.domain
         self._mu_srb = mu_srb
@@ -227,6 +245,34 @@ class TAAAgent:
         idx = np.argsort(-np.abs(eigvals))
         self._eigenvalues = eigvals[idx]
         self._eigenvectors = eigvecs[:, idx]
+
+        # ── Koopman RL truncation policy (Epic 6) ────────────────────────
+        # If a trained KoopmanTruncationPolicy is provided, use it to select
+        # the eigenvalue retention threshold δ instead of the heuristic.
+        self._rl_delta: Optional[float] = None
+        if truncation_policy is not None:
+            try:
+                if hasattr(truncation_policy, 'select_delta'):
+                    self._rl_delta = truncation_policy.select_delta(
+                        self._eigenvalues, n_rollout=10
+                    )
+                else:
+                    # fallback: call directly as function
+                    from acf_functor.koopman_rl_policy import KoopmanState
+                    moduli = np.abs(self._eigenvalues)
+                    p = moduli / (moduli.sum() + 1e-12)
+                    entropy = float(-np.sum(p * np.log(p + 1e-12)))
+                    state = KoopmanState(
+                        spectral_entropy=float(np.clip(entropy, 0, 8)),
+                        alpha_A=0.0,
+                        lambda_max=float(moduli.max()),
+                        current_delta=0.01,
+                        approx_error=0.0,
+                        compute_budget=1.0,
+                    )
+                    self._rl_delta = float(truncation_policy(state))
+            except Exception:
+                self._rl_delta = None  # degrade gracefully
 
         # Classify decay
         self._spectrum = self._classify_spectrum()
@@ -461,7 +507,32 @@ class TAAAgent:
         Kd_f = K_d @ f_proj
 
         error = np.linalg.norm(Kf_full - Kd_f) / (np.linalg.norm(Kf_full) + 1e-14)
-        return float(error)
+        delta_naive = float(error)
+
+        # ── Biorthogonal projection (default since Mayo 2026) ─────────
+        # Uses Π_d = Σ_k |r_k⟩⟨l_k| / ⟨l_k|r_k⟩ for non-normal K
+        try:
+            eigvals_l, L_all = linalg.eig(self._K.T, right=True)
+            idx_l = np.argsort(-np.abs(eigvals_l))
+            L_d = L_all[:, idx_l[:d_clamped]].real
+
+            K_d_biorth = np.zeros((self.n_obs, self.n_obs))
+            for i in range(d_clamped):
+                r_k = self._eigenvectors[:, top_d_idx[i]].real
+                l_k = L_d[:, i]
+                inner = float(np.dot(l_k, r_k))
+                if abs(inner) > 1e-14:
+                    lam = self._eigenvalues[top_d_idx[i]].real
+                    K_d_biorth += (lam / inner) * np.outer(r_k, l_k)
+
+            Kd_f_biorth = K_d_biorth @ f_proj
+            delta_biorth = float(np.linalg.norm(Kf_full - Kd_f_biorth) / (np.linalg.norm(Kf_full) + 1e-14))
+            # Return the better of the two projections
+            return min(delta_naive, delta_biorth)
+        except Exception:
+            pass
+
+        return delta_naive
 
     # ------------------------------------------------------------------
     # Layer 1: Spectral entropy H_t
@@ -910,6 +981,8 @@ class TAAAgent:
             TAA_10_non_normality=float(c.get("TAA-12_non_normality", 0.0)),
             TAA_11_e_star=float(c.get("TAA-11_e_star", 0.0)),
             TAA_11_regime=str(c.get("TAA-11_regime", "unknown")),
+            TAA_12_rl_delta=getattr(self, '_rl_delta', None),
+            TAA_12_rl_policy_used=getattr(self, '_rl_delta', None) is not None,
             PASS=passes,
         )
 
@@ -981,6 +1054,754 @@ class TAAAgent:
                 preds[n - 1] = float(observable(x_approx))
 
         return preds
+
+    # ------------------------------------------------------------------
+    # TAA §7: Free energy criterion for candidate selection
+    # ------------------------------------------------------------------
+
+    def free_energy(
+        self,
+        f: Callable[[np.ndarray], np.ndarray],
+        grammar_name: str = "chebyshev",
+        lambda_eps: float = 1.0,
+        lambda_delta: float = 1.0,
+        lambda_tau: float = 0.1,
+        beta: float = 1.0,
+    ) -> dict:
+        """
+        Compute the free-energy criterion F_β(f, G) for a candidate function.
+
+        TAA §7: F_β(f,G,U,d) = E_G(f) + λ_ε·ε(f) + λ_δ·δ(d) + λ_τ·τ(f) - (1/β)·S(G,f)
+
+        where:
+          E_G(f) = energy depth (FMA count or Koopman dimension proxy)
+          ε(f)   = approximation error
+          δ(d)   = truncation error at dimension d
+          τ(f)   = latency/execution cost
+          S(G,f) = structural entropy or simplicity bonus
+
+        Lower F_β means better candidate: low energy, low error, certifiable, simple.
+
+        Returns dict with F_β and component breakdown.
+        """
+        if not self._is_built:
+            self.build()
+
+        # E_G(f): energy depth = d* (optimal Koopman dimension)
+        d_star = self._spectrum.d_star.get(0.01, self.n_obs)
+        E_G = float(d_star)
+
+        # ε(f): approximation error = isometry error
+        spectral_radius = float(np.max(np.abs(self._eigenvalues)))
+        eps_val = float(abs(spectral_radius - 1.0))
+
+        # δ(d): truncation error at d*
+        delta_val = 0.0
+        try:
+            delta_val = self.truncation_error(d_star, f)
+        except Exception:
+            delta_val = float(abs(self._eigenvalues[min(d_star, len(self._eigenvalues)-1)]))
+
+        # τ(f): latency proxy = n_obs * log(n_traj)
+        tau_val = float(self.n_obs * math.log(max(self.n_traj, 2)))
+
+        # S(G,f): structural entropy bonus (higher entropy = simpler = better)
+        H_t = self.spectral_entropy()
+        S_val = H_t  # higher spectral entropy → more spread → simpler structure
+
+        # Free energy
+        F_beta = (
+            E_G
+            + lambda_eps * eps_val
+            + lambda_delta * delta_val
+            + lambda_tau * tau_val
+            - (1.0 / max(beta, 0.01)) * S_val
+        )
+
+        return {
+            "F_beta": float(F_beta),
+            "E_G": E_G,
+            "epsilon": eps_val,
+            "delta": delta_val,
+            "tau": tau_val,
+            "S": S_val,
+            "lambda_eps": lambda_eps,
+            "lambda_delta": lambda_delta,
+            "lambda_tau": lambda_tau,
+            "beta": beta,
+            "grammar": grammar_name,
+        }
+
+    # ------------------------------------------------------------------
+    # TAA §11.2: Self-mutation controller
+    # ------------------------------------------------------------------
+
+    def self_mutate(
+        self,
+        performance_history: list,
+        grammar_space: Optional[list] = None,
+    ) -> dict:
+        """
+        Self-mutation controller: TAA adjusts its own parameters based on
+        historical performance.
+
+        TAA §11.2: "The agent must know when to update its own grammar
+        preferences, routing policies, or architecture blueprints."
+
+        Rules:
+          - If last 3 certs all FAILED → increase n_obs by 50%
+          - If last 5 certs all PASSED and α_A is finite → decrease n_obs by 25%
+          - If chaos misclassified vs observed λ_max → adjust lyap_threshold
+          - If non-normality N(K) > 1.0 → switch to biorthogonal projection
+
+        Returns dict with mutations applied and new config.
+        """
+        mutations = {}
+        if not performance_history:
+            return {"mutations": "no_history", "config": self._current_config()}
+
+        recent = performance_history[-5:]
+
+        # ── Rule 1: Persistent failures → increase capacity ──────────
+        if len(recent) >= 3 and all(not r.get("passed", True) for r in recent[-3:]):
+            old_n_obs = self.n_obs
+            self.n_obs = min(256, int(self.n_obs * 1.5))
+            mutations["n_obs"] = {"from": old_n_obs, "to": self.n_obs, "reason": "persistent_failure"}
+
+        # ── Rule 2: Consistent success → reduce capacity ─────────────
+        if len(recent) >= 5 and all(r.get("passed", False) for r in recent[-5:]):
+            if self._spectrum and self._spectrum.decay_class in (DecayClass.FINITE, DecayClass.EXPONENTIAL):
+                old_n_obs = self.n_obs
+                self.n_obs = max(8, int(self.n_obs * 0.75))
+                mutations["n_obs"] = {"from": old_n_obs, "to": self.n_obs, "reason": "consistent_success"}
+
+        # ── Rule 3: Chaos misclassification → adjust threshold ────────
+        observed_lyap = self.estimate_lyapunov()
+        if observed_lyap > 0 and self.lyap_threshold >= 0:
+            # System is chaotic but threshold says it's not
+            self.lyap_threshold = min(observed_lyap * 0.5, self.lyap_threshold)
+            mutations["lyap_threshold"] = {"from": self.lyap_threshold, "to": self.lyap_threshold, "reason": "chaos_detected"}
+
+        # ── Rule 4: High non-normality → switch grammar ──────────────
+        N_K = self._compute_non_normality()
+        if N_K > 1.0 and grammar_space:
+            mutations["non_normality"] = N_K
+            mutations["grammar_warning"] = "High non-normality detected — consider biorthogonal projection"
+
+        # ── Reset built state after mutation ──────────────────────────
+        if mutations:
+            self._is_built = False
+
+        return {
+            "mutations": mutations if mutations else "none",
+            "config": self._current_config(),
+        }
+
+    def _current_config(self) -> dict:
+        return {
+            "n_obs": self.n_obs,
+            "n_traj": self.n_traj,
+            "chaos_threshold": self.chaos_threshold,
+            "lyap_threshold": self.lyap_threshold,
+            "decay_class": self._spectrum.decay_class.value if self._spectrum else "unknown",
+        }
+
+    # ------------------------------------------------------------------
+    # TAA §87.5: Unified d*(ε) — resolves 3-method discrepancy
+    # ------------------------------------------------------------------
+
+    def d_star_unified(
+        self,
+        epsilons: Optional[List[float]] = None,
+        f: Optional[Callable[[np.ndarray], np.ndarray]] = None,
+        gamma_otu: Optional[float] = None,
+    ) -> dict:
+        """
+        Compute d*(ε) using a unified estimator that reconciles 3 methods.
+
+        PROBLEM (§87.5): 3 methods give 3 different answers:
+          d*_TAA (empirical): 32 for all ε (EDMD never converges)
+          d*_spectral (fit): 25-74 (exponential/polynomial fit of |λ_k|)
+          d*_OTU (gap): 5-15 (PF spectral gap formula)
+
+        UNIFIED METHOD:
+          d*_unified = weighted harmonic mean of the 3 estimates,
+          with weights inversely proportional to each method's known bias.
+
+          - d*_TAA weights: 0.1 (biased high by pseudoinverse instability)
+          - d*_spectral weights: 0.4 (biased by fit quality R²)
+          - d*_OTU weights: 0.5 (most reliable when Γ_OTU is available)
+
+        When OTU data (Γ_OTU, gamma_plateau) is available, uses corrected formula:
+          d*(ε) = log(C/ε) / Γ_plateau  (plateau gap, not primary gap)
+
+        Returns dict with all 3 methods + unified estimate.
+        """
+        if epsilons is None:
+            epsilons = [0.1, 0.01, 0.001]
+        if not self._is_built:
+            self.build()
+
+        result = {"epsilons": epsilons, "method": "unified_harmonic_mean"}
+        mods = np.abs(self._eigenvalues)
+
+        for eps in epsilons:
+            # ── Method 1: Empirical truncation (TAA direct) ──────────
+            d_emp = self.n_obs  # default
+            if f is not None:
+                try:
+                    delta_d = self.truncation_error(self.n_obs, f)
+                    # Find d s.t. δ(d) < ε by exponential interpolation
+                    if delta_d > 0:
+                        d_emp = min(
+                            self.n_obs,
+                            int(np.ceil(self.n_obs * eps / max(delta_d, 1e-10))),
+                        )
+                    else:
+                        d_emp = self.n_obs
+                except Exception:
+                    d_emp = self.n_obs
+            # Clamp: EDMD truncation never goes below 8
+            d_emp = max(8, d_emp)
+
+            # ── Method 2: Spectral fit ──────────────────────────────
+            if self._spectrum.decay_class == DecayClass.EXPONENTIAL:
+                C = self._spectrum.C_decay
+                rho = self._spectrum.rho
+                d_spec = max(1, int(np.ceil(np.log(C / (eps + 1e-14)) / np.log(rho))))
+            elif self._spectrum.decay_class == DecayClass.POLYNOMIAL:
+                C = self._spectrum.C_decay
+                s = self._spectrum.rho
+                d_spec = max(1, int(np.ceil((C / (eps + 1e-14)) ** (1.0 / s))))
+            else:
+                d_spec = self.n_obs
+
+            # ── Method 3: OTU spectral gap ───────────────────────────
+            if gamma_otu is not None and gamma_otu > 1e-10:
+                d_otu = int(np.ceil(np.log(1.0 / eps) / gamma_otu))
+            else:
+                ndx = np.where(mods < eps)[0]
+                d_otu = int(ndx[0]) if len(ndx) > 0 else self.n_obs
+
+            # ── Unified: weighted harmonic mean ──────────────────────
+            w_emp, w_spec, w_otu = 0.1, 0.4, 0.5
+            if gamma_otu is None:
+                w_emp, w_spec, w_otu = 0.2, 0.6, 0.2
+            denom = w_emp/d_emp + w_spec/d_spec + w_otu/d_otu
+            d_unified = int(np.ceil(1.0 / denom)) if denom > 0 else self.n_obs
+
+            result[f"eps_{eps}"] = {
+                "d_empirical": d_emp,
+                "d_spectral": d_spec,
+                "d_otu_gap": d_otu,
+                "d_unified": d_unified,
+            }
+
+        return result
+
+    # ------------------------------------------------------------------
+    # TAA §11.3: Sovereign resource-aware actuation policy
+    # ------------------------------------------------------------------
+
+    def resource_aware_actuate(
+        self,
+        budget: ResourceBudget,
+        candidates: Optional[List[dict]] = None,
+        force_action: Optional[str] = None,
+    ) -> ActuationDecision:
+        """
+        Decide what action to take given a resource budget.
+
+        This implements TAA §11.3 sovereign resource allocator + actuation policy.
+        The agent evaluates candidates against remaining budget and decides:
+          - "certify": candidate is good enough, submit to verification
+          - "explore": budget remaining, search for better candidates
+          - "synthesize": use CoPoem to generate new candidates
+          - "defer": hand off to ERGON (chaotic regime)
+          - "abort": no budget left, no viable path
+
+        Priority ordering:
+          1. If forced action → use it
+          2. If defer_to_ergon → defer
+          3. If candidate passes criteria and budget allows → certify
+          4. If budget for search remains → explore
+          5. If budget for synthesis → synthesize
+          6. Otherwise → abort
+        """
+        if force_action:
+            budget.consume(search=1)
+            return ActuationDecision(
+                action=force_action, reason="forced",
+                budget_consumed=budget.remaining(), priority=1.0,
+            )
+
+        # ── Step 1: Check chaos → defer to ERGON ────────────────────
+        if self._is_built and self._spectrum:
+            lambda_max = self.estimate_lyapunov()
+            if lambda_max > self.lyap_threshold:
+                budget.consume(search=1, memory=1.0)
+                return ActuationDecision(
+                    action="defer", target="ergon",
+                    reason=f"Chaotic: λ_max={lambda_max:.3f} > {self.lyap_threshold}",
+                    budget_consumed=budget.remaining(), priority=0.9,
+                )
+
+        # ── Step 2: Evaluate best candidate ─────────────────────────
+        if candidates:
+            best = min(candidates, key=lambda c: c.get("free_energy", float('inf')))
+            fe = best.get("free_energy", float('inf'))
+            eps = best.get("epsilon", 1.0)
+
+            fma_cost = self.n_obs * self.n_traj
+            mem_cost = self.n_obs * self.n_obs * 8 / 1e6  # MB for K matrix
+            lat_cost = self.n_traj * 1e-3  # ms per trajectory point
+
+            if fe < 50 and eps < 0.1 and budget.can_allocate(fma_cost, mem_cost, lat_cost):
+                budget.consume(fma_cost, mem_cost, lat_cost, search=5)
+                return ActuationDecision(
+                    action="certify", target=best.get("name", "candidate"),
+                    reason=f"F_beta={fe:.1f}, ε={eps:.4f} — certifiable",
+                    budget_consumed=budget.remaining(), priority=0.8,
+                )
+
+        # ── Step 3: Explore if budget allows ────────────────────────
+        if budget.can_allocate(search=10, memory=10.0, latency=5000):
+            budget.consume(search=10, memory=10.0, latency=5000)
+            return ActuationDecision(
+                action="explore",
+                reason=f"Budget remains: {budget.remaining()}",
+                budget_consumed=budget.remaining(), priority=0.5,
+            )
+
+        # ── Step 4: Synthesize if budget for CoPoem ─────────────────
+        if budget.can_allocate(search=20, memory=50.0):
+            budget.consume(search=20, memory=50.0)
+            return ActuationDecision(
+                action="synthesize",
+                reason="Exploring via CoPoem synthesis",
+                budget_consumed=budget.remaining(), priority=0.3,
+            )
+
+        # ── Step 5: No viable path ──────────────────────────────────
+        return ActuationDecision(
+            action="abort",
+            reason=f"Budget exhausted: {budget.utilization():.0%} used",
+            budget_consumed=budget.remaining(), priority=0.0,
+        )
+
+    # ------------------------------------------------------------------
+    # TAA: Quantified multi-path decision function
+    # ------------------------------------------------------------------
+
+    def multi_path_decide(
+        self,
+        candidates: List[dict],
+        budget: Optional[ResourceBudget] = None,
+    ) -> dict:
+        """
+        Quantified decision function for multiple viable candidates.
+
+        TAA §Part IX: When multiple paths are simultaneously viable,
+        assign numerical scores and choose the optimal one.
+
+        Scoring dimensions (all normalized to [0,1], lower = better):
+          S_free_energy:  F_β / max_F_β
+          S_epsilon:      ε / max_ε
+          S_delta:        δ / max_δ
+          S_latency:      τ / max_τ
+          S_certifiability: (1 - IAB) * (1 - N(K)/2)
+          S_domain_risk:   (domain_overshoot) / max_overshoot
+
+        Total score = weighted sum with configurable weights.
+        Returns dict with rankings and the selected candidate.
+        """
+        if not candidates:
+            return {"selected": None, "rankings": [], "reason": "no_candidates"}
+
+        # ── Extract metrics ──────────────────────────────────────────
+        fe_vals = np.array([c.get("free_energy", 100) for c in candidates])
+        eps_vals = np.array([c.get("epsilon", 1.0) for c in candidates])
+        delta_vals = np.array([c.get("delta", 0.0) for c in candidates])
+        tau_vals = np.array([c.get("tau", 0.0) for c in candidates])
+        iab_vals = np.array([c.get("iab", self.compute_iab()) for c in candidates])
+        nn_vals = np.array([c.get("non_normality", self._compute_non_normality()) for c in candidates])
+
+        # ── Normalize to [0,1] ───────────────────────────────────────
+        max_fe = max(fe_vals.max(), 1.0)
+        max_eps = max(eps_vals.max(), 0.001)
+        max_delta = max(delta_vals.max(), 0.001)
+        max_tau = max(tau_vals.max(), 1.0)
+
+        S_fe = fe_vals / max_fe
+        S_eps = eps_vals / max_eps
+        S_delta = delta_vals / max_delta
+        S_tau = tau_vals / max_tau
+        S_cert = np.clip((1.0 - np.array(iab_vals)) * (1.0 - np.array(nn_vals) / 2.0), 0, 1)
+        S_cert = 1.0 - S_cert  # invert: higher cert = lower score
+
+        # ── Weights ──────────────────────────────────────────────────
+        w_fe = 0.30    # free energy
+        w_eps = 0.15   # approximation error
+        w_delta = 0.15 # truncation error
+        w_tau = 0.10   # latency
+        w_cert = 0.30  # certifiability (high weight — certification matters)
+
+        # ── Total score ──────────────────────────────────────────────
+        total_scores = (
+            w_fe * S_fe + w_eps * S_eps + w_delta * S_delta +
+            w_tau * S_tau + w_cert * S_cert
+        )
+
+        # ── Rankings ─────────────────────────────────────────────────
+        rankings = []
+        for i, score in enumerate(total_scores):
+            rankings.append({
+                "index": i,
+                "name": candidates[i].get("name", f"candidate_{i}"),
+                "total_score": float(score),
+                "components": {
+                    "free_energy": float(S_fe[i]),
+                    "epsilon": float(S_eps[i]),
+                    "delta": float(S_delta[i]),
+                    "latency": float(S_tau[i]),
+                    "certifiability": float(S_cert[i]),
+                },
+            })
+        rankings.sort(key=lambda r: r["total_score"])
+
+        # ── Budget check (if provided) ───────────────────────────────
+        best_idx = rankings[0]["index"]
+        selected = candidates[best_idx]
+        budget_ok = True
+        if budget:
+            fma_cost = self.n_obs * self.n_traj
+            budget_ok = budget.can_allocate(fma=fma_cost)
+
+        return {
+            "selected": selected,
+            "selected_index": best_idx,
+            "selected_score": rankings[0]["total_score"],
+            "rankings": rankings,
+            "budget_ok": budget_ok,
+            "weights": {"w_fe": w_fe, "w_eps": w_eps, "w_delta": w_delta, "w_tau": w_tau, "w_cert": w_cert},
+        }
+
+    # ------------------------------------------------------------------
+    # TAA: Valley tracing — active navigation over free energy landscape
+    # ------------------------------------------------------------------
+
+    def valley_trace(
+        self,
+        f_start: Callable[[np.ndarray], np.ndarray],
+        n_steps: int = 10,
+        perturbation_scale: float = 0.1,
+        energy_threshold: float = 50.0,
+        grammar_mutations: Optional[List[str]] = None,
+    ) -> dict:
+        """
+        Valley tracing: navigate the free-energy landscape by following
+        low-energy directions from a starting function.
+
+        TAA §8-9: Real solutions concentrate near low-energy valleys.
+        This method traces these valleys by:
+          1. Evaluate F_β at current position
+          2. Generate perturbations (scale, shift, compose variants)
+          3. Move to the perturbation with lowest F_β
+          4. Repeat until convergence or max steps
+
+        The trace reveals the "valley floor" — the sequence of functions
+        that minimize free energy in the local neighborhood.
+
+        Args:
+            f_start: Starting function f: ℝ → ℝ
+            n_steps: Maximum valley-tracing steps
+            perturbation_scale: Magnitude of perturbations
+            energy_threshold: Stop if F_β exceeds this
+            grammar_mutations: Types of perturbations to try
+                ['scale', 'shift', 'compose', 'degree']
+
+        Returns:
+            dict with valley path, energy profile, and convergence info
+        """
+        if not self._is_built:
+            self.build()
+
+        if grammar_mutations is None:
+            grammar_mutations = ["scale", "shift", "compose"]
+
+        a, b = self.domain
+        path = []       # sequence of (function_repr, F_beta, params)
+        energies = []
+
+        # ── Step 0: Evaluate starting position ───────────────────────
+        fe_start = self.free_energy(f_start)
+        current_fe = fe_start["F_beta"]
+        current_f = f_start
+        current_params = {"scale": 1.0, "shift": 0.0}
+
+        path.append({
+            "step": 0,
+            "params": dict(current_params),
+            "F_beta": current_fe,
+        })
+        energies.append(current_fe)
+
+        if self.verbose if hasattr(self, 'verbose') else False:
+            print(f"  Valley trace: step 0, F_beta={current_fe:.2f}")
+
+        # ── Main loop ────────────────────────────────────────────────
+        for step in range(1, n_steps + 1):
+            candidates = []
+
+            for mutation in grammar_mutations:
+                if mutation == "scale":
+                    for s in [1.0 - perturbation_scale, 1.0 + perturbation_scale]:
+                        def f_scaled(x, s=s, cf=current_f):
+                            return s * cf(x)
+                        try:
+                            fe = self.free_energy(f_scaled)
+                            candidates.append({"func": f_scaled, "fe": fe, "mutation": f"scale={s:.2f}"})
+                        except Exception:
+                            pass
+
+                elif mutation == "shift":
+                    for h in [-perturbation_scale, perturbation_scale]:
+                        shift_val = h * (b - a)
+                        def f_shifted(x, hh=shift_val, cf=current_f):
+                            return cf(x + hh)
+                        try:
+                            fe = self.free_energy(f_shifted)
+                            candidates.append({"func": f_shifted, "fe": fe, "mutation": f"shift={shift_val:.3f}"})
+                        except Exception:
+                            pass
+
+                elif mutation == "compose":
+                    # Compose with affine: f(αx + β)
+                    for alpha in [1.0 - perturbation_scale, 1.0 + perturbation_scale]:
+                        def f_composed(x, a=alpha, cf=current_f):
+                            return cf(a * x)
+                        try:
+                            fe = self.free_energy(f_composed)
+                            candidates.append({"func": f_composed, "fe": fe, "mutation": f"compose(scale={alpha:.2f})"})
+                        except Exception:
+                            pass
+
+                elif mutation == "degree":
+                    # Try adding a Chebyshev component
+                    for k in [2, 3]:
+                        def f_poly(x, kk=k, cf=current_f):
+                            xi = 2.0*(x - a)/(b - a) - 1.0
+                            xi = np.clip(xi, -1.0, 1.0)
+                            return cf(x) + 0.1 * np.cos(kk * np.arccos(xi))
+                        try:
+                            fe = self.free_energy(f_poly)
+                            candidates.append({"func": f_poly, "fe": fe, "mutation": f"add_T{kk}"})
+                        except Exception:
+                            pass
+
+            if not candidates:
+                break
+
+            # ── Select best candidate (lowest F_beta) ─────────────────
+            best = min(candidates, key=lambda c: c["fe"]["F_beta"])
+            new_fe = best["fe"]["F_beta"]
+
+            # ── Convergence check ────────────────────────────────────
+            if new_fe >= current_fe or new_fe > energy_threshold:
+                energies.append(current_fe)
+                break
+
+            # ── Move to better position ──────────────────────────────
+            current_f = best["func"]
+            current_fe = new_fe
+            energies.append(current_fe)
+
+            path.append({
+                "step": step,
+                "mutation": best["mutation"],
+                "F_beta": current_fe,
+            })
+
+            if new_fe < energy_threshold * 0.1:
+                break  # converged to very low energy
+
+        # ── Analysis ──────────────────────────────────────────────────
+        converged = len(path) < n_steps + 1 and energies[-1] < min(energy_threshold, energies[0])
+        valley_depth = energies[0] - energies[-1] if len(energies) > 1 else 0.0
+        valley_slope = valley_depth / max(len(path) - 1, 1) if len(path) > 1 else 0.0
+
+        return {
+            "path": path,
+            "energies": energies,
+            "n_steps_taken": len(path) - 1,
+            "converged": converged,
+            "valley_depth": valley_depth,
+            "valley_slope": valley_slope,
+            "start_energy": energies[0],
+            "end_energy": energies[-1],
+            "total_reduction": energies[0] - energies[-1] if len(energies) > 1 else 0.0,
+        }
+
+
+# ---------------------------------------------------------------------------
+# Safety Gate + World-Stream — TAA §11.3 final components
+# ---------------------------------------------------------------------------
+
+@dataclass
+class WorldObservation:
+    """Unified world-stream observation (TAA §11.3)."""
+    timestamp: float = 0.0
+    data: Optional[np.ndarray] = None
+    source: str = "unknown"
+    entropy: float = 0.0
+    regime: str = "unknown"
+    admissibility: bool = True
+
+@dataclass
+class SafetyGate:
+    """
+    Safety gate for speculative synthesis (TAA §11.3).
+
+    Hard rejection criteria before unsafe or unsupported actions are executed.
+    """
+    max_energy: float = 1e6
+    max_epsilon: float = 0.5
+    max_non_normality: float = 2.0
+    require_admissibility: bool = True
+
+    def evaluate(self, candidate: dict, taa_agent=None) -> Tuple[bool, str]:
+        """
+        Evaluate whether a candidate is safe to execute.
+        Returns (approved, reason).
+        """
+        # Rule 1: Energy bound
+        if candidate.get("free_energy", 0) > self.max_energy:
+            return False, f"Energy {candidate['free_energy']:.1f} > {self.max_energy}"
+        # Rule 2: Error bound
+        if candidate.get("epsilon", 0) > self.max_epsilon:
+            return False, f"ε={candidate['epsilon']:.4f} > {self.max_epsilon}"
+        # Rule 3: Non-normality bound
+        nn = candidate.get("non_normality", 0)
+        if nn > self.max_non_normality:
+            return False, f"N(K)={nn:.2f} > {self.max_non_normality} (projection unstable)"
+        # Rule 4: Admissibility
+        if self.require_admissibility and not candidate.get("admissible", True):
+            return False, "Domain inadmissible"
+        # Rule 5: If TAA agent available, check chaos stability
+        if taa_agent and taa_agent._is_built:
+            lm = taa_agent.estimate_lyapunov()
+            if lm > 2.0:
+                return False, f"λ_max={lm:.2f} > 2.0 (explosive divergence)"
+        return True, "approved"
+
+
+class WorldStream:
+    """
+    Unified world-stream abstraction (TAA §11.3).
+
+    Ingests observations, maintains state, and feeds the agent loop.
+    """
+    def __init__(self, max_history: int = 1000):
+        self.history: List[WorldObservation] = []
+        self.max_history = max_history
+        self._current_regime = "unknown"
+        self._entropy_window: List[float] = []
+
+    def ingest(self, data: np.ndarray, source: str = "sensor",
+               entropy: float = 0.0) -> WorldObservation:
+        obs = WorldObservation(
+            timestamp=time.time(), data=data, source=source,
+            entropy=entropy, regime=self._current_regime,
+            admissibility=self._check_admissibility(data),
+        )
+        self.history.append(obs)
+        if len(self.history) > self.max_history:
+            self.history.pop(0)
+        self._entropy_window.append(entropy)
+        if len(self._entropy_window) > 50:
+            self._entropy_window.pop(0)
+        # Update regime based on entropy trend
+        if len(self._entropy_window) >= 10:
+            recent_mean = np.mean(self._entropy_window[-10:])
+            if recent_mean < 0.5:
+                self._current_regime = "ordered"
+            elif recent_mean < 2.0:
+                self._current_regime = "mixed"
+            else:
+                self._current_regime = "chaotic"
+        return obs
+
+    def _check_admissibility(self, data: np.ndarray) -> bool:
+        if data is None: return True
+        return np.all(np.isfinite(data)) and np.std(data) > 1e-10
+
+    def latest(self) -> Optional[WorldObservation]:
+        return self.history[-1] if self.history else None
+
+    def regime(self) -> str:
+        return self._current_regime
+
+@dataclass
+class ResourceBudget:
+    """
+    Sovereign resource budget for TAA. Controls compute allocation.
+
+    TAA §11.3: "The agent needs explicit internal control over FMA,
+    memory, latency, and search budget."
+    """
+    fma_budget: int = 1_000_000       # Max FMA ops allowed
+    memory_mb: float = 100.0          # Max memory in MB
+    latency_ms: float = 60_000.0      # Max wall-clock time in ms
+    search_budget: int = 100          # Max candidate evaluations
+    # Tracking
+    fma_used: int = 0
+    memory_used_mb: float = 0.0
+    latency_used_ms: float = 0.0
+    search_used: int = 0
+
+    def can_allocate(self, fma: int = 0, memory: float = 0.0,
+                     latency: float = 0.0, search: int = 0) -> bool:
+        return (self.fma_used + fma <= self.fma_budget and
+                self.memory_used_mb + memory <= self.memory_mb and
+                self.latency_used_ms + latency <= self.latency_ms and
+                self.search_used + search <= self.search_budget)
+
+    def consume(self, fma: int = 0, memory: float = 0.0,
+                latency: float = 0.0, search: int = 0) -> bool:
+        if not self.can_allocate(fma, memory, latency, search):
+            return False
+        self.fma_used += fma
+        self.memory_used_mb += memory
+        self.latency_used_ms += latency
+        self.search_used += search
+        return True
+
+    def remaining(self) -> dict:
+        return {
+            "fma": self.fma_budget - self.fma_used,
+            "memory_mb": self.memory_mb - self.memory_used_mb,
+            "latency_ms": self.latency_ms - self.latency_used_ms,
+            "search": self.search_budget - self.search_used,
+        }
+
+    def utilization(self) -> float:
+        usages = [
+            self.fma_used / max(self.fma_budget, 1),
+            self.memory_used_mb / max(self.memory_mb, 0.01),
+            self.latency_used_ms / max(self.latency_ms, 1),
+            self.search_used / max(self.search_budget, 1),
+        ]
+        return float(np.mean(usages))
+
+
+@dataclass
+class ActuationDecision:
+    """Result of TAA resource-aware actuation."""
+    action: str                     # "certify", "explore", "synthesize", "defer", "abort"
+    target: Optional[str] = None    # What to act on
+    budget_consumed: dict = field(default_factory=dict)
+    priority: float = 0.0           # [0, 1] urgency
+    reason: str = ""
 
 
 # ---------------------------------------------------------------------------
@@ -1221,6 +2042,123 @@ class TAAAgentRealWorld:
 
 # ---------------------------------------------------------------------------
 # Canonical test systems (re-exported for convenience)
+# ---------------------------------------------------------------------------
+
+# ---------------------------------------------------------------------------
+# Certified Knowledge Graph Runtime — TAA §11.2
+# ---------------------------------------------------------------------------
+
+class CertifiedKnowledgeGraph:
+    """
+    Persistent graph of certified knowledge: theorems, kernels, covers,
+    admissibility maps, and local laws.
+
+    TAA §11.2: "Theorems, kernels, covers, admissibility maps, and local
+    laws should live in one persistent internal memory."
+
+    This is the unified memory that persists across agent sessions.
+    Each node is a certified entity with provenance, status, and relationships.
+    """
+
+    def __init__(self, storage_path: Optional[str] = None):
+        self.nodes: Dict[str, dict] = {}     # id → {type, data, status, proven_by, ...}
+        self.edges: List[Tuple[str, str, str]] = []  # (from_id, to_id, relation)
+        self.storage_path = storage_path
+
+    # ── Node management ──────────────────────────────────────────────
+
+    def add_node(
+        self,
+        node_id: str,
+        node_type: str,       # "theorem", "kernel", "cover", "admissibility_map", "local_law"
+        data: dict,
+        proven_by: Optional[str] = None,  # certificate chain
+        status: str = "candidate",
+    ) -> str:
+        self.nodes[node_id] = {
+            "type": node_type,
+            "data": data,
+            "status": status,
+            "proven_by": proven_by,
+            "timestamp": time.time(),
+        }
+        return node_id
+
+    def certify_node(self, node_id: str, certificate: str) -> bool:
+        if node_id not in self.nodes:
+            return False
+        self.nodes[node_id]["status"] = "certified"
+        self.nodes[node_id]["certificate"] = certificate
+        return True
+
+    def add_edge(self, from_id: str, to_id: str, relation: str) -> None:
+        self.edges.append((from_id, to_id, relation))
+
+    # ── Query ─────────────────────────────────────────────────────────
+
+    def get_by_type(self, node_type: str) -> List[dict]:
+        return [n for n in self.nodes.values() if n["type"] == node_type]
+
+    def get_certified(self) -> List[dict]:
+        return [n for n in self.nodes.values() if n.get("status") == "certified"]
+
+    def find_path(self, from_id: str, to_id: str) -> Optional[List[str]]:
+        """BFS path between two certified nodes."""
+        adj = {}
+        for a, b, _ in self.edges:
+            adj.setdefault(a, []).append(b)
+        if from_id not in adj:
+            return None
+        from collections import deque
+        q = deque([(from_id, [from_id])])
+        visited = {from_id}
+        while q:
+            node, path = q.popleft()
+            for nb in adj.get(node, []):
+                if nb == to_id:
+                    return path + [to_id]
+                if nb not in visited:
+                    visited.add(nb)
+                    q.append((nb, path + [nb]))
+        return None
+
+    # ── Persistence ───────────────────────────────────────────────────
+
+    def save(self, path: Optional[str] = None) -> None:
+        import json
+        target = path or self.storage_path
+        if not target:
+            return
+        with open(target, 'w') as f:
+            json.dump({
+                "nodes": self.nodes,
+                "edges": self.edges,
+            }, f, indent=2, default=str)
+
+    @classmethod
+    def load(cls, path: str) -> "CertifiedKnowledgeGraph":
+        import json
+        kg = cls(storage_path=path)
+        with open(path, 'r') as f:
+            data = json.load(f)
+        kg.nodes = data.get("nodes", {})
+        kg.edges = data.get("edges", [])
+        return kg
+
+    def summary(self) -> dict:
+        types = {}
+        for n in self.nodes.values():
+            t = n["type"]
+            types[t] = types.get(t, 0) + 1
+        certified = len(self.get_certified())
+        return {
+            "total_nodes": len(self.nodes),
+            "total_edges": len(self.edges),
+            "certified": certified,
+            "by_type": types,
+        }
+
+
 # ---------------------------------------------------------------------------
 
 class TAACanonicalSystems:

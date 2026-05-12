@@ -1,6 +1,6 @@
 # AUTO-GENERATED FROM LEAN CERTIFICATE
 # Theorem: PoemaFormalVerification
-# Generated: 2026-04-17 20:58:39
+# Generated: 2026-05-05 15:41:27
 # Source: MathTest/PoemaFormalVerification_*.lean
 
 from dataclasses import dataclass

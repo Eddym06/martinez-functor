@@ -3,6 +3,7 @@
 import math
 import os
 import tempfile
+import warnings
 
 import pytest
 import torch
@@ -60,14 +61,18 @@ class TestPoemJITWrapper:
     def test_jit_wrapper_torchscript(self, poem):
         ast = poem.polynomial([1.0, 2.0, 3.0])
         wrapper = PoemJITWrapper(ast, domain=(-2.0, 2.0))
-        with pytest.raises(ValueError, match="Unknown type annotation"):
-            wrapper.to_torchscript()
+        with warnings.catch_warnings():
+            warnings.filterwarnings("ignore", message="`torch.jit.script` is deprecated.*", category=DeprecationWarning)
+            with pytest.raises(ValueError, match="Unknown type annotation"):
+                wrapper.to_torchscript()
 
     def test_jit_wrapper_torchscript_transcendental(self, poem):
         ast = poem.sin(domain=(-math.pi, math.pi), degree=20)
         wrapper = PoemJITWrapper(ast, domain=(-math.pi, math.pi))
-        with pytest.raises(ValueError, match="Unknown type annotation"):
-            wrapper.to_torchscript()
+        with warnings.catch_warnings():
+            warnings.filterwarnings("ignore", message="`torch.jit.script` is deprecated.*", category=DeprecationWarning)
+            with pytest.raises(ValueError, match="Unknown type annotation"):
+                wrapper.to_torchscript()
 
     def test_jit_wrapper_extra_repr(self, poem):
         ast = poem.polynomial([1.0, 2.0, 3.0])

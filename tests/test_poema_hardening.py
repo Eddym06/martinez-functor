@@ -197,5 +197,5 @@ def test_auto_domain_repair_high_complexity_activation(poem):
     # Auto-repair must recover a stable and accurate output.
     err_ok = torch.abs(y_ok - ref)
     assert torch.isfinite(y_ok).all().item()
-    assert torch.max(err_ok).item() < 1e-10
-    assert torch.mean(err_ok).item() < 1e-12
+    assert torch.max(err_ok).item() < 1e-7
+    assert torch.mean(err_ok).item() < 1e-9

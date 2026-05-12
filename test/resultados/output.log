@@ -1,0 +1,200 @@
+
+================================================================================
+AXIOM-1 — SUITE DE TESTS DE PRODUCCION
+================================================================================
+AXIOM-1 ONLINE — nativo ACF, produccion-ready
+  TAA n_obs=24, ERGON n_grid=256
+
+[TEST 1] Sistema caotico — mapa logistico r=3.9
+
+================================================================================
+AXIOM-1  CICLO #1
+Sistema: logistic_r3.9
+================================================================================
+[OBSERVE] Sistema: logistic_r3.9, dominio=(0.0, 1.0)
+    Trayectoria generada: 3001 pasos
+  [ERGON] Computando medida SRB y entropia KS...
+    h_KS=0.4980  lyap=0.4980  E=1.0000  Pesin=FAIL
+  [TAA] Construyendo analisis Koopman...
+    alpha_A=0.0000  class=chaotic  lambda_max=0.4994  d*=24
+  [CCD] Reduccion dimensional (target k=8)...
+    dim_original=10  dim_efectiva=10  trust=0.6000  ratio=1.0x
+
+  [CREATE] OwnOperator — derivado del espectro Koopman...
+    K_axiom shape=(24, 24)  gap=0.0000  pred_err=1.7888e+00
+  [CREATE] OwnSpace — calibrado por CCD + entropia...
+    W_axiom dim=10  orth_err=2.31e-15  entropy_cal=True
+  [CREATE] OwnLaw — SINDy sparse regression...
+    R2=1.0000  residual=1.2723e-15  terminos_activos=6
+        +0.9000 * x
+        -1.2000 * x2
+        -0.6000 * x3
+        +2.1000 * x(1-x)
+
+  [VALIDATE] Ejecutando 8 tests numericos...
+    Tests pasados: 7/8  score=0.88  VALIDADO
+        FAIL V1_op_pred_err: 1.789
+        OK V2_op_stability: 1
+        OK V3_space_orth: 2.313e-15
+        OK V4_space_compression: 10
+        OK V5_law_r2: 1
+        OK V6_law_residual: 1.272e-15
+        OK V7_cross_consistency: 1.019e-15
+        OK V8_thermodynamics: 2.711
+
+[RESULT] bundle_id=25f11998  valid=True  score=0.88  time=5.2s  kb_size=1
+  OwnOperator('K_axiom_logistic_r3.9', shape=(24, 24), gap=0.0000, err=1.7888, validated=True)
+  OwnSpace('W_axiom_logistic_r3.9', dim=10, entropy_cal=True, curv_adapted=False, validated=True)
+  OwnLaw('law_logistic_r3.9': 0.9000*x + -1.2000*x2 + -0.6000*x3 + 2.1000*x(1-x) + -0.6000*x2(1-x), R2=1.0000, residual=1.2723e-15, validated=True)
+  -> Test 1: PASS  score=0.88
+
+[TEST 2] Sistema cuasi-periodico — mapa del circulo omega=0.618
+
+================================================================================
+AXIOM-1  CICLO #2
+Sistema: circle_omega0.618_k0.3
+================================================================================
+[OBSERVE] Sistema: circle_omega0.618_k0.3, dominio=(0.0, 1.0)
+    Trayectoria generada: 3001 pasos
+  [ERGON] Computando medida SRB y entropia KS...
+    h_KS=0.0000  lyap=0.0000  E=1.0000  Pesin=FAIL
+  [TAA] Construyendo analisis Koopman...
+    alpha_A=0.0000  class=chaotic  lambda_max=0.0000  d*=24
+  [CCD] Reduccion dimensional (target k=8)...
+    dim_original=10  dim_efectiva=11  trust=0.6000  ratio=0.9x
+
+  [CREATE] OwnOperator — derivado del espectro Koopman...
+    K_axiom shape=(24, 24)  gap=0.0000  pred_err=8.9831e-01
+  [CREATE] OwnSpace — calibrado por CCD + entropia...
+    W_axiom dim=10  orth_err=2.20e-15  entropy_cal=True
+  [CREATE] OwnLaw — SINDy sparse regression...
+    R2=0.8232  residual=1.2658e-01  terminos_activos=13
+        -566.3823 * 1
+        -130.9530 * x
+        +1547.6973 * x2
+        +1384.3354 * x3
+
+  [VALIDATE] Ejecutando 8 tests numericos...
+    Tests pasados: 7/8  score=0.88  VALIDADO
+        FAIL V1_op_pred_err: 0.8983
+        OK V2_op_stability: 1
+        OK V3_space_orth: 2.197e-15
+        OK V4_space_compression: 10
+        OK V5_law_r2: 0.8232
+        OK V6_law_residual: 0.1266
+        OK V7_cross_consistency: 0.07781
+        OK V8_thermodynamics: 1.956
+
+[RESULT] bundle_id=7b14a82f  valid=True  score=0.88  time=7.9s  kb_size=2
+  OwnOperator('K_axiom_circle_omega0.618_k0.3', shape=(24, 24), gap=0.0000, err=0.8983, validated=True)
+  OwnSpace('W_axiom_circle_omega0.618_k0.3', dim=10, entropy_cal=True, curv_adapted=False, validated=True)
+  OwnLaw('law_circle_omega0.618_k0.3': -566.3823*1 + -130.9530*x + 1547.6973*x2 + 1384.3354*x3 + -1584.2519*x4, R2=0.8232, residual=1.2658e-01, validated=True)
+  -> Test 2: PASS  score=0.88
+
+[TEST 3] Evolucion autonoma de reglas
+  [EVOLVE] Ajustando parametros propios...
+      Regla aprendida: n_obs: 24 -> 28
+      Regla aprendida: k_modes: 12 -> 16
+      Regla aprendida: k_ccd: 8 -> 10
+  -> Test 3: PASS  reglas_aprendidas=2
+
+[TEST 4] Knowledge Base — acumulacion
+  -> Test 4: PASS  discoveries=2  validated=2
+
+[TEST 5] Loop autonomo multi-sistema (1 ronda)
+
+================================================================================
+ROUND 1/1
+================================================================================
+
+================================================================================
+AXIOM-1  CICLO #3
+Sistema: bernoulli_m2
+================================================================================
+[OBSERVE] Sistema: bernoulli_m2, dominio=(0.0, 1.0)
+    Trayectoria generada: 3001 pasos
+  [ERGON] Computando medida SRB y entropia KS...
+    h_KS=0.9739  lyap=0.9739  E=1.0000  Pesin=FAIL
+  [TAA] Construyendo analisis Koopman...
+    alpha_A=0.0000  class=chaotic  lambda_max=0.9738  d*=28
+  [CCD] Reduccion dimensional (target k=10)...
+    dim_original=10  dim_efectiva=11  trust=0.6000  ratio=0.9x
+
+  [CREATE] OwnOperator — derivado del espectro Koopman...
+    K_axiom shape=(28, 28)  gap=0.0000  pred_err=2.4173e+01
+  [CREATE] OwnSpace — calibrado por CCD + entropia...
+    W_axiom dim=10  orth_err=2.76e-15  entropy_cal=True
+  [CREATE] OwnLaw — SINDy sparse regression...
+    R2=0.8442  residual=1.3192e-01  terminos_activos=13
+        +676.1978 * 1
+        -690.1332 * x
+        -788.5789 * x2
+        +1741.1764 * x3
+
+  [VALIDATE] Ejecutando 8 tests numericos...
+    Tests pasados: 7/8  score=0.88  VALIDADO
+        FAIL V1_op_pred_err: 24.17
+        OK V2_op_stability: 1
+        OK V3_space_orth: 2.76e-15
+        OK V4_space_compression: 10
+        OK V5_law_r2: 0.8442
+        OK V6_law_residual: 0.1319
+        OK V7_cross_consistency: 0.07171
+        OK V8_thermodynamics: 1.886
+
+[RESULT] bundle_id=f40277b4  valid=True  score=0.88  time=6.1s  kb_size=3
+  OwnOperator('K_axiom_bernoulli_m2', shape=(28, 28), gap=0.0000, err=24.1733, validated=True)
+  OwnSpace('W_axiom_bernoulli_m2', dim=10, entropy_cal=True, curv_adapted=False, validated=True)
+  OwnLaw('law_bernoulli_m2': 676.1978*1 + -690.1332*x + -788.5789*x2 + 1741.1764*x3 + -938.1332*x4, R2=0.8442, residual=1.3192e-01, validated=True)
+
+================================================================================
+AXIOM-1  CICLO #4
+Sistema: tent_mu1.99
+================================================================================
+[OBSERVE] Sistema: tent_mu1.99, dominio=(0.0, 1.0)
+    Trayectoria generada: 3001 pasos
+  [ERGON] Computando medida SRB y entropia KS...
+    h_KS=0.6881  lyap=0.6881  E=1.0000  Pesin=FAIL
+  [TAA] Construyendo analisis Koopman...
+    alpha_A=0.0000  class=chaotic  lambda_max=0.6881  d*=28
+  [CCD] Reduccion dimensional (target k=10)...
+    dim_original=10  dim_efectiva=11  trust=0.6000  ratio=0.9x
+
+  [CREATE] OwnOperator — derivado del espectro Koopman...
+    K_axiom shape=(28, 28)  gap=0.0000  pred_err=2.8169e+00
+  [CREATE] OwnSpace — calibrado por CCD + entropia...
+    W_axiom dim=10  orth_err=2.70e-15  entropy_cal=True
+  [CREATE] OwnLaw — SINDy sparse regression...
+    R2=0.9971  residual=1.5044e-02  terminos_activos=13
+        -28.8795 * 1
+        +1207.1235 * x
+        -1453.2789 * x2
+        -5361.9828 * x3
+
+  [VALIDATE] Ejecutando 8 tests numericos...
+    Tests pasados: 7/8  score=0.88  VALIDADO
+        FAIL V1_op_pred_err: 2.817
+        OK V2_op_stability: 1
+        OK V3_space_orth: 2.696e-15
+        OK V4_space_compression: 10
+        OK V5_law_r2: 0.9971
+        OK V6_law_residual: 0.01504
+        OK V7_cross_consistency: 0.0105
+        OK V8_thermodynamics: 2.218
+
+[RESULT] bundle_id=064dfabd  valid=True  score=0.88  time=6.4s  kb_size=4
+  OwnOperator('K_axiom_tent_mu1.99', shape=(28, 28), gap=0.0000, err=2.8169, validated=True)
+  OwnSpace('W_axiom_tent_mu1.99', dim=10, entropy_cal=True, curv_adapted=False, validated=True)
+  OwnLaw('law_tent_mu1.99': -28.8795*1 + 1207.1235*x + -1453.2789*x2 + -5361.9828*x3 + 4520.7295*x4, R2=0.9971, residual=1.5044e-02, validated=True)
+  [EVOLVE] Ajustando parametros propios...
+      Regla aprendida: n_obs: 28 -> 32
+      Regla aprendida: k_modes: 16 -> 20
+      Regla aprendida: k_ccd: 10 -> 12
+  -> Test 5: PASS  ciclos=4  val_rate=100%
+
+[TEST 6] Operadores propios — aplicacion real
+  -> Test 6: PASS  ||K*v||=50894.4415
+
+[TEST 7] Espacio propio — proyeccion y reconstruccion
+  -> Test 7: PASS  dim_proj=10
+

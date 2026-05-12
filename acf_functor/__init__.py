@@ -309,7 +309,111 @@ from .shared_numerics import (
     compute_renyi_dimensions,
 )
 
-__version__ = "5.0.0"
+# ── Universal Constructor Engine ──────────────────────────────────────────
+from .hypergraph_engine import (
+    ComputableHyperGraph,
+    HyperNode,
+    HyperEdge,
+    NodeKind,
+    EdgeKind,
+    SubGraph,
+    build_linear_chain,
+    build_residual_network,
+    build_attention_block,
+    build_stencil_grid,
+    build_butterfly_fft,
+    from_torch_module,
+)
+from .massive_algebra import (
+    RandomizedSVD,
+    SparseChebyshevOperator,
+    CompressedLinearSolver,
+    TensorTrainEngine,
+    MassiveEigenSolver,
+    OperatorCompressor,
+    SpectralDecomposition,
+    CompressedSolution,
+    OperatorFunctionResult,
+    TensorTrainDecomposition as MassiveTTDecomposition,
+)
+from .algorithm_forge import (
+    AlgorithmForge,
+    ProblemSpec,
+    ProblemKind,
+    StrategyKind,
+    HardwareTarget,
+    ForgedAlgorithm,
+    StrategyCandidate,
+    ProblemAnalyzer,
+    StrategyExplorer,
+    AlgorithmSynthesizer,
+    AlgorithmVerifier,
+    BackendSynthesizer,
+    SynthesizedKernel,
+    GraphPattern,
+    BackendDecision,
+    HardwareProfile,
+    HardwareDetector,
+    GraphPatternDetector,
+    BackendSelector,
+    BackendCodeGenerator,
+)
+from .universal_constructor import (
+    UniversalConstructor,
+    ConstructorMode,
+    SystemKind,
+    ConstructionStage,
+    ConstructionPlan,
+    ConstructedSystem,
+    NeuralArchitect,
+    PDESolverArchitect,
+    GraphProcessorArchitect,
+)
+
+# ── Autonomous Discovery Engine ───────────────────────────────────────────
+from .autonomous_discovery import (
+    AutonomousDiscoveryEngine,
+    DFTStructureDiscovery,
+    OperatorStructureAnalyzer,
+    ButterflyGraphSynthesizer,
+    CoPoemRefinementLoop,
+    KnowledgeGraph,
+    DiscoveryResult,
+    DiscoveryKind,
+    KnowledgeEntry,
+    # Level-5 Autonomy components
+    TopologicalOperatorAnalyzer,
+    TopologicalFingerprint,
+    KoopmanStructuralAnalyzer,
+    OperatorGrammarSearch,
+    AutonomousRuleInduction,
+    AutonomousRule,
+    # Level-6: Algebraic Discovery Engine
+    LinearOperatorAtomLibrary,
+    OperatorAtom,
+    AlgebraicDiscoveryEngine,
+)
+
+# CCD Engine — Motor para Alta Dimensionalidad
+from .ccd_engine import (
+    CCDEngine,
+    CCDCertificate,
+    RobustCCDCertificate,
+    ChebyshevShell,  # DEPRECATED — use SpectralPreprocessor
+    SpectralPreprocessor,
+    SparseAdaptiveKernel,
+    DiffusionGeometry,
+    CoupledOscillators,
+    ResonanceGroup,
+    LocalEntropyOperator,
+    LangevinPurifier,
+    ManifoldDecoder,
+    ScoreMatchingLangevin,
+    preprocess_high_dim,
+    estimate_intrinsic_dimension,
+)
+
+__version__ = "6.0.0"
 
 __all__ = [
     "ACFFunctor",
@@ -413,6 +517,7 @@ __all__ = [
     "PolynomialDetector",
     "KoopmanExactPolynomial",
     "CertifiedKoopman",
+    "ChebyshevShell",  # DEPRECATED
     # Alpha unification
     "AlphaUnificationTheorem",
     "UnificationResult",
@@ -579,4 +684,305 @@ __all__ = [
     "SpectralClassifier",
     "RenyiResult",
     "compute_renyi_dimensions",
+    # ── Universal Constructor Engine ──
+    # Hypergraph Engine
+    "ComputableHyperGraph",
+    "HyperNode",
+    "HyperEdge",
+    "NodeKind",
+    "EdgeKind",
+    "SubGraph",
+    "build_linear_chain",
+    "build_residual_network",
+    "build_attention_block",
+    "build_stencil_grid",
+    "from_torch_module",
+    # Massive Algebra
+    "RandomizedSVD",
+    "SparseChebyshevOperator",
+    "CompressedLinearSolver",
+    "TensorTrainEngine",
+    "MassiveEigenSolver",
+    "OperatorCompressor",
+    "SpectralDecomposition",
+    "CompressedSolution",
+    "OperatorFunctionResult",
+    "MassiveTTDecomposition",
+    # Algorithm Forge
+    "AlgorithmForge",
+    "ProblemSpec",
+    "ProblemKind",
+    "StrategyKind",
+    "HardwareTarget",
+    "ForgedAlgorithm",
+    "StrategyCandidate",
+    "ProblemAnalyzer",
+    "StrategyExplorer",
+    "AlgorithmSynthesizer",
+    "AlgorithmVerifier",
+    # Universal Constructor
+    "UniversalConstructor",
+    "ConstructorMode",
+    "SystemKind",
+    "ConstructionStage",
+    "ConstructionPlan",
+    "ConstructedSystem",
+    "NeuralArchitect",
+    "PDESolverArchitect",
+    "GraphProcessorArchitect",
+    # Autonomous Discovery Engine
+    "AutonomousDiscoveryEngine",
+    "DFTStructureDiscovery",
+    "OperatorStructureAnalyzer",
+    "ButterflyGraphSynthesizer",
+    "CoPoemRefinementLoop",
+    "KnowledgeGraph",
+    "DiscoveryResult",
+    "DiscoveryKind",
+    "KnowledgeEntry",
+    # Level-5 Autonomy
+    "TopologicalOperatorAnalyzer",
+    "TopologicalFingerprint",
+    "KoopmanStructuralAnalyzer",
+    "OperatorGrammarSearch",
+    "AutonomousRuleInduction",
+    "AutonomousRule",
+    # Level-6: Algebraic Discovery Engine
+    "LinearOperatorAtomLibrary",
+    "OperatorAtom",
+    "AlgebraicDiscoveryEngine",
+    # ── Stochastic Membrane (Level 0.5) ──────────────────────────────────────
+    "SMConfig",
+    "PurifiedTrajectory",
+    "UncertaintyManifold",
+    "SMOutput",
+    "FilterAlgorithm",
+    "NoiseFamily",
+    "GaussianNoiseModel",
+    "StudentTNoiseModel",
+    "LevyStableNoiseModel",
+    "AdaptiveNoiseModelSelector",
+    "ParticleFilter",
+    "UnscentedKalmanFilter",
+    "TopologicalSeparator",
+    "RegimeDetector",
+    "MembraneMetaController",
+    "StochasticMembrane",
+    "EvolutionaryMembrane",
+    # ── ACF Agents (Level 1-4) ─────────────────────────────────────────────
+    "TAAAgent",
+    "TAAState",
+    "TAACertificate",
+    "TAAMode",
+    "DecayClass",
+    "KoopmanSpectrum",
+    "TAAAgentRealWorld",
+    "ERGONAgent",
+    "ERGONState",
+    "ERGONCertificate",
+    "LyapunovField",
+    "PesinCertificate",
+    "MixingIndex",
+    "ERGONRealWorld",
+    "GelfandTriple",
+    "OTUResult",
+    "RuelleSpectrum",
+    "MultifractalSpectrum",
+    "ThermodynamicPressure",
+    "SpectralDampingProfile",
+    "FrequencyMode",
+    "OTURealWorld",
+    "AutopoieticScientist",
+    "PSALReport",
+    "PSALPhase",
+    "DiscoveredLaw",
+    "KnowledgeBase",
+    "LawStatus",
+    # ── Calibration & Validation ───────────────────────────────────────────
+    "ParameterCalibration",
+    "CalibrationResult",
+    "quick_calibrate",
+    "NavierStokesValidator",
+    "ValidationMetrics",
+    "NavierStokes2DSpectral",
+    "Lorenz96",
+    "KuramotoSivashinsky",
+    "FinancialGenerator",
+    "validate_acf_on_real_systems",
+    # ── Unified Pipeline ───────────────────────────────────────────────────
+    "UnifiedPipeline",
+    "PipelineResult",
+    "StageResult",
+    "StageStatus",
+    "run_acf_pipeline",
+    "demo_pipeline",
+    # ── Distribution Theory for Hardware (Doctoral Proposal) ──────────────────
+    "DualDistribution",
+    "DirectionalSingularity",
+    "SpectralTensor",
+    "SingularityType",
+    "DistributionOrder",
+    "DistributionOperator",
+    "CohomologicalGluingProtocol",
+    "PatchDistribution",
+    "GluingCondition",
+    "CohomologicalGluingResult",
+    "DistributionGelfandBridge",
+    "DistributionTransferOperator",
+    "DistributionGelfandState",
+    "dirac",
+    "heaviside",
+    "dirac_derivative",
+    "dirac_comb",
+    "pv_cauchy",
+    "distribution_to_gelfand_analysis",
+    # ── Distribution Closures ──
+    "OrderTruncationBound",
+    "OrderTruncationAnalyzer",
+    "ExactConvolutionResult",
+    "AlgebraicConvolver",
+    "CCDSingularityProjection",
+    "CCDSingularityProjector",
+    "AdaptiveCostBound",
+    "AdaptiveCostAnalyzer",
+    # ── Distribution Stability ──
+    "StabilityAnalyzer",
+    "StabilityCertificate",
+    "PerturbationTrial",
+    "PerturbationAnalysisResult",
+    "analyze_stability",
+    "PROOF_SKETCH_STABILITY",
 ]
+
+# ── Stochastic Membrane (Level 0.5) ──────────────────────────────────────────
+from .stochastic_membrane import (
+    SMConfig,
+    PurifiedTrajectory,
+    UncertaintyManifold,
+    SMOutput,
+    FilterAlgorithm,
+    NoiseFamily,
+    GaussianNoiseModel,
+    StudentTNoiseModel,
+    LevyStableNoiseModel,
+    AdaptiveNoiseModelSelector,
+    ParticleFilter,
+    UnscentedKalmanFilter,
+    TopologicalSeparator,
+    RegimeDetector,
+    MembraneMetaController,
+    StochasticMembrane,
+    EvolutionaryMembrane,
+)
+
+# ── ACF Agents (Level 1-4) ──────────────────────────────────────────────────
+from .taa_agent import (
+    TAAAgent,
+    TAAState,
+    TAACertificate,
+    TAAMode,
+    DecayClass,
+    KoopmanSpectrum,
+    TAAAgentRealWorld,
+)
+from .ergon_agent import (
+    ERGONAgent,
+    ERGONState,
+    ERGONCertificate,
+    LyapunovField,
+    PesinCertificate,
+    MixingIndex,
+    ERGONRealWorld,
+)
+from .gelfand_triple import (
+    GelfandTriple,
+    OTUResult,
+    RuelleSpectrum,
+    MultifractalSpectrum,
+    ThermodynamicPressure,
+    SpectralDampingProfile,
+    FrequencyMode,
+    OTURealWorld,
+)
+from .autopoietic_scientist import (
+    AutopoieticScientist,
+    PSALReport,
+    PSALPhase,
+    DiscoveredLaw,
+    KnowledgeBase,
+    LawStatus,
+)
+
+# ── Calibration & Validation ────────────────────────────────────────────────
+from .parameter_calibration import (
+    ParameterCalibration,
+    CalibrationResult,
+    quick_calibrate,
+)
+from .navier_stokes_validator import (
+    NavierStokesValidator,
+    ValidationMetrics,
+    NavierStokes2DSpectral,
+    Lorenz96,
+    KuramotoSivashinsky,
+    FinancialGenerator,
+    validate_acf_on_real_systems,
+)
+
+# ── Unified Pipeline ────────────────────────────────────────────────────────
+from .unified_pipeline import (
+    UnifiedPipeline,
+    PipelineResult,
+    StageResult,
+    StageStatus,
+    run_acf_pipeline,
+    demo_pipeline,
+)
+
+# ── Distribution Theory for Hardware (Doctoral Proposal) ──────────────────
+from .distribution_theory import (
+    DualDistribution,
+    DirectionalSingularity,
+    SpectralTensor,
+    SingularityType,
+    DistributionOrder,
+    DistributionOperator,
+    CohomologicalGluingProtocol,
+    PatchDistribution,
+    GluingCondition,
+    CohomologicalGluingResult,
+    dirac,
+    heaviside,
+    dirac_derivative,
+    dirac_comb,
+    pv_cauchy,
+)
+
+from .distribution_gelfand import (
+    DistributionGelfandBridge,
+    DistributionTransferOperator,
+    DistributionGelfandState,
+    distribution_to_gelfand_analysis,
+)
+
+# ── Distribution Closures (Four Open Problems Resolved) ──────────────────────
+from .distribution_closures import (
+    OrderTruncationBound,
+    OrderTruncationAnalyzer,
+    ExactConvolutionResult,
+    AlgebraicConvolver,
+    CCDSingularityProjection,
+    CCDSingularityProjector,
+    AdaptiveCostBound,
+    AdaptiveCostAnalyzer,
+)
+
+# ── Distribution Stability (Doctoral Core — Perturbation Theory) ─────────────
+from .distribution_stability import (
+    StabilityAnalyzer,
+    StabilityCertificate,
+    PerturbationTrial,
+    PerturbationAnalysisResult,
+    analyze_stability,
+    PROOF_SKETCH_STABILITY,
+)

@@ -585,7 +585,7 @@ def run_full_benchmark(verbose: bool = False) -> BenchmarkSuiteReport:
         mean_epsilon_ratio=mean_eps,
         mean_compile_ms=mean_ms,
         groups_summary=groups,
-        timestamp=datetime.datetime.utcnow().isoformat(),
+        timestamp=datetime.datetime.now(datetime.UTC).isoformat(),
     )
 
 

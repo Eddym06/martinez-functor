@@ -1,0 +1,75 @@
+{
+  "timestamp": "2026-05-10_18:52:06",
+  "elapsed_seconds": 50.821906089782715,
+  "investigations": [
+    {
+      "name": "Sobolev Classification",
+      "passed": true,
+      "discoveries": [
+        "Monotonic Sobolev descent confirmed: H^{-3.1} \u2192 H^{1.4} \u2192 H^{-0.0}",
+        "Analytic functions (sin, exp) have Sobolev order > -0.5 \u2014 confirmed: 3.58"
+      ],
+      "metrics": {}
+    },
+    {
+      "name": "Distributional Derivative",
+      "passed": true,
+      "discoveries": [
+        "\u2713 D(H(x)) = \u03b4(x) verified: Heaviside derivative contains Dirac singularity (order 0 at x\u22480.000)",
+        "\u2713 D\u00b2(|x|) = 2\u03b4(x) verified: second derivative of absolute value detected as Dirac-type (n_sing=1)"
+      ],
+      "metrics": {}
+    },
+    {
+      "name": "Cohomological Gluing",
+      "passed": true,
+      "discoveries": [],
+      "metrics": {}
+    },
+    {
+      "name": "Microlocal Analysis",
+      "passed": true,
+      "discoveries": [
+        "Dirac wavefront set: order 0 (point mass) confirmed",
+        "\u03b4' wavefront set: order 1 (dipole) confirmed",
+        "Dirac comb microlocal density: 5 directional singularities detected"
+      ],
+      "metrics": {}
+    },
+    {
+      "name": "SRB Measure Discovery",
+      "passed": true,
+      "discoveries": [
+        "SRB measure discovered as \u039b fixed point: integral=1.013 (probability measure)",
+        "SRB measure is purely spectral \u2014 smooth invariant density (no atoms)"
+      ],
+      "metrics": {}
+    },
+    {
+      "name": "Distribution Algebra",
+      "passed": true,
+      "discoveries": [
+        "D(\u03b1T\u2081 + \u03b2T\u2082) = \u03b1D(T\u2081) + \u03b2D(T\u2082) \u2014 derivative is linear on distributions",
+        "\u222b\u03b4 = H + C \u2014 fundamental theorem of distribution calculus verified"
+      ],
+      "metrics": {}
+    },
+    {
+      "name": "Physical Systems",
+      "passed": true,
+      "discoveries": [
+        "Charge conservation verified: \u03a3q\u1d62 = -0.500 (matches expected -0.5)",
+        "Multi-point charge system correctly represented as sum of Diracs"
+      ],
+      "metrics": {}
+    },
+    {
+      "name": "Numerical Stability",
+      "passed": true,
+      "discoveries": [
+        "CRITICAL: All distributions evaluate WITHOUT NaN across singular points (x=0, boundaries, etc.) \u2014 the 'no-NaN' guarantee holds"
+      ],
+      "metrics": {}
+    }
+  ]
+}

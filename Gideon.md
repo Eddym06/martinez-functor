@@ -4,6 +4,10 @@
 
 ---
 
+**Nota de estado formal actual:** el enrutado TAA/ERGON de Gideon debe leerse contra el estado canónico vigente de certificados: TAA-3b ya es teorema probado, ERG-6a ya es derivado, y la dependencia formal dura del lado caótico se concentra ahora en ERG-5 y la geometría SRB restante.
+
+**Actualización Mayo 2026 — Soporte de Distribuciones en el Grafo de Cómputo:** Gideon ahora soporta distribuciones como ciudadanos de primera clase en el grafo de ejecución. Los nodos de tipo `DISTRIBUTION` y `SINGULARITY` pueden descomponerse en parches GPU independientes (`CohomologicalGluingProtocol`), con comunicación inter-patch gestionada por `GideonDispatcher`. El `AdaptiveCostAnalyzer` monitorea la densidad de singularidades para mantener la cota $O(\log N)$ de comunicación. Los kernels de singularidad (`gather/scatter` sobre tabla hash de posiciones) coexisten con los kernels FMA tradicionales. Suite integrada: 172 tests.
+
 ## Índice
 
 1. [¿Qué es Gideon?](#qué-es-gideon)
@@ -150,27 +154,51 @@ SEÑAL ENTRANTE (sistema T, datos {x_k})
 
 ### API del GideonAgentRouter
 
+El router expone dos niveles de interfaz:
+
+**Nivel 1: Diagnóstico y ruteo** — decide qué agente debe actuar:
+
 ```python
-from poema.backends.gideon import GideonAgentRouter, AgentRouterConfig
+from poema.backends.gideon.agent_router import GideonAgentRouter
 
-config = AgentRouterConfig(
-    ergon_complexity_threshold=0.1,    # 𝔈 < 0.1 → TAA solo
-    chaos_lambda_threshold=0.05,       # λ_max > 0.05 → activa ERGON
-    ergon_iterations=50_000,           # Iteraciones Birkhoff para μ_SRB
-    epsilon=1e-4,                      # Tolerancia objetivo
-)
+router = GideonAgentRouter()
 
-router = GideonAgentRouter(config)
+# Diagnóstico automático: λ_max → TAA spectral → 𝔈(T) → ruteo
+result = router.route(T=my_map, domain=(0.0, 1.0))
 
-# Análisis automático: decide TAA vs ERGON vs joint
-result = router.route(T=my_map, x0=initial_condition, x_data=trajectory)
-
-print(result.agent_used)        # 'taa', 'ergon', 'joint'
-print(result.taa_report)        # TAAReport (siempre disponible)
-print(result.ergon_report)      # ERGONReport (None si 𝔈 ≈ 0)
-print(result.measure_source)    # 'empirical' o 'srb'
-print(result.pesin_verified)    # True si ERGON verificó Pesin
+print(result.decision)          # AgentDecision.TAA_ONLY, .ERGON_ONLY, o .TAA_ERGON_JOINT
+print(result.use_taa)           # True si TAA es necesario
+print(result.use_ergon)         # True si ERGON es necesario
+print(result.lambda_max)        # λ_max estimado (5k órbita rápida)
+print(result.ergodic_complexity) # 𝔈(T) ∈ [0,1]
+print(result.mu_srb)            # Medida SRB (None si TAA-only)
 ```
+
+**Nivel 2: Ruteo + ejecución** — diagnostica Y ejecuta los agentes necesarios:
+
+```python
+output = router.route_and_execute(T=logistic, domain=(0.0, 1.0))
+# output = {
+#   'route': RouteResult,
+#   'taa_result': TAACertificate | None,
+#   'ergon_result': ERGONCertificate | None,
+# }
+```
+
+### Lógica de ruteo implementada
+
+| Condición | λ_max | 𝔈(T) | Agente(s) | Motivo |
+|-----------|-------|------|-----------|--------|
+| No caótico | ≤ 0.05 | — | TAA solo | Sistema contractivo, FMA exacto |
+| Baja complejidad | > 0.05 | < 0.3 | TAA solo (+ μ_SRB) | TAA puede reducir con medida correcta |
+| Complejidad mixta | > 0.05 | 0.3–0.85 | TAA + ERGON | Ambos necesarios, μ_SRB handoff |
+| Caos pleno | > 0.05 | > 0.85 | ERGON solo | Pesin certificado, sin estructura FMA |
+
+### Comportamiento verificado (Mayo 2026)
+
+- **Logístico r=4**: λ_max=0.693, 𝔈=1.000 → **ERGON solo** ✅
+- **Mapa seno**: λ_max=-10.15 → **TAA solo** ✅
+- **Tent map (no-uniforme)**: ruteo correcto con handoff μ_SRB entre agentes
 
 ---
 
@@ -750,7 +778,7 @@ $$\mathcal{C}(G, f, \beta = n/2) = \varepsilon - \frac{2S}{n} \quad \text{(= AIC
 
 ## Estado y Roadmap
 
-### Estado actual (Abril 2026) ✓ — v1.4.0
+### Estado actual (Mayo 2026) ✓ — v1.5.0
 
 | Componente | Estado | Versión |
 |---|---|---|
@@ -762,6 +790,7 @@ $$\mathcal{C}(G, f, \beta = n/2) = \varepsilon - \frac{2S}{n} \quad \text{(= AIC
 | `GideonDispatcher` — ranking dinámico | ✅ Completo | v1.0 |
 | `GideonEngine` — pipeline completo | ✅ Completo | v1.0 |
 | `GideonEngine` — benchmark mode | ✅ Completo | v1.0 |
+| `GideonAgentRouter` — diagnóstico y ruteo TAA/ERGON | ✅ Operacional | v1.5 |
 | `PoemCompiler(target="gideon")` | ✅ Nativo | v1.0 |
 | `GideonNeuralHints` — blueprints IA | ✅ Base implementada | v1.1 |
 | `GideonTheoremSeeds` — invariantes | ✅ Base implementada | v1.1 |
@@ -1672,4 +1701,265 @@ print(f"Lyapunov = {density.lyapunov_exponent:.4f}")  # ≈ ln(2)
 
 ---
 
-*Gideon v1.4.0 — 8 dominios algebraicos, 105 tests, 17 certificados Lean 4*
+## GideonROMExecutor — Ejecución de ROMs Descubiertos
+
+### Descripción
+
+`GideonROMExecutor` es el brazo ejecutor del Científico Autopoiético (P-SAL). Toma PoemROMs compilados y los ejecuta con optimización de hardware.
+
+**Archivo:** `poema/backends/gideon/rom_executor.py`
+
+### Modos de Ejecución
+
+| Modo | Descripción | Uso |
+|---|---|---|
+| `direct` | RK4 puro NumPy | Ejecución estándar |
+| `adaptive` | RK4(5) con control PI de paso | Dinámicas stiff |
+| `ensemble` | Ejecución paralela de ICs | Análisis de sensibilidad |
+
+### Uso
+
+```python
+from poema.backends.gideon.rom_executor import GideonROMExecutor
+
+executor = GideonROMExecutor(energy_limit=1e8)
+
+# Ejecución directa
+result = executor.execute(poem_rom, a0, mode="direct")
+print(f"Estable: {result.stable}")
+print(f"Energía final: {result.final_energy:.4e}")
+print(f"Tiempo: {result.wall_time_ms:.1f}ms")
+
+# Ejecución adaptativa
+result = executor.execute(poem_rom, a0, mode="adaptive")
+
+# Ensemble
+ics = np.random.randn(10, r) * 0.5
+ensemble = executor.execute_ensemble(poem_rom, ics)
+print(f"Estables: {ensemble.n_stable}/{ensemble.n_total}")
+```
+
+### Monitorización de Estabilidad
+
+El executor verifica en cada paso:
+- **Energía acotada:** $E(t) < E_{limit}$
+- **NaN detection:** interrupción inmediata si `isnan`
+- **Historial energético:** tracking completo para diagnóstico
+
+### Exports (Gideon v1.6.0)
+
+Añadidos a `poema/backends/gideon/__init__.py`:
+- `GideonROMExecutor`
+- `ROMExecutionResult`
+- `EnsembleResult`
+
+**CERTIFICADO GID-ROM-1:** GideonROMExecutor implementado. Ejecución directa, adaptativa y ensemble de ROMs descubiertos por P-SAL.
+
+Ver documentación completa en `PSAL.md`.
+
+---
+
+## Meta-ACF: Optimización del Dispatcher y Arquitecturas Neuronales
+
+### Pilar 2: DispatcherOptimizer
+
+Meta-ACF trata el dispatcher de Gideon como un **sistema de control óptimo**: modela las decisiones de dispatch como un sistema dinámico donde el estado es (n_elements, n_fma, precision, hardware) y la acción es la selección de backend.
+
+| Componente | Función |
+|---|---|
+| `CostModel` | Superficie de costo polinomial por backend |
+| `TransitionPolicy` | Política óptima como matriz de transición |
+| `CrossoverPoints` | Puntos donde el backend óptimo cambia |
+
+Certificados: DISP-1 (mejora de latencia), DISP-2 (R² del modelo), DISP-3 (estocástica), DISP-4 (estabilidad).
+
+### Pilar 3: NeuralArchACF
+
+Búsqueda de arquitecturas neuronales via navegación Riemanniana en la variedad de arquitecturas, sin entrenar miles de modelos. Usa métricas training-free (espectro, rango efectivo, flujo de información).
+
+**Módulos:** `acf_functor/dispatcher_optimizer.py`, `acf_functor/neural_arch_acf.py`
+
+**CERTIFICADO GID-META-1:** Dispatcher optimizable por Meta-ACF. Política óptima sintetizada desde telemetría.
+
+Ver documentación completa en `META_ACF.md`.
+
+---
+
+*Gideon v1.6.0 — 8 dominios algebraicos, 105+ tests, 17 certificados Lean 4, ROM executor integrado, Meta-ACF dispatcher*
+
+---
+
+## Validación del Dispatcher Optimizer (2026)
+
+Esta sección documenta los resultados de validación del `DispatcherOptimizer` de Gideon, verificados en `tests/test_validation_realworld.py`.
+
+### Garantías Verificadas
+
+| Test | Propiedad matemática | Resultado |
+|------|---------------------|-----------|
+| `test_optimizer_produces_policy` | El optimizador produce una política no-nula con certificados | ✅ PASA |
+| `test_policy_reduces_mean_latency` | La latencia media de la política ≤ 1.5× baseline | ✅ PASA |
+| `test_transition_matrix_row_stochastic` | Todas las filas de la matriz de transición suman 1 | ✅ PASA |
+| `test_cost_model_r2_above_threshold` | R² del modelo de costos ≥ 0.3 (separación GPU/CPU) | ✅ PASA |
+
+### Telemetría Sintética para Validación
+
+La validación usa telemetría sintética con crossover conocido (CPU óptimo para n < 1650 elementos, GPU para n > 1650):
+
+```python
+# CPU: latency = 0.001 * n + ε
+# GPU: latency = 0.0003 * n + 0.5 + ε  (overhead fijo de 0.5ms)
+# Crossover: n_crossover ≈ 1650 elementos
+```
+
+El `DispatcherOptimizer` recupera este crossover con datos de 200–500 muestras.
+
+### API Confirmada (DispatchRecord)
+
+```python
+DispatchRecord(
+    n_elements=1000,
+    n_fma=500,
+    backend="cpu_numpy",
+    latency_ms=0.5,       # NOTA: campo es latency_ms, NO latency_us
+    precision="fp32",
+    gpu_available=False,
+)
+```
+
+La política se accede como `result.policy.transition_matrix` (no `result.transition_matrix` directamente).
+
+**CERTIFICADO GID-VALID-1:** Suite de 4 tests Dispatcher Optimizer, todos verificados en CI.
+
+## Integración con el Constructor Universal
+
+### Dispatch de Algoritmos Forjados
+
+Cuando el `AlgorithmForge` produce un `ForgedAlgorithm`, Gideon puede despachar su ejecución al backend óptimo:
+
+```python
+from acf_functor import UniversalConstructor, ProblemSpec, ProblemKind
+
+uc = UniversalConstructor()
+algo = uc.forge_algorithm(ProblemSpec(
+    kind=ProblemKind.LINEAR_SOLVE, n=10000, target_error=1e-6))
+
+# Gideon decide: CPU para n < crossover, GPU para n > crossover
+result = algo.execute(A, b)
+```
+
+### Despacho de Sistemas Construidos
+
+Los `ConstructedSystem` que produce el Constructor incluyen un `ComputableHyperGraph` con anotaciones FMA. Gideon usa estas anotaciones para:
+
+1. **Decidir backend** por nodo (CPU/GPU) basado en el costo FMA
+2. **Pipeline** ejecución: particionar el hipergrafo en profundidad y ejecutar bandas en paralelo
+3. **Monitorear** latencia real vs. estimada y retroalimentar al Constructor
+
+*Gideon v1.7.0 — Meta-ACF dispatcher integrado, validación cuantitativa de crossover GPU/CPU*
+
+---
+
+## Integración Level-5: Descubrimiento Autónomo de Estructura
+
+### Gideon como Ejecutor de Algoritmos Descubiertos
+
+Con Level-5 Autonomy, el ecosistema puede descubrir algoritmos autónomamente via `OperatorGrammarSearch`. Gideon es el brazo ejecutor:
+
+```python
+from acf_functor import OperatorGrammarSearch, TopologicalOperatorAnalyzer
+
+# El sistema descubre la factorización sin conocimiento previo
+tda = TopologicalOperatorAnalyzer()
+gs = OperatorGrammarSearch()
+
+fingerprint = tda.fingerprint(A)  # TDA del operador
+result = gs.search(A, fingerprint=fingerprint)  # busca factorización
+
+if result["found"]:
+    algo = gs.build_algorithm_from_factorization(N, result["best_factorization"])
+    # Gideon despacha al backend óptimo
+    output = algo.execute(x)
+```
+
+### Flujo Level-5 en Gideon
+
+1. **TDA Fingerprint** → `TopologicalOperatorAnalyzer` analiza estructura del operador
+2. **Koopman Spectrum** → `KoopmanStructuralAnalyzer` detecta grupo/multiresolución
+3. **Grammar Search** → `OperatorGrammarSearch` descubre factorización parsimoniosa
+4. **Rule Check** → `AutonomousRuleInduction` aplica reglas previamente inducidas
+5. **Build Algorithm** → convierte factorización en `ForgedAlgorithm` ejecutable
+6. **Gideon Dispatch** → selecciona backend CPU/GPU y ejecuta con monitoreo
+
+### Certificados Level-5 verificados
+
+- **AD-5**: Topological fingerprint estable bajo perturbación
+- **AD-6**: Grammar search converge a factorización parsimoniosa
+- **AD-7**: Reglas inducidas generalizan a tamaños no vistos
+- **47 tests** en `tests/test_autonomous_discovery.py`, todos verificados
+
+*Gideon v2.0.0 — Level-5 Autonomy integrado, descubrimiento autónomo de algoritmos*
+
+---
+
+## Backend Synthesizer — Generación Autónoma de Código Nativo
+
+El `BackendSynthesizer` es el módulo que rompe la barrera Python/NumPy. Dado un `ComputableHyperGraph`, el sistema:
+
+1. **Detecta** el patrón algebraico (butterfly FFT, GEMM, stencil) con `GraphPatternDetector`
+2. **Selecciona** el backend óptimo según hardware con `BackendSelector`
+3. **Genera** código nativo ejecutable con `BackendCodeGenerator`
+4. **Retorna** un `SynthesizedKernel` con proveniencia completa
+
+### Pipeline: Topología → Silicio
+
+```
+ComputableHyperGraph → GraphPatternDetector → BackendSelector → BackendCodeGenerator
+                          ↓                       ↓                    ↓
+                    GraphPattern            BackendDecision      SynthesizedKernel
+                    (butterfly_fft,         (triton_gpu,         (execute(), source,
+                     dense_gemm,             torch_cuda,          certificate)
+                     stencil,                fused_numpy)
+                     chain_fma)
+```
+
+### Backends soportados
+
+| Backend | Condición | Descripción |
+|---|---|---|
+| `triton_gpu` | GPU + Triton disponible | Kernels JIT: butterfly FFT, GEMM vía `@triton.jit` |
+| `torch_cuda` | GPU disponible | PyTorch vectorizado sobre CUDA |
+| `fused_numpy` | Siempre | NumPy vectorizado (sin `np.fft`) |
+| `c_native` | Generación de fuente C99 | Para auditoría o compilación futura |
+
+### Uso desde UniversalConstructor
+
+```python
+from acf_functor import UniversalConstructor
+
+uc = UniversalConstructor()
+# Construir procesador FFT con backend óptimo
+system = uc.build_fft_processor(1024)
+result = system.execute(signal)
+
+# Benchmark completo en todos los backends
+report = uc.run_fft_experiment(N=1024, n_warmup=20, n_iter=500)
+```
+
+### Experimento FFT N=1024 — Resultados
+
+| Backend | Latencia (μs) | Error máx | Correcto |
+|---|---|---|---|
+| `fused_numpy` | 189.0 | 5.02e-14 | ✅ |
+| `triton_gpu` | 652.6 | 1.07e-05 | ✅ |
+| `torch_cuda` | 7777.1 | 1.04e-05 | ✅ |
+| `numpy.fft` (ref) | 15.3 | 0 | ✅ |
+
+### Certificados FORGE verificados
+
+- **FORGE-5**: Correctitud — todos los backends producen resultado correcto (rel_err < 1e-3)
+- **FORGE-6**: Speedup entre backends: 41.15× (numpy vectorizado vs torch_cuda)
+- **FORGE-7**: Detección de patrón butterfly con confianza 1.000
+- **18 tests** en `tests/test_universal_constructor.py`
+
+*Gideon v2.1.0 — BackendSynthesizer: generación autónoma de código nativo*

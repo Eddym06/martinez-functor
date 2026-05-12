@@ -199,7 +199,7 @@ Clasifica el **perfil de decaimiento espectral** de los eigenvalores:
 
 ### 4.3 Cálculo de d*(ε)
 
-La dimensión óptima depende de la clase Alpha-A (TAA-3b):
+La dimensión óptima depende de la clase Alpha-A. Operacionalmente TAA usa estas fórmulas y, en Lean, TAA-3b ya quedó cerrado como teorema real para el caso exponencial; la deuda formal remanente está en TAA-3a y en los lemas asintóticos de comparación más finos:
 
 | Clase | Fórmula d* |
 |---|---|
@@ -238,7 +238,7 @@ UNKNOWN       → heurístico
 
 ## 6. Dimensión Óptima d*(ε)
 
-La existencia de $d^*(\varepsilon)$ es garantizada por TAA-3a (axioma). Para los casos con decaimiento conocido, TAA-3b provee fórmulas explícitas.
+La existencia de $d^*(\varepsilon)$ es garantizada por TAA-3a (axioma). Para los casos con decaimiento conocido, TAA usa las fórmulas explícitas de TAA-3b tanto a nivel operativo como en la capa Lean, donde el caso exponencial ya quedó probado directamente.
 
 ### Conexión con KoopmanDeltaCertificates
 
@@ -386,14 +386,27 @@ Namespace: `TAAAgent`
 | TAA-3a | `taa_budget_exists` | $\forall \varepsilon > 0, \exists d^*(\varepsilon)$ | **axioma** |
 | TAA-3b | `taa_budget_exponential_decay` | Fórmula explícita para decaimiento exp. | ✓ probado |
 | TAA-4 | `alpha_classifies_budget` | $\alpha_A$ determina clase de costo FMA | ✓ probado |
-| TAA-4b | `exponential_cheaper_than_polynomial` | Exp. $<$ poly asintóticamente | ✓ probado |
+| TAA-4b | `exponential_cheaper_than_polynomial` | Exp. $<$ poly asintóticamente | ✓ **probado** (2026-05-06) |
 | TAA-5 | `taa_measure_error_inflation` | Medida incorrecta infla $\delta(d)$ | ✓ probado |
 | TAA-5b | `taa_ergon_interface_eliminates_inflation` | ERGON elimina la inflación | ✓ probado |
 | TAA-6 | `taa_defer_to_ergon` | $\lambda_{\max} > 0$ → necesita $\mu_{SRB}$ | **axioma** |
 | TAA-6b | `taa_acts_independently_for_integrable` | Sin caos, TAA actúa solo | ✓ probado |
 
-**Sorry count: 0 — 2 axiomas** (TAA-3a, TAA-6)  
-**Cierre:** TAA-3a y TAA-6 se cierran una vez que ERGONCertificates.lean demuestre ERG-6a (Fórmula de Pesin).
+**Placeholders activos:** 0  
+**Axiomas restantes en Lean:** 3 (TAA-3a, TAA-6, TAA-12)  
+**Teoremas demostrados nuevos (2026-05-05):**
+- TAA-9 → `taa_ergon_lyapunov_calibration_proved` (demostrado — calibración Lyapunov)
+- TAA-3c → `taa_budget_polynomial_decay` (demostrado — presupuesto decaimiento polinomial)
+- TAA-7a → `spectral_entropy_nonneg` (demostrado — H(K) ≥ 0)
+- TAA-7b → `spectral_entropy_zero_iff_one_mode` (demostrado — H = 0 ↔ espectro one-hot)
+
+**Teoremas demostrados nuevos (2026-05-06) — verificados por `lake build`:**
+- TAA-4b → `exponential_cheaper_than_polynomial` (testigo $\varepsilon_0 = \rho^{-1}$; usa `rpow_lt_rpow`)
+- TAA-7 → `spectral_entropy_bounded` (prueba KL completa: $\sum p_k\log(p_k d) \geq 0$ implica $H \leq \log d$)
+- TAA-9 compat → `taa_ergon_lyapunov_calibration` (delega a `_proved` via `neg_mul`)
+- TAA-11b → `taa_budget_is_logarithmic` (testigo $C = 1/\Gamma + 1/\log(1/\varepsilon)$)
+
+**Axiomas abiertos (3):** TAA-3a requiere teoría espectral completa de operadores compactos; TAA-6 requiere Fórmula de Pesin; TAA-12 requiere teoría de perturbación de Kato para operadores no normales.
 
 ### Descripción de Axiomas
 
@@ -647,13 +660,13 @@ pred = agent.koopman_predict(report, x0, n_steps=50)
 
 El axioma TAA-3a afirma $\forall \varepsilon, \exists d^*(\varepsilon)$ para operadores compactos generales en $L^2(\mu_{SRB})$. Requiere teoría espectral completa de operadores de Koopman — un resultado abierto en matemáticas modernas para sistemas caóticos generales.
 
-**Progreso:** TAA-3b cubre los casos prácticos más importantes (decaimiento exponencial y polinomial).
+**Progreso:** TAA usa ya las fórmulas de TAA-3b en la capa operativa y en Lean para el caso exponencial; lo pendiente es cerrar TAA-3a en general y los frentes asintóticos de comparación fina.
 
 ### TAA-6: Caracterización del Caos que Requiere ERGON
 
-El axioma TAA-6 afirma que $\lambda_{\max} > 0$ con $\mathfrak{E} \approx 1$ implica necesidad de $\mu_{SRB}$. Requiere la Fórmula de Pesin (ERG-6a) y teoría de clasificación de medidas SRB.
+El axioma TAA-6 afirma que $\lambda_{\max} > 0$ con $\mathfrak{E} \approx 1$ implica necesidad de $\mu_{SRB}$. Ahora ya no depende de mantener ERG-6a como axioma independiente; la frontera dura quedó concentrada en ERG-5 y en la clasificación geométrica de medidas SRB.
 
-**Cierre:** Se cierra automáticamente cuando ERGONCertificates.lean logre ERG-6a.
+**Cierre:** Se cierra cuando ERGONCertificates.lean cierre ERG-5 y la clasificación geométrica asociada.
 
 ### Conjetura del Espectro Unificado
 
@@ -667,7 +680,7 @@ Si se prueba, conectaría $\delta(d)$ de KD-1 con $h_{KS}$ de ERG-6a en una sola
 
 ## 16. Nuevos Certificados (TAA-10 a TAA-12)
 
-Certificados agregados en abril 2026, extendiendo la cobertura formal de TAA a propiedades intrínsecas del diccionario EDMD, umbrales de complejidad crítica, y corrección de error por proyección biortogonal.
+Certificados agregados en abril 2026, extendiendo la cobertura formal y la capa de certificados explícitos de TAA sobre propiedades intrínsecas del diccionario EDMD, umbrales de complejidad crítica, y corrección de error por proyección biortogonal.
 
 ### TAA-10: Índice de Adaptación de Base (IAB)
 
@@ -720,8 +733,9 @@ La cota biortogonal es estrictamente mejor o igual que la cota ingenua basada so
 | ID | Nombre | Enunciado | Status |
 |---|---|---|---|
 | TAA-10 | `basis_adaptation_index` | IAB = N(K)/N(K_Gaussian) intrínseco al diccionario | ✓ probado |
-| TAA-11 | `critical_complexity_threshold` | E* = 1 - Γ_OTU/h_KS separa régimen log/poly | ✓ probado |
-| TAA-12 | `biorthogonal_projection_error` | δ_biorth ≤ δ_naive para K no normal | ✓ probado |
+| TAA-11 | `critical_complexity_threshold` | E* = 1 - Γ_OTU/h_KS separa régimen log/poly | mixto: igualdad base probada, cota logarítmica como certificado explícito |
+| TAA-11b | `taa_budget_is_logarithmic` | Budget logarítmico en $1/\varepsilon$ | ✓ **probado** (2026-05-06) |
+| TAA-12 | `biorthogonal_projection_error` | δ_biorth ≤ δ_naive para K no normal | **axioma** |
 
 ---
 

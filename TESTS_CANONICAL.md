@@ -1,10 +1,15 @@
 # TESTS CANONICAL — Poema / Functor de Colapso Afín (ACF)
 
-**Última verificación:** 2026-04-06
-**Total de tests:** 356
+**Última verificación:** 2026-05-05
+**Total de tests:** 2298
+**Subtests verificados:** 21
+**Skipped:** 3
+**Warnings:** 15
 **Regresiones:** 0
 
 **Validación teórica reciente (resultados reales):**
+- Suite canónica completa: `2298 passed, 3 skipped, 15 warnings, 21 subtests passed`.
+- Lean completo: `lake build` exitoso y certificados TAA/ERGON sin placeholders activos.
 - Certificados Lean rebuild: sin/cos/exp/log/tanh/sigmoid sincronizados, errores < 4e-3.
 - Canonical benchmark: poly ε=0, sin error 9.99e-16, Triton speedup.
 - FMA benchmark: error 1.39e-17, speedup hasta 6.87x vs NumPy en batch grande.
@@ -20,12 +25,12 @@
 ## Ejecución canónica
 
 ```bash
-PYTHONPATH=. python3 -m pytest tests -q
+PYTHONPATH=. .venv/bin/python -m pytest -q
 ```
 
 ## Tests excluidos
 
-Actualmente no hay exclusiones en la corrida canónica `tests -q`.
+Actualmente no hay exclusiones en la corrida canónica `-m pytest -q`.
 
 ## Distribución por módulo
 
