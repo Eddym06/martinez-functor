@@ -415,6 +415,15 @@ from .ccd_engine import (
 
 __version__ = "6.0.0"
 
+# 🔥 Gideon-Nova Native + GPU Backend
+from .gideon_nova_backend import (
+    GideonNovaBackend,
+    NovaGPUBackend,
+    accelerate_nova,
+    get_gideon_backend,
+    benchmark_nova_backend,
+)
+
 __all__ = [
     "ACFFunctor",
     "ACFInvariant",
@@ -468,6 +477,12 @@ __all__ = [
     "GaloisAnalyzer",
     "GaloisGroup",
     "DetectedSymmetry",
+    # Gideon-Nova
+    "GideonNovaBackend",
+    "NovaGPUBackend",
+    "accelerate_nova",
+    "get_gideon_backend",
+    "benchmark_nova_backend",
     "SymmetryType",
     "KolmogorovEntropy",
     "EntropyProfile",
